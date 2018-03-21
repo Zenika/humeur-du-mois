@@ -136,7 +136,9 @@
             body: JSON.stringify({ userId: user.sub, accessToken: accessToken }),
             headers: { 'Content-Type': 'application/json' }
           })
-            .then(response => response.text())
+            .then(response => {
+              if (reponse.ok) { return response.text() } else { throw new Error('Could not exchange token') }
+            })
             .then(firebaseToken => {
               firebase.auth().signInWithCustomToken(firebaseToken).catch((error) => {
                 console.log(error)
