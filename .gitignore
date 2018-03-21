@@ -1,0 +1,4 @@
+service-account.json
+.runtimeconfig.json
+node_modules/
+functions/lib/
