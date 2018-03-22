@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import { authenticateAuth0, authenticateFirebase } from "./auth";
 import { AUTH0_CONFIG, API_BASE_URL } from "./config";
+import "./style.css";
 
 window.addEventListener("load", async function() {
   const submitGreat = document.getElementById("submitGreat")!;

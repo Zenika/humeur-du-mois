@@ -1,5 +1,6 @@
 import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import ScriptExtHtmlWebpackPlugin from "script-ext-html-webpack-plugin";
 import webpack from "webpack";
 
@@ -11,9 +12,15 @@ module.exports = {
     main: "./src/index.ts"
   },
   module: {
-    rules: [{ test: /\.ts/, use: "ts-loader" }]
+    rules: [
+      { test: /\.ts/, use: "ts-loader" },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"]
+      }
+    ]
   },
-  resolve: { extensions: [".ts"] },
+  resolve: { extensions: [".js", ".ts"] },
   externals: {
     "auth0-js": "auth0",
     "firebase/app": "firebase"
@@ -24,6 +31,9 @@ module.exports = {
     }),
     new ScriptExtHtmlWebpackPlugin({
       defer: "main.js"
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name].css"
     }),
     new webpack.DefinePlugin({
       __ENV__: {
