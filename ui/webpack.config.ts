@@ -10,12 +10,13 @@ module.exports = {
   entry: {
     main: "./src/index.ts"
   },
+  module: {
+    rules: [{ test: /\.ts/, use: "ts-loader" }]
+  },
+  resolve: { extensions: [".ts"] },
   externals: {
     "auth0-js": "auth0",
     "firebase/app": "firebase"
-  },
-  module: {
-    rules: [{ test: /\.ts/, use: "ts-loader" }]
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -25,8 +26,8 @@ module.exports = {
       defer: "main.js"
     }),
     new webpack.DefinePlugin({
-      "process.env": {
-        FUNCTIONS_BASE_URL: JSON.stringify(
+      __ENV__: {
+        API_BASE_URL: JSON.stringify(
           production
             ? "https://us-central1-humeur-du-mois-2018.cloudfunctions.net"
             : "http://localhost:5001/humeur-du-mois-2018/us-central1"
