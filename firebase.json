@@ -10,7 +10,10 @@
     ]
   },
   "hosting": {
-    "public": "public",
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run build"
+    ],
+    "public": "ui/dist",
     "ignore": [
       "firebase.json",
       "**/.*",
