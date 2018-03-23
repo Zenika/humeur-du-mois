@@ -11,7 +11,7 @@
   },
   "hosting": {
     "predeploy": [
-      "npm --prefix \"ui\" run build"
+      "npm --prefix \"ui\" run build:prod"
     ],
     "public": "ui/dist",
     "ignore": [

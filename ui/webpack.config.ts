@@ -4,9 +4,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import ScriptExtHtmlWebpackPlugin from "script-ext-html-webpack-plugin";
 import webpack from "webpack";
 
-const production = process.env.NODE_ENV === "production";
-
-module.exports = {
+export default (env, argv) => ({
   mode: "development",
   entry: {
     main: "./src/index.ts"
@@ -38,7 +36,7 @@ module.exports = {
     new webpack.DefinePlugin({
       __ENV__: {
         API_BASE_URL: JSON.stringify(
-          production
+          argv.mode === "production"
             ? "https://us-central1-humeur-du-mois-2018.cloudfunctions.net"
             : "http://localhost:5001/humeur-du-mois-2018/us-central1"
         ),
@@ -52,4 +50,4 @@ module.exports = {
       }
     })
   ]
-};
+});

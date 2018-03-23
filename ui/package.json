@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "webpack",
+    "build:prod": "npm run build -- --mode production",
     "watch": "npm run build -- --watch"
   },
   "devDependencies": {
