@@ -1,3 +1,9 @@
+/**
+ * Connects Auth0 with the firebase Authentication system.
+ *
+ * Inspired by https://community.auth0.com/t/no-way-to-delegate-firebase-token-with-v8-web-sdk/6904/7.
+ */
+
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import * as auth0 from "auth0-js";
