@@ -8,11 +8,15 @@ Prototype.
 
 ## Links
 
-- [App](https://humeur-du-mois-2018.firebaseapp.com)
-- [Firebase Console](https://console.firebase.google.com/)
+- [App](https://humeur-du-mois-2018.firebaseapp.com) (only zenika.com adresses are authorized to log in)
+- [Firebase Console](https://console.firebase.google.com/) (requires access permissions, see below)
 
-## Commands
+## Development
+
+The app uses Firebase so you must have permission to access. Contact dsi@zenika.com to ask for access (only zenika.com addresses can reach that address).
+
+### Commands
 
 - `firebase serve --only hosting,functions` to serve locally
 - `npm run watch` in `ui` to have the front-end recompile automatically when the sources change (this does not include live reloading)
-- `firebase deploy` to deploy (must be logged in using `firebase login`)
+- `firebase deploy` to deploy (must be logged in first using `firebase login`)
