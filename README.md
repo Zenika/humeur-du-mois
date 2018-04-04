@@ -15,8 +15,12 @@ Prototype.
 
 The app uses Firebase so you must have permission to access. Contact dsi@zenika.com to ask for access (only zenika.com addresses can reach that address).
 
+### Setup
+
+- `npm install`
+- `npm run firebase:login`
+
 ### Commands
 
-- `firebase serve --only hosting,functions` to serve locally
-- `npm run watch` in `ui` to have the front-end recompile automatically when the sources change (this does not include live reloading)
-- `firebase deploy` to deploy (must be logged in first using `firebase login`)
+- `npm start` to serve locally (includes compile-on-save for the ui but does not include live reloading)
+- `npm run deploy` to deploy
