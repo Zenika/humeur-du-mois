@@ -12,7 +12,6 @@ import * as cors from "cors";
 const applyCors = cors({ origin: true });
 
 interface Config {
-  firebase: admin.AppOptions;
   serviceaccount?: string;
   auth0?: {
     domain?: string;
@@ -45,7 +44,6 @@ export const exchangeToken = functions.https.onRequest((request, response) => {
 
     if (admin.apps.length === 0) {
       admin.initializeApp({
-        ...config.firebase,
         credential: admin.credential.cert(config.serviceaccount)
       });
     }
