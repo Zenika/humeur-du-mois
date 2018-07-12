@@ -1,11 +1,8 @@
 import firebase from "firebase/app";
-import { API_BASE_URL } from "../config";
 import { Session } from "./session-repository";
 
-const EXCHANGE_TOKEN_ENDPOINT_URL = `${API_BASE_URL}/exchangeToken`;
-
 export async function authenticate({ user, accessToken }: Session) {
-  const response = await fetch(EXCHANGE_TOKEN_ENDPOINT_URL, {
+  const response = await fetch("/api/exchangeToken", {
     method: "POST",
     body: JSON.stringify({ userId: user.sub, accessToken: accessToken }),
     headers: { "Content-Type": "application/json" }

@@ -21,6 +21,10 @@
     ],
     "rewrites": [
       {
+        "source": "/api/exchangeToken",
+        "function": "exchangeToken"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

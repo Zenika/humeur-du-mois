@@ -1,7 +1,6 @@
 declare const __ENV__: any;
 
 const ENV: {
-  API_BASE_URL: string;
   AUTH0_CONFIG: {
     domain: string;
     clientID: string;
@@ -11,4 +10,4 @@ const ENV: {
   };
 } = __ENV__;
 
-export const { API_BASE_URL, AUTH0_CONFIG } = ENV;
+export const { AUTH0_CONFIG } = ENV;

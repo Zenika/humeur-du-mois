@@ -35,11 +35,6 @@ export default (env, argv) => ({
     }),
     new webpack.DefinePlugin({
       __ENV__: {
-        API_BASE_URL: JSON.stringify(
-          argv.mode === "production"
-            ? "https://us-central1-humeur-du-mois-2018.cloudfunctions.net"
-            : "http://localhost:5001/humeur-du-mois-2018/us-central1"
-        ),
         AUTH0_CONFIG: JSON.stringify({
           domain: "zenika.eu.auth0.com",
           clientID: "j5xIoOh3R9Jov6wtKQm2BAHUSkrYpttY",

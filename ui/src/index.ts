@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import { authenticateAuth0, authenticateFirebase } from "./auth";
-import { AUTH0_CONFIG, API_BASE_URL } from "./config";
+import { AUTH0_CONFIG } from "./config";
 import "./style.css";
 
 window.addEventListener("load", async function() {
