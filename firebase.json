@@ -10,19 +10,17 @@
     ]
   },
   "hosting": {
-    "predeploy": [
-      "npm --prefix \"ui\" run build:prod"
-    ],
+    "predeploy": ["npm --prefix \"ui\" run build:prod"],
     "public": "ui/dist",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "/api/exchangeToken",
         "function": "exchangeToken"
+      },
+      {
+        "source": "/api/importEmployeesFromAlibeezHttp",
+        "function": "importEmployeesFromAlibeezHttp"
       },
       {
         "source": "**",

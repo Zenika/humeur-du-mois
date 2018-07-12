@@ -13,11 +13,13 @@
     "auth0-js": "^9.3.3",
     "cors": "^2.8.4",
     "firebase-admin": "^5.11.0",
-    "firebase-functions": "^1.0.0"
+    "firebase-functions": "^1.0.0",
+    "node-fetch": "^2.1.2"
   },
   "devDependencies": {
     "@types/auth0-js": "^8.11.2",
     "@types/cors": "^2.8.3",
+    "@types/node-fetch": "^2.1.1",
     "tslint": "^5.8.0",
     "typescript": "^2.5.3"
   },
