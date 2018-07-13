@@ -11,18 +11,22 @@ window.addEventListener("load", async function() {
   const homePage = document.getElementById("homePage")!;
   const thankYouPage = document.getElementById("thankYouPage")!;
   const errorPage = document.getElementById("errorPage")!;
+  const pages = [loggingInPage, homePage, thankYouPage, errorPage];
   const errorMessage = document.getElementById("errorMessage")!;
   const userId = document.getElementById("userId")!;
   const hideClass = "hidden";
 
-  const hide = (element: HTMLElement) => {
-    element.classList.add(hideClass);
-  };
   const show = (element: HTMLElement) => {
     element.classList.remove(hideClass);
   };
-  const swap = (outgoing: HTMLElement, incoming: HTMLElement) => {
-    hide(outgoing);
+  const hide = (element: HTMLElement) => {
+    element.classList.add(hideClass);
+  };
+  const hideAllPages = () => {
+    pages.forEach(page => hide(page))
+  }
+  const changePageTo = (incoming: HTMLElement) => {
+    hideAllPages();
     show(incoming);
   };
 
@@ -38,10 +42,10 @@ window.addEventListener("load", async function() {
     await authenticateFirebase(session);
     enableFirestore(session.user.email);
     userId.innerText = session.user.email;
-    swap(loggingInPage, homePage);
+    changePageTo(homePage);
   } catch (err) {
     console.error(err);
-    swap(homePage, errorPage);
+    changePageTo(errorPage);
   }
 
   function enableFirestore(userId: string) {
@@ -53,7 +57,7 @@ window.addEventListener("load", async function() {
         response: response,
         instant: new Date().toISOString()
       });
-      swap(homePage, thankYouPage);
+      changePageTo(thankYouPage);
     };
 
     submitGreat.onclick = () => saveResponse("great");
