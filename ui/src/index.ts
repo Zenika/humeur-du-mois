@@ -53,15 +53,16 @@ window.addEventListener("load", async function() {
   async function enableFirestore(userId: string) {
     const db = firebase.firestore();
 
-    const latestImportsSnapshot = await db
+    const latestImport = await db
       .collection("employee-imports")
       .orderBy("at", "desc")
       .limit(1)
-      .get();
-    const latestImport = latestImportsSnapshot.docs[0];
+      .get()
+      .then(result => result.docs[0]);
     if (!latestImport) {
       throw new Error(`cannot find user '${userId}' in employee data`);
     }
+
     const employeeSnapshot = await latestImport.ref
       .collection("employees")
       .doc(userId)
