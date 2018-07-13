@@ -14,6 +14,7 @@ window.addEventListener("load", async function() {
   const pages = [loggingInPage, homePage, thankYouPage, errorPage];
   const errorMessage = document.getElementById("errorMessage")!;
   const userId = document.getElementById("userId")!;
+  const managerName = document.getElementById("managerName")!;
   const hideClass = "hidden";
 
   const show = (element: HTMLElement) => {
@@ -48,8 +49,24 @@ window.addEventListener("load", async function() {
     changePageTo(errorPage);
   }
 
-  function enableFirestore(userId: string) {
-    var db = firebase.firestore();
+  async function enableFirestore(userId: string) {
+    const db = firebase.firestore();
+
+    const latestImportsSnapshot = await db
+      .collection("employee-imports")
+      .orderBy("at", "desc")
+      .limit(1)
+      .get();
+    const latestImport = latestImportsSnapshot.docs[0];
+    if (!latestImport) {
+      throw new Error(`cannot find user '${userId}' in employee data`);
+    }
+    const employeeSnapshot = await latestImport.ref
+      .collection("employees")
+      .doc(userId)
+      .get();
+    const employee = employeeSnapshot.data();
+    managerName.innerText = employee.managerEmail;
 
     const saveResponse = (response: string) => {
       db.collection("responses").add({
