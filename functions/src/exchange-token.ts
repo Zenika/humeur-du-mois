@@ -42,11 +42,12 @@ export const exchangeToken = functions.https.onRequest((request, response) => {
       clientID: config.auth0.clientid
     });
 
-    if (admin.apps.length === 0) {
-      admin.initializeApp({
+    const exchangeTokenApp = admin.initializeApp(
+      {
         credential: admin.credential.cert(config.serviceaccount)
-      });
-    }
+      },
+      "exchangeToken"
+    );
 
     auth0WebAuth.client.userInfo(accessToken, (userInfoErr, user) => {
       if (userInfoErr) {
@@ -54,7 +55,7 @@ export const exchangeToken = functions.https.onRequest((request, response) => {
         response.status(401).send("Unauthorized");
       } else {
         if (userId === user.sub) {
-          admin
+          exchangeTokenApp
             .auth()
             .createCustomToken(userId)
             .then(customToken => {
