@@ -14,6 +14,7 @@ window.addEventListener("load", async function() {
   const pages = [loggingInPage, homePage, thankYouPage, errorPage];
   const errorMessage = document.getElementById("errorMessage")!;
   const userId = document.getElementById("userId")!;
+  const managerNotice = document.getElementById("managerNotice")!;
   const managerName = document.getElementById("managerName")!;
   const hideClass = "hidden";
 
@@ -24,8 +25,8 @@ window.addEventListener("load", async function() {
     element.classList.add(hideClass);
   };
   const hideAllPages = () => {
-    pages.forEach(page => hide(page))
-  }
+    pages.forEach(page => hide(page));
+  };
   const changePageTo = (incoming: HTMLElement) => {
     hideAllPages();
     show(incoming);
@@ -66,7 +67,10 @@ window.addEventListener("load", async function() {
       .doc(userId)
       .get();
     const employee = employeeSnapshot.data();
-    managerName.innerText = employee.managerEmail;
+    if (employee.managerEmail) {
+      managerName.innerText = employee.managerEmail;
+      show(managerNotice);
+    }
 
     const saveResponse = (response: string) => {
       db.collection("responses").add({
