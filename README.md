@@ -18,9 +18,13 @@ The app uses Firebase so you must have permission to access. Contact dsi@zenika.
 ### Setup
 
 - `npm install`
-- `npm run firebase:login`
+- `cd functions && npm install && cd ..`
+- `cd ui && npm install && cd ..`
+- `npm run firebase login`
 
 ### Commands
 
-- `npm start` to serve locally (includes compile-on-save for the ui but does not include live reloading)
+- `npm start` to serve locally
+  - functions are compiled and deployed on save
+  - UI is compiled on save but the browser is not reloaded
 - `npm run deploy` to deploy
