@@ -1,14 +1,11 @@
 {
   "name": "humeur-du-mois-2018",
   "scripts": {
-    "start:ui": "npm run --prefix ui start",
-    "start:functions": "npm run --prefix functions serve",
-    "start": "run-p start:ui start:functions",
-    "deploy": "firebase deploy",
-    "firebase:login": "firebase login"
+    "start": "npm --prefix functions run build && npm --prefix ui run build && npm run firebase serve",
+    "deploy": "npm run firebase deploy",
+    "firebase": "firebase"
   },
   "devDependencies": {
-    "firebase-tools": "3.19.3",
-    "npm-run-all": "4.1.3"
+    "firebase-tools": "3.19.3"
   }
 }

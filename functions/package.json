@@ -3,10 +3,7 @@
   "scripts": {
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
-    "serve": "npm run build && firebase serve --port 5001 --only functions",
-    "shell": "npm run build && firebase experimental:functions:shell",
-    "start": "npm run shell",
-    "logs": "firebase functions:log"
+    "build:watch": "npm run build -- --watch"
   },
   "main": "lib/index.js",
   "dependencies": {

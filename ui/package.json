@@ -5,9 +5,7 @@
   "scripts": {
     "build": "webpack",
     "build:prod": "npm run build -- --mode production",
-    "build:watch": "npm run build -- --watch",
-    "serve": "firebase serve --only hosting",
-    "start": "run-p build:watch serve"
+    "build:watch": "npm run build -- --watch"
   },
   "devDependencies": {
     "@types/auth0-js": "8.11.2",
