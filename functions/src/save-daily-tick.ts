@@ -7,5 +7,5 @@ export const saveDailyTick = functions.pubsub
     firebase
       .firestore()
       .collection("daily-ticks")
-      .add(event);
+      .add(event.toJSON());
   });
