@@ -1,0 +1,24 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+
+# Handler for the pubsub cron.
+- url: /publish/.*
+  script: main.app
+  login: admin
+  secure: always
+
+- url: /.*
+  script: main.app
+
+libraries:
+- name: webapp2
+  version: latest
+- name: pycrypto
+  version: latest
+- name: ssl
+  version: latest
+
+instance_class: F1
