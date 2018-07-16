@@ -3,9 +3,9 @@ import * as functions from "firebase-functions";
 
 export const saveDailyTick = functions.pubsub
   .topic("daily-tick")
-  .onPublish(event => {
+  .onPublish(event =>
     firebase
       .firestore()
       .collection("daily-ticks")
-      .add(event.toJSON());
-  });
+      .add(event.toJSON())
+  );
