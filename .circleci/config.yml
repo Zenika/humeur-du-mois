@@ -1,0 +1,187 @@
+version: 2
+
+jobs:
+
+  install-ui-dependencies:
+    docker:
+        - image: circleci/node:8
+    steps:
+        - checkout
+        - restore_cache:
+            keys:
+                - ui-dependencies-{{ checksum "ui/package.json" }}
+                - ui-dependencies-
+        - run:
+            name: Download UI dependencies
+            command: npm --prefix ui install
+        - save_cache:
+            paths:
+                - ui/node_modules
+            key: ui-dependencies-{{ checksum "ui/package.json" }}
+        - persist_to_workspace:
+            root: ./
+            paths:
+              - ui/node_modules
+
+  build-ui:
+    docker:
+        - image: circleci/node:8
+    steps:
+        - checkout
+        - attach_workspace:
+            at: ./
+        - run: npm --prefix ui run build
+
+  build-ui-for-production:
+    docker:
+        - image: circleci/node:8
+    steps:
+        - checkout
+        - attach_workspace:
+            at: ./
+        - run: npm --prefix ui run build:prod
+
+  install-functions-dependencies:
+    docker:
+        - image: circleci/node:8
+    steps:
+        - checkout
+        - restore_cache:
+            keys:
+                - functions-dependencies-{{ checksum "functions/package.json" }}
+                - functions-dependencies-
+        - run:
+            name: Download functions dependencies
+            command: npm --prefix functions install
+        - save_cache:
+            paths:
+                - functions/node_modules
+            key: functions-dependencies-{{ checksum "functions/package.json" }}
+        - persist_to_workspace:
+            root: ./
+            paths:
+              - functions/node_modules
+
+  lint-functions:
+    docker:
+        - image: circleci/node:8
+    steps:
+        - checkout
+        - attach_workspace:
+            at: ./
+        - run: npm --prefix functions run lint
+
+  build-functions:
+    docker:
+        - image: circleci/node:8
+    steps:
+        - checkout
+        - attach_workspace:
+            at: ./
+        - run: npm --prefix functions run build
+
+  install-tooling-dependencies:
+    docker:
+        - image: circleci/node:8
+    steps:
+        - checkout
+        - restore_cache:
+            keys:
+                - tooling-dependencies-{{ checksum "package.json" }}
+                - tooling-dependencies-
+        - run: npm install
+        - save_cache:
+            paths:
+                - node_modules
+            key: tooling-dependencies-{{ checksum "package.json" }}
+        - persist_to_workspace:
+            root: ./
+            paths:
+              - node_modules
+
+  deploy-firebase-app:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: npm run deploy -- --token=$FIREBASE_TOKEN --non-interactive
+
+  install-app-engine-cron-dependencies:
+    docker:
+        - image: circleci/python:2.7
+    steps:
+        - checkout
+        - restore_cache:
+            keys:
+                - app-engine-cron-dependencies-{{ checksum "cron/requirements.txt" }}
+                - app-engine-cron-dependencies-
+        - run: pip install --target cron/lib --requirement cron/requirements.txt
+        - save_cache:
+            paths:
+                - cron/lib
+            key: app-engine-cron-dependencies-{{ checksum "cron/requirements.txt" }}
+        - persist_to_workspace:
+            root: ./
+            paths:
+              - cron/lib
+
+  deploy-app-engine-cron:
+    environment:
+      GCLOUD_PROJECT: humeur-du-mois-2018
+    docker:
+      - image: google/cloud-sdk:206.0.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: echo $GCLOUD_SERVICE_ACCOUNT_KEY > ${HOME}/gcloud-service-key.json
+      - run: gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+      - run: gcloud config set project $GCLOUD_PROJECT
+      - run: gcloud app deploy cron/app.yaml cron/cron.yaml --promote
+
+workflows:
+  version: 2
+
+  build-and-deploy:
+    jobs:
+
+      - install-ui-dependencies
+      - build-ui:
+          requires:
+            - install-ui-dependencies
+      - build-ui-for-production:
+          requires:
+            - install-ui-dependencies
+
+      - install-functions-dependencies
+      - lint-functions:
+          requires:
+            - install-functions-dependencies
+      - build-functions:
+          requires:
+            - install-functions-dependencies
+
+      - install-tooling-dependencies
+      - deploy-firebase-app:
+          requires:
+            - install-tooling-dependencies
+            - build-ui
+            - build-ui-for-production
+            - lint-functions
+            - build-functions
+          filters:
+            branches:
+              only:
+                - master
+
+      - install-app-engine-cron-dependencies
+      - deploy-app-engine-cron:
+          requires:
+            - install-app-engine-cron-dependencies
+            - deploy-firebase-app
+          filters:
+            branches:
+              only:
+                - master
