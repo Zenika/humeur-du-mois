@@ -1,10 +1,10 @@
-import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+//@ts-ignore no types for this package
 import ScriptExtHtmlWebpackPlugin from "script-ext-html-webpack-plugin";
 import webpack from "webpack";
 
-export default (env, argv) => ({
+export default (): webpack.Configuration => ({
   mode: "development",
   entry: {
     main: "./src/index.ts"
