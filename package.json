@@ -1,8 +1,9 @@
 {
   "name": "humeur-du-mois-2018",
   "scripts": {
-    "start": "npm --prefix functions run build && npm --prefix ui run build && npm run firebase serve",
+    "start": "npm --prefix functions run build && npm --prefix ui run build && npm run serve",
     "deploy": "npm run firebase deploy",
+    "serve": "npx node@6.11.5 ./node_modules/firebase-tools/bin/firebase serve",
     "firebase": "firebase"
   },
   "devDependencies": {
