@@ -1,12 +1,15 @@
 {
   "name": "humeur-du-mois-2018",
   "scripts": {
-    "start": "npm --prefix functions run build && npm --prefix ui run build && npm run serve",
-    "deploy": "npm run firebase deploy",
+    "start": "run-p serve functions:build:watch ui:build:watch",
     "serve": "npx node@6.11.5 ./node_modules/firebase-tools/bin/firebase serve",
-    "firebase": "firebase"
+    "deploy": "npm run firebase deploy",
+    "firebase": "firebase",
+    "functions:build:watch": "npm --prefix functions run build:watch",
+    "ui:build:watch": "npm --prefix ui run build:watch"
   },
   "devDependencies": {
-    "firebase-tools": "3.19.3"
+    "firebase-tools": "3.19.3",
+    "npm-run-all": "4.1.3"
   }
 }
