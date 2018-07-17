@@ -1,4 +1,4 @@
 cron:
   - description: Push a "tick" onto pubsub every day
     url: /publish/daily-tick
-    schedule: every 24 hours
+    schedule: every 24 hours synchronized
