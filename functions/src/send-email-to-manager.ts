@@ -41,7 +41,7 @@ export const sendEmailToManager = functions.firestore
     }
 
     const message = {
-      from: "Humeur du mois 2018 <humeur-du-mois-2018@zenika.com>",
+      from: "Humeur du mois <humeur-du-mois@zenika.com>",
       to: config.mailgun.recipientoverride || employee.managerEmail,
       "h:Reply-To": employee.email,
       subject: `${employee.fullName} has shared how they feel`,
