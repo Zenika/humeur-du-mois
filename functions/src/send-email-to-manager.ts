@@ -49,7 +49,7 @@ export const sendEmailToManager = functions.firestore
         <p>Hi ${employee.managerEmail},</p>
         <p>${employee.fullName} has shared how they feel: "${
         response.response
-      }".
+      }".</p>
         <p>See you soon!</p>
       `
     };
