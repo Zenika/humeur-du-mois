@@ -10,3 +10,4 @@ export {
 export {
   importEmployeesFromAlibeezHttp
 } from "./import-employees-from-alibeez-http";
+export { sendEmailToManager } from "./send-email-to-manager";

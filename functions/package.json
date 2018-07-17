@@ -11,11 +11,13 @@
     "cors": "2.8.4",
     "firebase-admin": "5.12.1",
     "firebase-functions": "1.1.0",
+    "mailgun-js": "0.20.0",
     "node-fetch": "2.1.2"
   },
   "devDependencies": {
     "@types/auth0-js": "8.11.2",
     "@types/cors": "2.8.4",
+    "@types/mailgun-js": "0.16.0",
     "@types/node-fetch": "2.1.1",
     "tslint": "5.10.0",
     "typescript": "2.9.2"
