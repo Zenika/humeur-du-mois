@@ -3,7 +3,11 @@ import * as firebase from "firebase-admin";
 firebase.initializeApp();
 
 export { exchangeToken } from "./exchange-token";
-export { saveDailyTick } from "./save-daily-tick";
+export {
+  saveDailyTick,
+  saveEndOfMonthStartsTick,
+  saveEndOfMonthEndsTick
+} from "./save-ticks";
 export {
   importEmployeesFromAlibeezDaily
 } from "./import-employees-from-alibeez-daily";

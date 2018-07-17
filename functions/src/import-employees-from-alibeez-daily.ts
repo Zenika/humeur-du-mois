@@ -5,7 +5,7 @@ import {
 } from "./import-employees-from-alibeez";
 
 export const importEmployeesFromAlibeezDaily = functions.firestore
-  .document("daily-ticks/{tickId}")
+  .document("daily-tick/{tickId}")
   .onCreate(async () => {
     const config = functions.config();
     if (!ensureAlibeezApiConfigIsValid(config)) {

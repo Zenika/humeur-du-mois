@@ -13,13 +13,13 @@
 # limitations under the License.
 
 import webapp2
-import time
 import json
 import pubsub_utils
+from datetime import datetime
 
 class PushToPubSub(webapp2.RequestHandler):
     def get(self, topic):
-        pubsub_utils.publish_to_topic(topic, str(time.time()))
+        pubsub_utils.publish_to_topic(topic, datetime.now().isoformat())
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json.dumps({"status": "200"}))
