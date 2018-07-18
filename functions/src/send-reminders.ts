@@ -11,6 +11,11 @@ const mailgunClient = mailgun({
 export const sendEndOfMonthStartsReminder = functions.firestore
   .document("end-of-month-starts-tick/{tickId}")
   .onCreate(async tickSnapshot => {
+    if (config.features.reminders.endofmonth.start !== "true") {
+      console.warn(`Feature is disabled, aborting (features.reminders.endofmonth.start=${config.features.reminders.endofmonth.start}).`)
+      return;
+    }
+
     const tick = tickSnapshot.data();
     if (!tick) {
       throw new Error(
