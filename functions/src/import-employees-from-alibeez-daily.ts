@@ -1,15 +1,13 @@
 import * as functions from "firebase-functions";
 import {
-  ensureAlibeezApiConfigIsValid,
   importEmployeesFromAlibeez
 } from "./import-employees-from-alibeez";
+import { Config } from "./config";
+
+const config = functions.config() as Config;
 
 export const importEmployeesFromAlibeezDaily = functions.firestore
   .document("daily-tick/{tickId}")
   .onCreate(async () => {
-    const config = functions.config();
-    if (!ensureAlibeezApiConfigIsValid(config)) {
-      throw new Error("Incomplete configuration");
-    }
-    await importEmployeesFromAlibeez(config.tyk.proxybeez);
+    await importEmployeesFromAlibeez(config.alibeez);
   });

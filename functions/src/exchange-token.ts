@@ -1,5 +1,5 @@
 /**
- * Connects Auth0 with the firebase Authentication system.
+ * Connects Auth0 with the Firebase authentication system.
  *
  * Inspired by https://community.auth0.com/t/no-way-to-delegate-firebase-token-with-v8-web-sdk/6904/7.
  */
@@ -7,14 +7,9 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import * as auth0 from "auth0-js";
+import { Config } from "./config";
 
-interface Config {
-  serviceaccount?: string;
-  auth0?: {
-    domain?: string;
-    clientid?: string;
-  };
-}
+const config = functions.config() as Config;
 
 export const exchangeToken = functions.https.onRequest((request, response) => {
   const { userId, accessToken } = request.body;
@@ -22,25 +17,19 @@ export const exchangeToken = functions.https.onRequest((request, response) => {
     response.status(400).send("Missing fields in request body");
     return;
   }
-  const config: Config = functions.config() as Config;
-  if (
-    !config.serviceaccount ||
-    !config.auth0 ||
-    !config.auth0.domain ||
-    !config.auth0.clientid
-  ) {
-    response.status(500).send("Incomplete configuration");
-    return;
-  }
 
   const auth0WebAuth = new auth0.WebAuth({
     domain: config.auth0.domain,
-    clientID: config.auth0.clientid
+    clientID: config.auth0.client_id
   });
 
   const exchangeTokenApp = admin.initializeApp(
     {
-      credential: admin.credential.cert(config.serviceaccount)
+      credential: admin.credential.cert({
+        clientEmail: config.service_account.client_email,
+        privateKey: config.service_account.private_key,
+        projectId: config.service_account.project_id
+      })
     },
     "exchangeToken"
   );

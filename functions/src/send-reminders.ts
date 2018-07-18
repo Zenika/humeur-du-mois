@@ -1,21 +1,22 @@
 import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
 import * as mailgun from "mailgun-js";
+import { Config } from "./config";
 
 const db = firebase.firestore();
-const config = functions.config();
+const config = functions.config() as Config;
 const mailgunClient = mailgun({
   domain: config.mailgun.domain,
-  apiKey: config.mailgun.apikey
+  apiKey: config.mailgun.api_key
 });
 
 export const sendEndOfMonthStartsReminder = functions.firestore
   .document("end-of-month-starts-tick/{tickId}")
   .onCreate(async tickSnapshot => {
-    if (config.features.reminders.endofmonth.start !== "true") {
+    if (config.features.reminders.end_of_month.start !== "true") {
       console.warn(
         `Feature is disabled, aborting (features.reminders.endofmonth.start=${
-          config.features.reminders.endofmonth.start
+          config.features.reminders.end_of_month.start
         }).`
       );
       return;
@@ -34,7 +35,7 @@ export const sendEndOfMonthStartsReminder = functions.firestore
 
     const message = {
       from: "Humeur du mois <humeur-du-mois@zenika.com>",
-      to: config.mailgun.recipientoverride || "all@zenika.com",
+      to: config.mailgun.recipient_override || "all@zenika.com",
       subject: `Humeur du mois is open for ${monthLongName}!`,
       html: `
         <p>Hi,</p>

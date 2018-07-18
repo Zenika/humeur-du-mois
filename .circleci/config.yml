@@ -99,6 +99,18 @@ jobs:
           paths:
             - node_modules
 
+
+  validate-functions-config:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: node_modules/.bin/firebase --token=$FIREBASE_TOKEN functions:config:get > config.json
+      - run: npx typescript-json-schema --required --noExtraProps --out config-schema.json functions/src/config.ts Config
+      - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
+
   deploy-firebase-app:
     docker:
       - image: circleci/node:8
@@ -164,6 +176,9 @@ workflows:
             - install-functions-dependencies
 
       - install-tooling-dependencies
+      - validate-functions-config:
+          requires:
+            - install-tooling-dependencies
       - deploy-firebase-app:
           requires:
             - install-tooling-dependencies
@@ -171,6 +186,7 @@ workflows:
             - build-ui-for-production
             - lint-functions
             - build-functions
+            - validate-functions-config
           filters:
             branches:
               only:

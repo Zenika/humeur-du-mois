@@ -1,17 +1,12 @@
 import * as functions from "firebase-functions";
-import {
-  ensureAlibeezApiConfigIsValid,
-  importEmployeesFromAlibeez
-} from "./import-employees-from-alibeez";
+import { importEmployeesFromAlibeez } from "./import-employees-from-alibeez";
+import { Config } from "./config";
+
+const config = functions.config() as Config;
 
 export const importEmployeesFromAlibeezHttp = functions.https.onRequest(
   async (request, response) => {
-    const config = functions.config();
-    if (!ensureAlibeezApiConfigIsValid(config)) {
-      response.status(500).send("Incomplete configuration");
-      return;
-    }
-    await importEmployeesFromAlibeez(config.tyk.proxybeez);
+    await importEmployeesFromAlibeez(config.alibeez);
     response.sendStatus(200);
   }
 );

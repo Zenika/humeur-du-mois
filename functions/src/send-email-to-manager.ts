@@ -1,11 +1,12 @@
 import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
 import * as mailgun from "mailgun-js";
+import { Config } from "./config";
 
-const config = functions.config();
+const config = functions.config() as Config;
 const mailgunClient = mailgun({
   domain: config.mailgun.domain,
-  apiKey: config.mailgun.apikey
+  apiKey: config.mailgun.api_key
 });
 
 export const sendEmailToManager = functions.firestore
@@ -45,7 +46,7 @@ export const sendEmailToManager = functions.firestore
 
     const message = {
       from: "Humeur du mois <humeur-du-mois@zenika.com>",
-      to: config.mailgun.recipientoverride || employee.managerEmail,
+      to: config.mailgun.recipient_override || employee.managerEmail,
       "h:Reply-To": employee.email,
       subject: `${employee.fullName} has shared how they feel`,
       html: `

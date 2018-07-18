@@ -1,18 +1,6 @@
 import * as firebase from "firebase-admin";
 import fetch from "node-fetch";
-
-interface AlibeezApiConfig {
-  key: string;
-  url: string;
-}
-
-interface CompatibleTykConfig {
-  proxybeez: AlibeezApiConfig;
-}
-
-interface CompatibleFunctionsConfig {
-  tyk: CompatibleTykConfig;
-}
+import {AlibeezConfig} from "./config"
 
 interface AlibeezEmployee {
   fullName: string;
@@ -32,19 +20,7 @@ const obfuscateKey = key => {
   }
 };
 
-export const ensureAlibeezApiConfigIsValid = (
-  config: any
-): config is CompatibleFunctionsConfig => {
-  return (
-    config &&
-    config.tyk &&
-    config.tyk.proxybeez &&
-    config.tyk.proxybeez.key &&
-    config.tyk.proxybeez.url
-  );
-};
-
-export const importEmployeesFromAlibeez = async (config: AlibeezApiConfig) => {
+export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
   const requestRef = await firebase
     .firestore()
     .collection("alibeez-requests")
