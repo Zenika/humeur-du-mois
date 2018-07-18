@@ -39,6 +39,9 @@ export const sendEmailToManager = functions.firestore
         `cannot find user '${response.respondant}' in employee data`
       );
     }
+    if (!employee.managerEmail) {
+      return;
+    }
 
     const message = {
       from: "Humeur du mois <humeur-du-mois@zenika.com>",
