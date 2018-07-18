@@ -4,100 +4,100 @@ jobs:
 
   install-ui-dependencies:
     docker:
-        - image: circleci/node:8
+      - image: circleci/node:8
     steps:
-        - checkout
-        - restore_cache:
-            keys:
-                - ui-dependencies-{{ checksum "ui/package.json" }}
-                - ui-dependencies-
-        - run:
-            name: Download UI dependencies
-            command: npm --prefix ui install
-        - save_cache:
-            paths:
-                - ui/node_modules
-            key: ui-dependencies-{{ checksum "ui/package.json" }}
-        - persist_to_workspace:
-            root: ./
-            paths:
-              - ui/node_modules
+      - checkout
+      - restore_cache:
+          keys:
+            - ui-dependencies-{{ checksum "ui/package.json" }}
+            - ui-dependencies-
+      - run:
+          name: Download UI dependencies
+          command: npm --prefix ui install
+      - save_cache:
+          paths:
+            - ui/node_modules
+          key: ui-dependencies-{{ checksum "ui/package.json" }}
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ui/node_modules
 
   build-ui:
     docker:
-        - image: circleci/node:8
+      - image: circleci/node:8
     steps:
-        - checkout
-        - attach_workspace:
-            at: ./
-        - run: npm --prefix ui run build
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: npm --prefix ui run build
 
   build-ui-for-production:
     docker:
-        - image: circleci/node:8
+      - image: circleci/node:8
     steps:
-        - checkout
-        - attach_workspace:
-            at: ./
-        - run: npm --prefix ui run build:prod
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: npm --prefix ui run build:prod
 
   install-functions-dependencies:
     docker:
-        - image: circleci/node:8
+      - image: circleci/node:8
     steps:
-        - checkout
-        - restore_cache:
-            keys:
-                - functions-dependencies-{{ checksum "functions/package.json" }}
-                - functions-dependencies-
-        - run:
-            name: Download functions dependencies
-            command: npm --prefix functions install
-        - save_cache:
-            paths:
-                - functions/node_modules
-            key: functions-dependencies-{{ checksum "functions/package.json" }}
-        - persist_to_workspace:
-            root: ./
-            paths:
-              - functions/node_modules
+      - checkout
+      - restore_cache:
+          keys:
+            - functions-dependencies-{{ checksum "functions/package.json" }}
+            - functions-dependencies-
+      - run:
+          name: Download functions dependencies
+          command: npm --prefix functions install
+      - save_cache:
+          paths:
+            - functions/node_modules
+          key: functions-dependencies-{{ checksum "functions/package.json" }}
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - functions/node_modules
 
   lint-functions:
     docker:
-        - image: circleci/node:8
+      - image: circleci/node:8
     steps:
-        - checkout
-        - attach_workspace:
-            at: ./
-        - run: npm --prefix functions run lint
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: npm --prefix functions run lint
 
   build-functions:
     docker:
-        - image: circleci/node:8
+      - image: circleci/node:8
     steps:
-        - checkout
-        - attach_workspace:
-            at: ./
-        - run: npm --prefix functions run build
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: npm --prefix functions run build
 
   install-tooling-dependencies:
     docker:
-        - image: circleci/node:8
+      - image: circleci/node:8
     steps:
-        - checkout
-        - restore_cache:
-            keys:
-                - tooling-dependencies-{{ checksum "package.json" }}
-                - tooling-dependencies-
-        - run: npm install
-        - save_cache:
-            paths:
-                - node_modules
-            key: tooling-dependencies-{{ checksum "package.json" }}
-        - persist_to_workspace:
-            root: ./
-            paths:
-              - node_modules
+      - checkout
+      - restore_cache:
+          keys:
+            - tooling-dependencies-{{ checksum "package.json" }}
+            - tooling-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: tooling-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - node_modules
 
   deploy-firebase-app:
     docker:
@@ -110,22 +110,22 @@ jobs:
 
   install-app-engine-cron-dependencies:
     docker:
-        - image: circleci/python:2.7
+      - image: circleci/python:2.7
     steps:
-        - checkout
-        - restore_cache:
-            keys:
-                - app-engine-cron-dependencies-{{ checksum "cron/requirements.txt" }}
-                - app-engine-cron-dependencies-
-        - run: pip install --target cron/lib --requirement cron/requirements.txt
-        - save_cache:
-            paths:
-                - cron/lib
-            key: app-engine-cron-dependencies-{{ checksum "cron/requirements.txt" }}
-        - persist_to_workspace:
-            root: ./
-            paths:
-              - cron/lib
+      - checkout
+      - restore_cache:
+          keys:
+            - app-engine-cron-dependencies-{{ checksum "cron/requirements.txt" }}
+            - app-engine-cron-dependencies-
+      - run: pip install --target cron/lib --requirement cron/requirements.txt
+      - save_cache:
+          paths:
+            - cron/lib
+          key: app-engine-cron-dependencies-{{ checksum "cron/requirements.txt" }}
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - cron/lib
 
   deploy-app-engine-cron:
     environment:
