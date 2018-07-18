@@ -107,9 +107,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: ./
-      - run: node_modules/.bin/firebase --token=$FIREBASE_TOKEN functions:config:get > config.json
-      - run: npx typescript-json-schema --required --noExtraProps --out config-schema.json functions/src/config.ts Config
-      - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
+      - run: npm --silent run firebase functions:config:get -- --token=$FIREBASE_TOKEN > functions/.runtimeconfig.json
+      - run: npm --prefix functions run generate-config-schema
+      - run: npm --prefix functions run validate-runtime-config
 
   deploy-firebase-app:
     docker:

@@ -3,7 +3,11 @@
   "scripts": {
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
-    "build:watch": "npm run build -- --watch"
+    "build:watch": "npm run build -- --watch",
+    "validate-config": "npm run generate-runtime-config && npm run generate-config-schema && npm run validate-runtime-config",
+    "generate-config-schema": "typescript-json-schema --required --noExtraProps --out config-schema.json src/config.ts Config",
+    "generate-runtime-config": "npm --silent --prefix .. run firebase functions:config:get > .runtimeconfig.json",
+    "validate-runtime-config": "ajv validate -s config-schema.json -d .runtimeconfig.json"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -19,8 +23,10 @@
     "@types/cors": "2.8.4",
     "@types/mailgun-js": "0.16.0",
     "@types/node-fetch": "2.1.1",
+    "ajv-cli": "3.0.0",
     "tslint": "5.10.0",
-    "typescript": "2.9.2"
+    "typescript": "2.9.2",
+    "typescript-json-schema": "0.27.0"
   },
   "private": true
 }
