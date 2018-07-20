@@ -51,9 +51,10 @@ export const sendEmailToManager = functions.firestore
       subject: `${employee.fullName} has shared how they feel`,
       html: `
         <p>Hi ${employee.managerEmail},</p>
-        <p>${employee.fullName} has shared how they feel: "${
-        response.response
-      }".</p>
+        <p>
+          ${employee.fullName} has shared how they feel:
+          "${response.response}".
+        </p>
         <p>See you soon!</p>
       `
     };
