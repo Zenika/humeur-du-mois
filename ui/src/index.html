@@ -6,13 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Humeur du mois 2018</title>
 
-  <script defer src="https://cdn.auth0.com/js/auth0/9.3.3/auth0.min.js"></script>
+  <script defer src="https://cdn.auth0.com/js/auth0/9.6.1/auth0.min.js"></script>
 
   <!-- update the version number as needed -->
-  <script defer src="/__/firebase/4.11.0/firebase-app.js"></script>
+  <script defer src="/__/firebase/5.3.0/firebase-app.js"></script>
   <!-- include only the Firebase features as you need -->
-  <script defer src="/__/firebase/4.11.0/firebase-auth.js"></script>
-  <script defer src="/__/firebase/4.11.0/firebase-firestore.js"></script>
+  <script defer src="/__/firebase/5.3.0/firebase-auth.js"></script>
+  <script defer src="/__/firebase/5.3.0/firebase-firestore.js"></script>
   <!-- initialize the SDK after all desired features are loaded -->
   <script defer src="/__/firebase/init.js"></script>
 </head>
@@ -35,6 +35,14 @@
   <div id="thankYouPage" class="page hidden">
     <h2>Thanks!</h2>
     <h1>Your answer was properly recorded.</h1>
+  </div>
+  <div id="noCampaignPage" class="page hidden">
+    <h2>We're closed!</h2>
+    <h1>There is no voting going on right now.</h1>
+  </div>
+  <div id="alreadyVotedPage" class="page hidden">
+    <h2>We're closed!</h2>
+    <h1>Looks like you've already voted this month.</h1>
   </div>
   <div id="errorPage" class="page hidden">
     <h2>There was an error!</h2>

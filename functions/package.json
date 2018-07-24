@@ -2,6 +2,8 @@
   "name": "functions",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
+    "test": "ava",
+    "test:watch": "ava --watch",
     "build": "tsc",
     "build:watch": "npm run build -- --watch"
   },
@@ -19,11 +21,22 @@
     "@types/cors": "2.8.4",
     "@types/mailgun-js": "0.16.0",
     "@types/node-fetch": "2.1.1",
+    "ava": "0.25.0",
+    "ts-node": "7.0.0",
     "tslint": "5.10.0",
     "typescript": "2.9.2"
   },
   "engines": {
     "node": "8"
   },
-  "private": true
+  "private": true,
+  "ava": {
+    "compileEnhancements": false,
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  }
 }

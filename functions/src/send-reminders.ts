@@ -1,35 +1,59 @@
 import * as functions from "firebase-functions";
-import * as firebase from "firebase-admin";
+import { firestore } from "firebase-admin";
 import * as mailgun from "mailgun-js";
-import { Config } from "./config";
+import { Tick } from "./save-ticks";
+import { selectCampaign } from "./select-campaign";
+import { Config, isEnabled, asNumber } from "./config";
 
-const db = firebase.firestore();
+const db = firestore();
 const config = functions.config() as Config;
 const mailgunClient = mailgun({
   domain: config.mailgun.domain,
   apiKey: config.mailgun.api_key
 });
 
-export const sendEndOfMonthStartsReminder = functions.firestore
-  .document("end-of-month-starts-tick/{tickId}")
+export const sendCampaignStartsReminder = functions.firestore
+  .document("daily-tick/{tickId}")
   .onCreate(async tickSnapshot => {
-    if (config.features.reminders.end_of_month.start !== "true") {
-      console.warn(
-        `Feature is disabled, aborting (features.reminders.endofmonth.start=${
-          config.features.reminders.end_of_month.start
-        }).`
-      );
+    if (!isEnabled(config.features.reminders.voting_campaign_starts)) {
       return;
     }
 
-    const tick = tickSnapshot.data();
-    if (!tick) {
-      throw new Error(
-        "sendEndOfMonthStartsReminder was triggered but no tick was found"
-      );
+    const tick = tickSnapshot.data()! as Tick;
+    const tickDate = tick.emittedAt.toDate();
+    const campaign = selectCampaign(tickDate, {
+      enabled: isEnabled(config.features.voting_campaigns),
+      startOn: asNumber(config.features.voting_campaigns.start_on),
+      endOn: asNumber(config.features.voting_campaigns.end_on)
+    });
+    if (!campaign) {
+      return;
     }
-    const tickEmissionDate = new Date(tick.emittedAt);
-    const monthLongName = tickEmissionDate.toLocaleString("en-us", {
+
+    const [campaignYear, campaignMonth] = campaign;
+    const campaignId = new Date(Date.UTC(campaignYear, campaignMonth))
+      .toISOString()
+      .substr(0, 7);
+
+    const campaignAlreadyExisted = await db.runTransaction(async transaction => {
+      const campaignRef = db.collection("voting-campaign").doc(campaignId);
+      const campaignSnapshot = await transaction.get(campaignRef);
+      if (campaignSnapshot.exists) {
+        return true;
+      } else {
+        await transaction.create(campaignRef, {
+          recordedAt: firestore.Timestamp.now(),
+          createdBy: tickSnapshot.ref
+        });
+        return false;
+      }
+    });
+
+    if (campaignAlreadyExisted) {
+      return;
+    }
+
+    const monthLongName = tickDate.toLocaleString("en-us", {
       month: "long"
     });
 
@@ -48,15 +72,15 @@ export const sendEndOfMonthStartsReminder = functions.firestore
     };
 
     const reminderRef = await db
-      .collection("end-of-month-starts-reminders")
+      .collection("voting-campaign-starts-reminders")
       .add({
-        at: new Date().toISOString(),
-        tick: tickSnapshot.ref,
+        recordedAt: firestore.Timestamp.now(),
+        votingCampaign: tickSnapshot.ref,
         message
       });
 
     await db.runTransaction(async transaction => {
       await mailgunClient.messages().send(message);
-      transaction.update(reminderRef, { sentAt: new Date().toISOString() });
+      transaction.update(reminderRef, { sentAt: firestore.Timestamp.now() });
     });
   });

@@ -3,11 +3,3 @@ cron:
   - description: Push a "tick" onto pubsub every day
     url: /publish/daily-tick
     schedule: every 24 hours synchronized
-
-  - description: Push a "tick" onto pubsub when the end of the month starts
-    url: /publish/end-of-month-starts-tick
-    schedule: 25 of month 00:00
-
-  - description: Push a "tick" onto pubsub when the end of the month ends
-    url: /publish/end-of-month-ends-tick
-    schedule: 5 of month 00:00

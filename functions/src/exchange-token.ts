@@ -10,9 +10,28 @@ import * as auth0 from "auth0-js";
 import { Config } from "./config";
 
 const config = functions.config() as Config;
+const exchangeTokenApp = admin.initializeApp(
+  {
+    credential: admin.credential.cert({
+      clientEmail: config.service_account.client_email,
+      privateKey: config.service_account.private_key,
+      projectId: config.service_account.project_id
+    })
+  },
+  "exchangeToken"
+);
 
+interface RequestPayload {
+  userId?: string;
+  accessToken?: string;
+}
+
+/**
+ * Cannot use functions.https.onCall here because this function is called
+ * before the user is authenticated to Firebase.
+ */
 export const exchangeToken = functions.https.onRequest((request, response) => {
-  const { userId, accessToken } = request.body;
+  const { userId, accessToken } = request.body as RequestPayload;
   if (!userId || !accessToken) {
     response.status(400).send("Missing fields in request body");
     return;
@@ -23,35 +42,22 @@ export const exchangeToken = functions.https.onRequest((request, response) => {
     clientID: config.auth0.client_id
   });
 
-  const exchangeTokenApp = admin.initializeApp(
-    {
-      credential: admin.credential.cert({
-        clientEmail: config.service_account.client_email,
-        privateKey: config.service_account.private_key,
-        projectId: config.service_account.project_id
-      })
-    },
-    "exchangeToken"
-  );
-
-  auth0WebAuth.client.userInfo(accessToken, (userInfoErr, user) => {
+  auth0WebAuth.client.userInfo(accessToken, async (userInfoErr, user) => {
     if (userInfoErr) {
       console.error(userInfoErr);
       response.status(401).send("Unauthorized");
-    } else {
-      if (userId === user.sub) {
-        exchangeTokenApp
-          .auth()
-          .createCustomToken(userId)
-          .then(customToken => {
-            response.send(customToken);
-          })
-          .catch(error => {
-            response.status(500).send("Error creating custom token");
-          });
-      } else {
-        response.status(401).send("userId and accessToken do not match");
-      }
+      return;
+    } else if (userId !== user.sub) {
+      response.status(401).send("userId and accessToken do not match");
+      return;
+    }
+    try {
+      const customToken = await exchangeTokenApp
+        .auth()
+        .createCustomToken(userId);
+      response.send(customToken);
+    } catch (err) {
+      response.status(500).send("Error creating custom token");
     }
   });
 });
