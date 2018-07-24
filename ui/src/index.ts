@@ -31,6 +31,10 @@ window.addEventListener("load", async function() {
     hideAllPages();
     show(incoming);
   };
+  const errorOut = (err: Error) => {
+    console.error(err);
+    changePageTo(errorPage);
+  }
 
   try {
     const session = await authenticateAuth0({
@@ -46,8 +50,8 @@ window.addEventListener("load", async function() {
     userId.innerText = session.user.email;
     changePageTo(homePage);
   } catch (err) {
-    console.error(err);
-    changePageTo(errorPage);
+    errorOut(err);
+    return;
   }
 
   async function enableFirestore(userId: string) {
@@ -76,12 +80,17 @@ window.addEventListener("load", async function() {
       show(managerNotice);
     }
 
-    const saveResponse = (response: string) => {
-      db.collection("responses").add({
-        respondant: userId,
-        response: response,
-        instant: new Date().toISOString()
-      });
+    const saveResponse = async (response: string) => {
+      try {
+        await db.collection("responses").add({
+          respondant: userId,
+          response: response,
+          instant: new Date().toISOString()
+        });
+      } catch (err) {
+        errorOut(err);
+        return;
+      }
       changePageTo(thankYouPage);
     };
 
