@@ -5,11 +5,11 @@
   },
   "functions": {
     "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run build"
+      "npm --prefix functions run build"
     ]
   },
   "hosting": {
-    "predeploy": ["npm --prefix \"ui\" run build:prod"],
+    "predeploy": ["npm --prefix ui run build:prod"],
     "public": "ui/dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
