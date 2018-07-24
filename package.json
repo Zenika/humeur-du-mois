@@ -12,7 +12,7 @@
     "ui:build:watch": "npm --prefix ui run build:watch"
   },
   "devDependencies": {
-    "firebase-tools": "3.19.3",
+    "firebase-tools": "4.0.0",
     "npm-run-all": "4.1.3"
   }
 }
