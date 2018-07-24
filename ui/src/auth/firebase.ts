@@ -11,5 +11,5 @@ export async function authenticate({ user, accessToken }: Session) {
     throw new Error("Could not exchange token");
   }
   const firebaseToken = await response.text();
-  await firebase.auth().signInWithCustomToken(firebaseToken);
+  return await firebase.auth().signInWithCustomToken(firebaseToken);
 }

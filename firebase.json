@@ -18,12 +18,12 @@
         "function": "exchangeToken"
       },
       {
-        "source": "/api/importEmployeesFromAlibeezHttp",
-        "function": "importEmployeesFromAlibeezHttp"
+        "source": "/api/getCampaign",
+        "function": "getCampaign"
       },
       {
-        "source": "**",
-        "destination": "/index.html"
+        "source": "/api/castVote",
+        "function": "castVote"
       }
     ]
   }

@@ -10,8 +10,17 @@ window.addEventListener("load", async function() {
   const loggingInPage = document.getElementById("loggingInPage")!;
   const homePage = document.getElementById("homePage")!;
   const thankYouPage = document.getElementById("thankYouPage")!;
+  const noCampaignPage = document.getElementById("noCampaignPage")!;
+  const alreadyVotedPage = document.getElementById("alreadyVotedPage")!;
   const errorPage = document.getElementById("errorPage")!;
-  const pages = [loggingInPage, homePage, thankYouPage, errorPage];
+  const pages = [
+    loggingInPage,
+    homePage,
+    thankYouPage,
+    noCampaignPage,
+    alreadyVotedPage,
+    errorPage
+  ];
   const errorMessage = document.getElementById("errorMessage")!;
   const userId = document.getElementById("userId")!;
   const managerNotice = document.getElementById("managerNotice")!;
@@ -34,21 +43,20 @@ window.addEventListener("load", async function() {
   const errorOut = (err: Error) => {
     console.error(err);
     changePageTo(errorPage);
-  }
+  };
 
   try {
     const session = await authenticateAuth0({
       ...AUTH0_CONFIG,
       redirectUri: window.location.href
     });
-    if (!session) return; // this means an redirect has been issued
+    if (!session) return; // this means a redirect has been issued
     if (!session.user.email) {
       throw new Error("expected user to have email but it did not");
     }
     await authenticateFirebase(session);
-    enableFirestore(session.user.email);
     userId.innerText = session.user.email;
-    changePageTo(homePage);
+    enableFirestore(session.user.email);
   } catch (err) {
     errorOut(err);
     return;
@@ -56,6 +64,48 @@ window.addEventListener("load", async function() {
 
   async function enableFirestore(userId: string) {
     const db = firebase.firestore();
+    db.settings({ timestampsInSnapshots: true });
+
+    const getCampaign = async () => {
+      const cred = await firebase.auth().currentUser!.getIdToken();
+      const response = await fetch("/api/getCampaign", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cred}`
+        },
+        body: JSON.stringify({ data: {} })
+      });
+      const { result } = await response.json();
+      return { data: result };
+    };
+    const castVote = async (data: { vote: string }) => {
+      const response = await fetch("/api/castVote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${await firebase
+            .auth()
+            .currentUser!.getIdToken()}`
+        },
+        body: JSON.stringify({ data })
+      });
+      const responseBody = await response.json();
+      if (!response.ok) {
+        throw responseBody.error;
+      }
+      return { data: responseBody.result };
+    };
+
+    const response = await getCampaign();
+    const campaign = response.data.campaign;
+
+    if (campaign) {
+      changePageTo(homePage);
+    } else {
+      changePageTo(noCampaignPage);
+      return;
+    }
 
     const latestImport = await db
       .collection("employee-imports")
@@ -73,7 +123,7 @@ window.addEventListener("load", async function() {
       .get();
     const employee = employeeSnapshot.data();
     if (!employee) {
-      throw new Error(`cannot find user '${userId}' in employee data`)
+      throw new Error(`cannot find user '${userId}' in employee data`);
     }
     if (employee.managerEmail) {
       managerName.innerText = employee.managerEmail;
@@ -82,13 +132,13 @@ window.addEventListener("load", async function() {
 
     const saveResponse = async (response: string) => {
       try {
-        await db.collection("responses").add({
-          respondant: userId,
-          response: response,
-          instant: new Date().toISOString()
-        });
+        await castVote({ vote: response, voter: employee.email });
       } catch (err) {
-        errorOut(err);
+        if (err.status === "ALREADY_EXISTS") {
+          changePageTo(alreadyVotedPage);
+        } else {
+          errorOut(err.message);
+        }
         return;
       }
       changePageTo(thankYouPage);

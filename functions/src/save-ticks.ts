@@ -1,21 +1,21 @@
-import * as firebase from "firebase-admin";
+import { firestore } from "firebase-admin";
 import * as functions from "firebase-functions";
+
+export interface Tick {
+  receivedAt: firestore.Timestamp;
+  emittedAt: firestore.Timestamp;
+}
 
 const pubSubToFirestoreFunction = topic =>
   functions.pubsub.topic(topic).onPublish(event =>
-    firebase
-      .firestore()
+    firestore()
       .collection(topic)
       .add({
-        receivedAt: new Date().toISOString(),
-        emittedAt: Buffer.from(event.data, "base64").toString()
-      })
+        receivedAt: firestore.Timestamp.now(),
+        emittedAt: firestore.Timestamp.fromDate(
+          new Date(Buffer.from(event.data, "base64").toString())
+        )
+      } as Tick)
   );
 
 export const saveDailyTick = pubSubToFirestoreFunction("daily-tick");
-export const saveEndOfMonthStartsTick = pubSubToFirestoreFunction(
-  "end-of-month-starts-tick"
-);
-export const saveEndOfMonthEndsTick = pubSubToFirestoreFunction(
-  "end-of-month-ends-tick"
-);

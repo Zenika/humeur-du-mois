@@ -1,14 +1,11 @@
 import * as firebase from "firebase-admin";
 
 firebase.initializeApp();
+firebase.firestore().settings({ timestampsInSnapshots: true });
 
 export { exchangeToken } from "./exchange-token";
 
-export {
-  saveDailyTick,
-  saveEndOfMonthStartsTick,
-  saveEndOfMonthEndsTick
-} from "./save-ticks";
+export { saveDailyTick } from "./save-ticks";
 
 export {
   importEmployeesFromAlibeezDaily
@@ -20,4 +17,8 @@ export {
 
 export { sendEmailToManager } from "./send-email-to-manager";
 
-export { sendEndOfMonthStartsReminder } from "./send-reminders";
+export { sendCampaignStartsReminder } from "./send-reminders";
+
+export { getCampaign } from "./get-campaign";
+
+export { castVote } from "./cast-vote";

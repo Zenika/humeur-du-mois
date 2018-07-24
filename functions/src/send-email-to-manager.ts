@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
 import * as mailgun from "mailgun-js";
 import { Config } from "./config";
+import { Vote } from "./cast-vote";
 
 const config = functions.config() as Config;
 const mailgunClient = mailgun({
@@ -10,14 +11,9 @@ const mailgunClient = mailgun({
 });
 
 export const sendEmailToManager = functions.firestore
-  .document("responses/{responseId}")
-  .onCreate(async responseSnapshot => {
-    const response = responseSnapshot.data();
-    if (!response) {
-      throw new Error(
-        "sendEmailToManager was triggered but no response was found"
-      );
-    }
+  .document("vote/{voteId}")
+  .onCreate(async voteSnapshot => {
+    const vote = voteSnapshot.data()! as Vote;
 
     const latestImport = await firebase
       .firestore()
@@ -32,13 +28,11 @@ export const sendEmailToManager = functions.firestore
 
     const employeeSnapshot = await latestImport.ref
       .collection("employees")
-      .doc(response.respondant)
+      .doc(vote.voter)
       .get();
     const employee = employeeSnapshot.data();
     if (!employee) {
-      throw new Error(
-        `cannot find user '${response.respondant}' in employee data`
-      );
+      throw new Error(`cannot find user '${vote.voter}' in employee data`);
     }
     if (!employee.managerEmail) {
       return;
@@ -53,7 +47,7 @@ export const sendEmailToManager = functions.firestore
         <p>Hi ${employee.managerEmail},</p>
         <p>
           ${employee.fullName} has shared how they feel:
-          "${response.response}".
+          "${vote.value}".
         </p>
         <p>See you soon!</p>
       `
@@ -61,9 +55,9 @@ export const sendEmailToManager = functions.firestore
 
     await firebase.firestore().runTransaction(async transaction => {
       await mailgunClient.messages().send(message);
-      transaction.update(responseSnapshot.ref, {
-        emailSent: true,
-        respondant: "*REDACTED*"
+      transaction.update(voteSnapshot.ref, {
+        emailToManagerSent: true,
+        voter: "*REDACTED*"
       });
     });
   });
