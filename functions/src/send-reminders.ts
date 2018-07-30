@@ -16,6 +16,7 @@ export const sendCampaignStartsReminder = functions.firestore
   .document("daily-tick/{tickId}")
   .onCreate(async tickSnapshot => {
     if (!isEnabled(config.features.reminders.voting_campaign_starts)) {
+      console.warn("feature is disabled; aborting");
       return;
     }
 
