@@ -36,19 +36,21 @@ export const sendCampaignStartsReminder = functions.firestore
       .toISOString()
       .substr(0, 7);
 
-    const campaignAlreadyExisted = await db.runTransaction(async transaction => {
-      const campaignRef = db.collection("voting-campaign").doc(campaignId);
-      const campaignSnapshot = await transaction.get(campaignRef);
-      if (campaignSnapshot.exists) {
-        return true;
-      } else {
-        await transaction.create(campaignRef, {
-          recordedAt: firestore.Timestamp.now(),
-          createdBy: tickSnapshot.ref
-        });
-        return false;
+    const campaignAlreadyExisted = await db.runTransaction(
+      async transaction => {
+        const campaignRef = db.collection("voting-campaign").doc(campaignId);
+        const campaignSnapshot = await transaction.get(campaignRef);
+        if (campaignSnapshot.exists) {
+          return true;
+        } else {
+          await transaction.create(campaignRef, {
+            recordedAt: firestore.Timestamp.now(),
+            createdBy: tickSnapshot.ref
+          });
+          return false;
+        }
       }
-    });
+    );
 
     if (campaignAlreadyExisted) {
       return;
