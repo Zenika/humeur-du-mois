@@ -11,10 +11,6 @@ export {
   importEmployeesFromAlibeezDaily
 } from "./import-employees-from-alibeez-daily";
 
-export {
-  importEmployeesFromAlibeezHttp
-} from "./import-employees-from-alibeez-http";
-
 export { sendEmailToManager } from "./send-email-to-manager";
 
 export { sendCampaignStartsReminder } from "./send-reminders";
