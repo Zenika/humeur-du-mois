@@ -1,15 +1,8 @@
 import firebase from "firebase/app";
 import { Session } from "./session-repository";
+import { exchangeToken } from "../api";
 
 export async function authenticate({ user, accessToken }: Session) {
-  const response = await fetch("/api/exchangeToken", {
-    method: "POST",
-    body: JSON.stringify({ userId: user.sub, accessToken: accessToken }),
-    headers: { "Content-Type": "application/json" }
-  });
-  if (!response.ok) {
-    throw new Error("Could not exchange token");
-  }
-  const firebaseToken = await response.text();
-  return await firebase.auth().signInWithCustomToken(firebaseToken);
+  const response = await exchangeToken({userId: user.sub, accessToken: accessToken})
+  return await firebase.auth().signInWithCustomToken(response.token);
 }

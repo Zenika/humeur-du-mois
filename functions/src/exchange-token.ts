@@ -26,14 +26,16 @@ interface RequestPayload {
   accessToken?: string;
 }
 
+const errorResponse = message => ({ error: { message } });
+
 /**
  * Cannot use functions.https.onCall here because this function is called
  * before the user is authenticated to Firebase.
  */
 export const exchangeToken = functions.https.onRequest((request, response) => {
-  const { userId, accessToken } = request.body as RequestPayload;
+  const { userId, accessToken } = request.body.data as RequestPayload;
   if (!userId || !accessToken) {
-    response.status(400).send("Missing fields in request body");
+    response.status(400).send(errorResponse("Missing fields in request body"));
     return;
   }
 
@@ -45,19 +47,21 @@ export const exchangeToken = functions.https.onRequest((request, response) => {
   auth0WebAuth.client.userInfo(accessToken, async (userInfoErr, user) => {
     if (userInfoErr) {
       console.error(userInfoErr);
-      response.status(401).send("Unauthorized");
+      response.status(401).send(errorResponse("Unauthorized"));
       return;
     } else if (userId !== user.sub) {
-      response.status(401).send("userId and accessToken do not match");
+      response
+        .status(401)
+        .send(errorResponse("userId and accessToken do not match"));
       return;
     }
     try {
       const customToken = await exchangeTokenApp
         .auth()
         .createCustomToken(userId);
-      response.send(customToken);
+      response.send({ result: { token: customToken } });
     } catch (err) {
-      response.status(500).send("Error creating custom token");
+      response.status(500).send(errorResponse("Error creating custom token"));
     }
   });
 });
