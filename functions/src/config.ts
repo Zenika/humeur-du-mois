@@ -101,9 +101,14 @@ export interface VotingCampaignsConfig {
   end_on: DayOfMonth;
 }
 
+export interface DailyAlibeezImportConfig {
+  enabled: Flag;
+}
+
 export interface FeaturesConfig {
   voting_campaigns: VotingCampaignsConfig;
   reminders: RemindersConfig;
+  daily_alibeez_import: DailyAlibeezImportConfig;
 }
 
 export interface AlibeezConfig {
