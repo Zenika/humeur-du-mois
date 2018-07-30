@@ -28,6 +28,7 @@ export const sendCampaignStartsReminder = functions.firestore
       endOn: asNumber(config.features.voting_campaigns.end_on)
     });
     if (!campaign) {
+      console.warn("no campaign currently open; aborting");
       return;
     }
 
@@ -35,15 +36,17 @@ export const sendCampaignStartsReminder = functions.firestore
     const campaignId = new Date(Date.UTC(campaignYear, campaignMonth))
       .toISOString()
       .substr(0, 7);
+    const reminderRef = db
+      .collection("voting-campaign-starts-reminder")
+      .doc(campaignId);
 
-    const campaignAlreadyExisted = await db.runTransaction(
+    const reminderAlreadySent = await db.runTransaction(
       async transaction => {
-        const campaignRef = db.collection("voting-campaign").doc(campaignId);
-        const campaignSnapshot = await transaction.get(campaignRef);
-        if (campaignSnapshot.exists) {
+        const reminderSnapshot = await transaction.get(reminderRef);
+        if (reminderSnapshot.exists) {
           return true;
         } else {
-          await transaction.create(campaignRef, {
+          await transaction.create(reminderRef, {
             recordedAt: firestore.Timestamp.now(),
             createdBy: tickSnapshot.ref
           });
@@ -52,7 +55,8 @@ export const sendCampaignStartsReminder = functions.firestore
       }
     );
 
-    if (campaignAlreadyExisted) {
+    if (reminderAlreadySent) {
+      console.warn("reminder already sent; aborting");
       return;
     }
 
@@ -74,13 +78,9 @@ export const sendCampaignStartsReminder = functions.firestore
         `
     };
 
-    const reminderRef = await db
-      .collection("voting-campaign-starts-reminders")
-      .add({
-        recordedAt: firestore.Timestamp.now(),
-        votingCampaign: tickSnapshot.ref,
-        message
-      });
+    await reminderRef.update({
+      message
+    });
 
     await db.runTransaction(async transaction => {
       await mailgunClient.messages().send(message);
