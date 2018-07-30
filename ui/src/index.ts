@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import { authenticateAuth0, authenticateFirebase } from "./auth";
+import { getCampaign, castVote } from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./style.css";
 
@@ -21,7 +22,6 @@ window.addEventListener("load", async function() {
     alreadyVotedPage,
     errorPage
   ];
-  const errorMessage = document.getElementById("errorMessage")!;
   const userId = document.getElementById("userId")!;
   const managerNotice = document.getElementById("managerNotice")!;
   const managerName = document.getElementById("managerName")!;
@@ -66,39 +66,8 @@ window.addEventListener("load", async function() {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
 
-    const getCampaign = async () => {
-      const cred = await firebase.auth().currentUser!.getIdToken();
-      const response = await fetch("/api/getCampaign", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${cred}`
-        },
-        body: JSON.stringify({ data: {} })
-      });
-      const { result } = await response.json();
-      return { data: result };
-    };
-    const castVote = async (data: { vote: string }) => {
-      const response = await fetch("/api/castVote", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${await firebase
-            .auth()
-            .currentUser!.getIdToken()}`
-        },
-        body: JSON.stringify({ data })
-      });
-      const responseBody = await response.json();
-      if (!response.ok) {
-        throw responseBody.error;
-      }
-      return { data: responseBody.result };
-    };
-
     const response = await getCampaign();
-    const campaign = response.data.campaign;
+    const campaign = response.campaign;
 
     if (campaign) {
       changePageTo(homePage);
