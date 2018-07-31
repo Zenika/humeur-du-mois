@@ -8,7 +8,7 @@ export const importEmployeesFromAlibeezDaily = functions.firestore
   .document("daily-tick/{tickId}")
   .onCreate(async () => {
     if (!isEnabled(config.features.daily_alibeez_import)) {
-      console.warn("feature is disabled; aborting");
+      console.info("feature is disabled; aborting");
       return;
     }
     await importEmployeesFromAlibeez(config.alibeez);

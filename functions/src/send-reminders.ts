@@ -16,7 +16,7 @@ export const sendCampaignStartsReminder = functions.firestore
   .document("daily-tick/{tickId}")
   .onCreate(async tickSnapshot => {
     if (!isEnabled(config.features.reminders.voting_campaign_starts)) {
-      console.warn("feature is disabled; aborting");
+      console.info("feature is disabled; aborting");
       return;
     }
 
@@ -28,7 +28,7 @@ export const sendCampaignStartsReminder = functions.firestore
       endOn: asNumber(config.features.voting_campaigns.end_on)
     });
     if (!campaign) {
-      console.warn("no campaign currently open; aborting");
+      console.info("no campaign currently open; aborting");
       return;
     }
 
@@ -56,7 +56,7 @@ export const sendCampaignStartsReminder = functions.firestore
     );
 
     if (reminderAlreadySent) {
-      console.warn("reminder already sent; aborting");
+      console.info("reminder already sent; aborting");
       return;
     }
 
