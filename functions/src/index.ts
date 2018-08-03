@@ -13,7 +13,10 @@ export {
 
 export { sendEmailToManager } from "./send-email-to-manager";
 
-export { sendCampaignStartsReminder } from "./send-reminders";
+export {
+  sendCampaignStartsReminder,
+  sendCampaignEndsReminder
+} from "./send-reminders";
 
 export { getCampaign } from "./get-campaign";
 
