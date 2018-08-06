@@ -70,7 +70,7 @@ export const sendCampaignStartsReminder = functions.firestore
         <p>Hi,</p>
         <p>
           Tell us how it's been for you this past month!
-          Go to https://humeur-du-mois.zenika.com.
+          Go to https://humeur-du-mois-2018.firebaseapp.com.
         </p>
         <p>See you soon!</p>
         `
@@ -146,7 +146,7 @@ export const sendCampaignEndsReminder = functions.firestore
         <p>Hi,</p>
         <p>
           If you haven't already, tell us how it's been for you this past month!
-          Go to https://humeur-du-mois.zenika.com.
+          Go to https://humeur-du-mois-2018.firebaseapp.com.
         </p>
         <p>See you soon!</p>
         `
