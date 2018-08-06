@@ -6,6 +6,7 @@ import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Config, isEnabled, asNumber } from "./config";
 import { daysBeforeCampaignEnds } from "./days-before-campaign-ends";
 
+const linkToApp = `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
 const db = firestore();
 const config = functions.config() as Config;
 const campaignConfig = {
@@ -70,7 +71,7 @@ export const sendCampaignStartsReminder = functions.firestore
         <p>Hi,</p>
         <p>
           Tell us how it's been for you this past month!
-          Go to https://humeur-du-mois-2018.firebaseapp.com.
+          Go to ${linkToApp}.
         </p>
         <p>See you soon!</p>
         `
@@ -146,7 +147,7 @@ export const sendCampaignEndsReminder = functions.firestore
         <p>Hi,</p>
         <p>
           If you haven't already, tell us how it's been for you this past month!
-          Go to https://humeur-du-mois-2018.firebaseapp.com.
+          Go to ${linkToApp}.
         </p>
         <p>See you soon!</p>
         `
