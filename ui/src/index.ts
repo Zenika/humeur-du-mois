@@ -10,6 +10,7 @@ window.addEventListener("load", async function() {
   const submitNotGreatAtAll = document.getElementById("submitNotGreatAtAll")!;
   const loggingInPage = document.getElementById("loggingInPage")!;
   const homePage = document.getElementById("homePage")!;
+  const recordingPage = document.getElementById("recordingPage")!;
   const thankYouPage = document.getElementById("thankYouPage")!;
   const noCampaignPage = document.getElementById("noCampaignPage")!;
   const alreadyVotedPage = document.getElementById("alreadyVotedPage")!;
@@ -17,6 +18,7 @@ window.addEventListener("load", async function() {
   const pages = [
     loggingInPage,
     homePage,
+    recordingPage,
     thankYouPage,
     noCampaignPage,
     alreadyVotedPage,
@@ -100,6 +102,7 @@ window.addEventListener("load", async function() {
     }
 
     const saveResponse = async (response: string) => {
+      changePageTo(recordingPage);
       try {
         await castVote({ vote: response, voter: employee.email });
       } catch (err) {
