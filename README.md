@@ -27,4 +27,7 @@ The app uses Firebase so you must have permission to access. Contact dsi@zenika.
 - `npm start` to serve locally
   - functions are compiled and deployed on save
   - UI is compiled on save but the browser is not reloaded
+  - only emulates HTTP functions
+- `npm run start:shell` to test non-HTTP functions
+  - functions are compiled and deployed on save
 - `npm run deploy` to deploy
