@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import { firestore } from "firebase-admin";
 import * as mailgun from "mailgun-js";
 import { Tick } from "./save-ticks";
-import { selectCampaign } from "./select-campaign";
+import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Config, isEnabled, asNumber } from "./config";
 import { daysBeforeCampaignEnds } from "./days-before-campaign-ends";
 
@@ -28,19 +28,15 @@ export const sendCampaignStartsReminder = functions.firestore
 
     const tick = tickSnapshot.data()! as Tick;
     const tickDate = tick.emittedAt.toDate();
-    const campaign = selectCampaign(tickDate, campaignConfig);
-    if (!campaign) {
+    const campaign = computeCurrentCampaign(tickDate, campaignConfig);
+    if (!campaign.open) {
       console.info("no campaign currently open; aborting");
       return;
     }
 
-    const [campaignYear, campaignMonth] = campaign;
-    const campaignId = new Date(Date.UTC(campaignYear, campaignMonth))
-      .toISOString()
-      .substr(0, 7);
     const reminderRef = db
       .collection("voting-campaign-starts-reminder")
-      .doc(campaignId);
+      .doc(campaign.id);
 
     const reminderAlreadySent = await db.runTransaction(async transaction => {
       const reminderSnapshot = await transaction.get(reminderRef);
@@ -61,7 +57,7 @@ export const sendCampaignStartsReminder = functions.firestore
     }
 
     const monthLongName = new Date(
-      Date.UTC(campaignYear, campaignMonth)
+      Date.UTC(campaign.year, campaign.month)
     ).toLocaleString("en-us", {
       month: "long"
     });
@@ -100,19 +96,15 @@ export const sendCampaignEndsReminder = functions.firestore
 
     const tick = tickSnapshot.data()! as Tick;
     const tickDate = tick.emittedAt.toDate();
-    const campaign = selectCampaign(tickDate, campaignConfig);
-    if (!campaign) {
+    const campaign = computeCurrentCampaign(tickDate, campaignConfig);
+    if (!campaign.open) {
       console.info("no campaign currently open; aborting");
       return;
     }
 
-    const [campaignYear, campaignMonth] = campaign;
-    const campaignId = new Date(Date.UTC(campaignYear, campaignMonth))
-      .toISOString()
-      .substr(0, 7);
     const reminderRef = db
       .collection("voting-campaign-ends-reminder")
-      .doc(campaignId);
+      .doc(campaign.id);
 
     const reminderDaysBefore = asNumber(
       config.features.reminders.voting_campaign_ends.days_before
@@ -141,7 +133,7 @@ export const sendCampaignEndsReminder = functions.firestore
     }
 
     const monthLongName = new Date(
-      Date.UTC(campaignYear, campaignMonth)
+      Date.UTC(campaign.year, campaign.month)
     ).toLocaleString("en-us", {
       month: "long"
     });

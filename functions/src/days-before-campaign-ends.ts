@@ -1,4 +1,4 @@
-import { CampaignOptions } from "./select-campaign";
+import { CampaignOptions } from "./compute-current-campaign";
 
 export const daysBeforeCampaignEnds = (
   now: Date,

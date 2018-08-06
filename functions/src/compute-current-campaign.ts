@@ -5,14 +5,24 @@ export type CampaignOptions =
       endOn: number;
     }
   | { enabled: false };
-export type YearMonth = [number, number];
 
-export const selectCampaign = (
+export type CampaignInfo =
+  | { open: true; id: string; year: number; month: number }
+  | { open: false };
+
+export const computeCurrentCampaign = (
   voteDate: Date,
   campaignOptions: CampaignOptions
-): YearMonth | null => {
+): CampaignInfo => {
   if (!campaignOptions.enabled) {
-    return [voteDate.getUTCFullYear(), voteDate.getUTCMonth()];
+    return {
+      open: true,
+      year: voteDate.getUTCFullYear(),
+      month: voteDate.getUTCMonth(),
+      id: new Date(Date.UTC(voteDate.getUTCFullYear(), voteDate.getUTCMonth()))
+        .toISOString()
+        .substr(0, 7)
+    };
   }
   const campaignStartsAndEndsOnTheSameMonth =
     campaignOptions.startOn < campaignOptions.endOn;
@@ -21,21 +31,27 @@ export const selectCampaign = (
       voteDate.getUTCDate() < campaignOptions.startOn ||
       voteDate.getUTCDate() > campaignOptions.endOn
     ) {
-      return null;
+      return { open: false };
     }
   } else {
     if (
       voteDate.getUTCDate() < campaignOptions.startOn &&
       voteDate.getUTCDate() > campaignOptions.endOn
     ) {
-      return null;
+      return { open: false };
     }
   }
   const voteDateIsNextMonth =
     !campaignStartsAndEndsOnTheSameMonth &&
     voteDate.getUTCDate() < campaignOptions.startOn;
-  return [
+  const [year, month] = [
     voteDate.getUTCFullYear(),
     voteDate.getUTCMonth() - (voteDateIsNextMonth ? 1 : 0)
   ];
+  return {
+    open: true,
+    year,
+    month,
+    id: new Date(Date.UTC(year, month)).toISOString().substr(0, 7)
+  };
 };

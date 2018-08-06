@@ -1,7 +1,7 @@
 import { firestore } from "firebase-admin";
 import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
-import { selectCampaign } from "./select-campaign";
+import { computeCurrentCampaign } from "./compute-current-campaign";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -31,12 +31,12 @@ export const castVote = functions.https.onCall(
       );
     }
     const voteDate = new Date();
-    const campaign = selectCampaign(voteDate, {
+    const campaign = computeCurrentCampaign(voteDate, {
       enabled: isEnabled(config.features.voting_campaigns),
       startOn: asNumber(config.features.voting_campaigns.start_on),
       endOn: asNumber(config.features.voting_campaigns.end_on)
     });
-    if (!campaign) {
+    if (!campaign.open) {
       throw new functions.https.HttpsError(
         "failed-precondition",
         "No campaign currently opened",
@@ -46,13 +46,8 @@ export const castVote = functions.https.onCall(
       );
     }
 
-    const [campaignYear, campaignMonth] = campaign;
-    const campaignId = new Date(Date.UTC(campaignYear, campaignMonth))
-      .toISOString()
-      .substr(0, 7);
-
     const vote: Vote = {
-      campaign: db.collection("voting-campaign").doc(campaignId),
+      campaign: db.collection("voting-campaign").doc(campaign.id),
       recordedAt: firestore.Timestamp.fromDate(voteDate),
       voter: payload.voter,
       value: payload.vote
@@ -62,7 +57,7 @@ export const castVote = functions.https.onCall(
       try {
         await db
           .collection("vote")
-          .doc(`${campaignId}-${context.auth!.uid}`)
+          .doc(`${campaign.id}-${context.auth!.uid}`)
           .create(vote);
       } catch (err) {
         if (err.code === 6 /* ALREADY_EXISTS */) {
