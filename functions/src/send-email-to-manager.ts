@@ -62,8 +62,17 @@ export const sendEmailToManager = functions.firestore
       `
     };
 
+    /**
+     * This following has (or intends to have, at least) the following properties:
+     * - failure to the send the email restarts the transaction
+     * - failure to update the document restarts the transaction but does not send the email again
+     */
+    let emailSent = false;
     await firebase.firestore().runTransaction(async transaction => {
-      await mailgunClient.messages().send(message);
+      if (!emailSent) {
+        await mailgunClient.messages().send(message);
+        emailSent = true;
+      }
       transaction.update(voteSnapshot.ref, {
         emailToManagerSent: true,
         voter: "*REDACTED*"
