@@ -71,9 +71,7 @@ window.addEventListener("load", async function() {
     const response = await getCampaign();
     const campaign = response.campaign;
 
-    if (campaign) {
-      changePageTo(homePage);
-    } else {
+    if (!campaign) {
       changePageTo(noCampaignPage);
       return;
     }
@@ -102,6 +100,7 @@ window.addEventListener("load", async function() {
       managerName.innerText = employee.managerEmail;
       show(managerNotice);
     }
+    changePageTo(homePage);
 
     const saveResponse = async (response: string) => {
       changePageTo(recordingPage);
