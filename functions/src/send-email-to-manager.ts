@@ -1,10 +1,13 @@
 import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
 import * as mailgun from "mailgun-js";
-import { Config } from "./config";
+import { Config, isEnabled, asBoolean } from "./config";
 import { Vote } from "./cast-vote";
 
 const config = functions.config() as Config;
+const redirectToVoter = asBoolean(
+  config.features.send_vote_to_manager.redirect_to_voter
+);
 const mailgunClient = mailgun({
   domain: config.mailgun.domain,
   apiKey: config.mailgun.api_key
@@ -13,6 +16,11 @@ const mailgunClient = mailgun({
 export const sendEmailToManager = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
+    if (!isEnabled(config.features.send_vote_to_manager)) {
+      console.info("feature is disabled; aborting");
+      return;
+    }
+
     const vote = voteSnapshot.data()! as Vote;
 
     const latestImport = await firebase
@@ -38,9 +46,10 @@ export const sendEmailToManager = functions.firestore
       return;
     }
 
+    const recipient = redirectToVoter ? employee.email : employee.managerEmail;
     const message = {
       from: "Humeur du mois <humeur-du-mois@zenika.com>",
-      to: config.mailgun.recipient_override || employee.managerEmail,
+      to: config.mailgun.recipient_override || recipient,
       "h:Reply-To": employee.email,
       subject: `${employee.fullName} has shared how they feel`,
       html: `

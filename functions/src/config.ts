@@ -121,6 +121,11 @@ export interface VotingCampaignsConfig {
   end_on: DayOfMonth;
 }
 
+export interface SendVoteToManagerConfig {
+  enabled: Flag;
+  redirect_to_voter: Flag;
+}
+
 export interface DailyAlibeezImportConfig {
   enabled: Flag;
 }
@@ -128,6 +133,7 @@ export interface DailyAlibeezImportConfig {
 export interface FeaturesConfig {
   voting_campaigns: VotingCampaignsConfig;
   reminders: RemindersConfig;
+  send_vote_to_manager: SendVoteToManagerConfig;
   daily_alibeez_import: DailyAlibeezImportConfig;
 }
 
