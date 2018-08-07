@@ -56,7 +56,7 @@ export interface Auth0Config {
 export interface MailgunConfig {
   domain: string;
   api_key: string;
-  recipient_override: string;
+  recipient_override?: string;
 }
 
 export interface EndOfMonthRemindersConfig {
