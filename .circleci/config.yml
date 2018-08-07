@@ -99,26 +99,41 @@ jobs:
           paths:
             - node_modules
 
-
   validate-functions-config:
-    docker:
+    environment:
+      FIREBASE_PROJECT: default
+    docker: &validate-functions-config-docker
       - image: circleci/node:8
-    steps:
+    steps: &validate-functions-config-steps
       - checkout
       - attach_workspace:
           at: ./
-      - run: node_modules/.bin/firebase --token=$FIREBASE_TOKEN functions:config:get > config.json
+      - run: node_modules/.bin/firebase --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN functions:config:get > config.json
       - run: npx typescript-json-schema --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
+  beta-validate-functions-config:
+    environment:
+      FIREBASE_PROJECT: beta
+    docker: *validate-functions-config-docker
+    steps: *validate-functions-config-steps
+
   deploy-firebase-app:
-    docker:
+    environment:
+      FIREBASE_PROJECT: default
+    docker: &deploy-firebase-app-docker
       - image: circleci/node:8
-    steps:
+    steps: &deploy-firebase-app-steps
       - checkout
       - attach_workspace:
           at: ./
-      - run: npm run deploy -- --token=$FIREBASE_TOKEN --non-interactive
+      - run: node_modules/.bin/firebase deploy --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN --non-interactive
+
+  beta-deploy-firebase-app:
+    environment:
+      FIREBASE_PROJECT: beta
+    docker: *deploy-firebase-app-docker
+    steps: *deploy-firebase-app-steps
 
   install-app-engine-cron-dependencies:
     docker:
@@ -139,19 +154,41 @@ jobs:
           paths:
             - cron/lib
 
-  deploy-app-engine-cron:
+  set-up-gcloud:
+    docker: &google-cloud-sdk
+      - image: google/cloud-sdk:206.0.0
+    steps:
+      - run: echo $DEFAULT_GCLOUD_SERVICE_ACCOUNT_KEY > gcloud-service-key.json
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - gcloud-service-key.json
+
+  beta-set-up-gcloud:
+    docker: *google-cloud-sdk
+    steps:
+      - run: echo $BETA_GCLOUD_SERVICE_ACCOUNT_KEY > gcloud-service-key.json
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - gcloud-service-key.json
+
+  deploy-app-engine-cron: &deploy-app-engine-cron
     environment:
       GCLOUD_PROJECT: humeur-du-mois-2018
-    docker:
-      - image: google/cloud-sdk:206.0.0
+    docker: *google-cloud-sdk
     steps:
       - checkout
       - attach_workspace:
           at: ./
-      - run: echo $GCLOUD_SERVICE_ACCOUNT_KEY > ${HOME}/gcloud-service-key.json
-      - run: gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+      - run: gcloud auth activate-service-account --key-file=gcloud-service-key.json
       - run: gcloud config set project $GCLOUD_PROJECT
       - run: gcloud app deploy cron/app.yaml cron/cron.yaml --promote
+
+  beta-deploy-app-engine-cron:
+    <<: *deploy-app-engine-cron
+    environment:
+      GCLOUD_PROJECT: humeur-du-mois-2018-beta
 
 workflows:
   version: 2
@@ -177,7 +214,7 @@ workflows:
 
       - install-tooling-dependencies
       - validate-functions-config:
-          requires:
+          requires: &validate-functions-config-requires
             - install-tooling-dependencies
       - deploy-firebase-app:
           requires:
@@ -192,12 +229,39 @@ workflows:
               only:
                 - master
 
+      - set-up-gcloud
       - install-app-engine-cron-dependencies
       - deploy-app-engine-cron:
           requires:
             - install-app-engine-cron-dependencies
+            - set-up-gcloud
             - deploy-firebase-app
           filters:
             branches:
               only:
                 - master
+
+      - beta-set-up-gcloud:
+          filters: &filters-for-beta
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.+-beta.*/
+      - beta-validate-functions-config:
+          requires: *validate-functions-config-requires
+          filters: *filters-for-beta
+      - beta-deploy-firebase-app:
+          requires:
+            - install-tooling-dependencies
+            - build-ui
+            - build-ui-for-production
+            - lint-functions
+            - build-functions
+            - beta-validate-functions-config
+          filters: *filters-for-beta
+      - beta-deploy-app-engine-cron:
+          requires:
+            - install-app-engine-cron-dependencies
+            - beta-set-up-gcloud
+            - beta-deploy-firebase-app
+          filters: *filters-for-beta
