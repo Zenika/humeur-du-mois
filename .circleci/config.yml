@@ -196,23 +196,44 @@ workflows:
   build-and-deploy:
     jobs:
 
-      - install-ui-dependencies
+      - install-ui-dependencies:
+          filters:
+            tags:
+              only: /.*/
       - build-ui:
           requires:
             - install-ui-dependencies
+          filters:
+            tags:
+              only: /.*/
       - build-ui-for-production:
           requires:
             - install-ui-dependencies
+          filters:
+            tags:
+              only: /.*/
 
-      - install-functions-dependencies
+      - install-functions-dependencies:
+          filters:
+            tags:
+              only: /.*/
       - lint-functions:
           requires:
             - install-functions-dependencies
+          filters:
+            tags:
+              only: /.*/
       - build-functions:
           requires:
             - install-functions-dependencies
+          filters:
+            tags:
+              only: /.*/
 
-      - install-tooling-dependencies
+      - install-tooling-dependencies:
+          filters:
+            tags:
+              only: /.*/
       - validate-functions-config:
           requires: &validate-functions-config-requires
             - install-tooling-dependencies
@@ -229,8 +250,15 @@ workflows:
               only:
                 - master
 
-      - set-up-gcloud
-      - install-app-engine-cron-dependencies
+      - install-app-engine-cron-dependencies:
+          filters:
+            tags:
+              only: /.*/
+      - set-up-gcloud:
+          filters:
+            branches:
+              only:
+                - master
       - deploy-app-engine-cron:
           requires:
             - install-app-engine-cron-dependencies
