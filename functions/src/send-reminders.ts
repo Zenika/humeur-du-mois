@@ -64,8 +64,10 @@ export const sendCampaignStartsReminder = functions.firestore
     });
 
     const message = {
-      from: "Humeur du mois <humeur-du-mois@zenika.com>",
-      to: config.mailgun.recipient_override || "all@zenika.com",
+      from: config.features.reminders.voting_campaign_starts.sender,
+      to:
+        config.mailgun.recipient_override ||
+        config.features.reminders.voting_campaign_starts.recipient,
       subject: `Humeur du mois is open for ${monthLongName}!`,
       html: `
         <p>Hi,</p>
@@ -140,8 +142,10 @@ export const sendCampaignEndsReminder = functions.firestore
     });
 
     const message = {
-      from: "Humeur du mois <humeur-du-mois@zenika.com>",
-      to: config.mailgun.recipient_override || "all@zenika.com",
+      from: config.features.reminders.voting_campaign_ends.sender,
+      to:
+        config.mailgun.recipient_override ||
+        config.features.reminders.voting_campaign_ends.recipient,
       subject: `Humeur du mois is about to close for ${monthLongName}!`,
       html: `
         <p>Hi,</p>

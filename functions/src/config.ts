@@ -66,10 +66,30 @@ export interface EndOfMonthRemindersConfig {
 
 export interface VotingCampaignStartsReminderConfig {
   enabled: Flag;
+  /**
+   * Sender of the reminder emails.
+   *
+   * May be in the format "Display Name <address@domain>".
+   */
+  sender: string;
+  /**
+   * Mailing list to which to send the reminder emails.
+   */
+  recipient: string;
 }
 
 export interface VotingCampaignEndsReminderConfig {
   enabled: Flag;
+  /**
+   * Sender of the reminder emails.
+   *
+   * May be in the format "Display Name <address@domain>".
+   */
+  sender: string;
+  /**
+   * Mailing list to which to send the reminder emails.
+   */
+  recipient: string;
   /**
    * When to send the reminder, in number of days before the end of the
    * campaign.
