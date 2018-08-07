@@ -56,6 +56,7 @@ export interface Auth0Config {
 export interface MailgunConfig {
   domain: string;
   api_key: string;
+  host?: string;
   recipient_override?: string;
 }
 

@@ -10,7 +10,8 @@ const redirectToVoter = asBoolean(
 );
 const mailgunClient = mailgun({
   domain: config.mailgun.domain,
-  apiKey: config.mailgun.api_key
+  apiKey: config.mailgun.api_key,
+  host: config.mailgun.host
 });
 
 export const sendEmailToManager = functions.firestore
