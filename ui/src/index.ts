@@ -85,7 +85,8 @@ window.addEventListener("load", async function() {
       .get()
       .then(result => result.docs[0]);
     if (!latestImport) {
-      throw new Error(`cannot find latest employee data import`);
+      errorOut(new Error("cannot find latest employee data import"));
+      return;
     }
 
     const employeeSnapshot = await latestImport.ref
@@ -94,7 +95,8 @@ window.addEventListener("load", async function() {
       .get();
     const employee = employeeSnapshot.data();
     if (!employee) {
-      throw new Error(`cannot find user '${userId}' in employee data`);
+      errorOut(new Error(`cannot find user '${userId}' in employee data`));
+      return;
     }
     if (employee.managerEmail) {
       managerName.innerText = employee.managerEmail;
