@@ -1,55 +1,86 @@
+html, body {
+  height: 100%;
+}
+
 body {
   background: #eceff1;
   color: rgba(0, 0, 0, 0.87);
   font-family: Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .page {
   background: white;
   max-width: 460px;
-  margin: 100px auto 16px;
-  padding: 32px 24px;
+  padding: 24px;
   border-radius: 3px;
 }
 
 .page h2 {
   color: #ffa100;
-  font-weight: bold;
+  font-weight: 400;
   font-size: 16px;
-  margin: 0 0 8px;
+  margin: 0 0 16px;
 }
 
 .page h1 {
   font-size: 22px;
   font-weight: 300;
   color: rgba(0, 0, 0, 0.6);
-  margin: 0 0 16px;
+  margin: 0;
 }
 
-.page p {
+.page h1 + * {
+  margin-top: 20px;
+}
+
+p {
   line-height: 140%;
-  margin: 16px 0 24px;
+  margin: 8px 0 0 0;
   font-size: 14px;
 }
 
-.page button {
-  display: block;
+.button__wrapper {
+  margin-bottom: 16px;
+}
+.button {
+  display: flex;
   width: 100%;
   text-align: center;
-  background: #039be5;
-  text-transform: uppercase;
+  background: transparent;
   text-decoration: none;
-  color: white;
   margin: 8px 0;
   padding: 16px 0;
   border-radius: 4px;
-  border: none;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 16px;
+  font-weight: 300;
+  cursor: pointer;
+}
+.button:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+.button__emoji {
+  margin: 0 16px 0 20px;
 }
 
-.page,
-.page button {
+.button--great {
+  color: #1B5E20;
+}
+.button--no-that-great {
+  color: #263238;
+}
+.button--not-great-at-all {
+  color: #B71C1C;
+}
+
+.page {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 

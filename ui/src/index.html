@@ -27,10 +27,24 @@
       <span id="userId"></span>
     </h2>
     <h1>How have you been at Zenika?</h1>
-    <button type="button" id="submitGreat">Great!</button>
-    <button type="button" id="submitNotThatGreat">Not that great</button>
-    <button type="button" id="submitNotGreatAtAll">Not great at all</button>
-    <span id="managerNotice" class="hidden">The result will be sent to <span id="managerName"></span></span>
+    <div class="button__wrapper">
+      <button class="button button--great" type="button" id="submitGreat">
+        <span class="button__emoji">😁</span>
+        Great!
+      </button>
+      <button class="button button--no-that-great" type="button" id="submitNotThatGreat">
+        <span class="button__emoji">😐</span>
+        Not that great
+      </button>
+      <button class="button button--not-great-at-all" type="button" id="submitNotGreatAtAll">
+        <span class="button__emoji">😤</span>
+        Not great at all
+      </button>
+    </div>
+    <span id="managerNotice" class="hidden">
+      The result will be sent to
+      <span id="managerName"></span>
+    </span>
   </div>
   <div id="recordingPage" class="page hidden">
     <h2>Sit tight!</h2>
@@ -51,10 +65,8 @@
   <div id="errorPage" class="page hidden">
     <h2>There was an error!</h2>
     <h1>Please try reloading.</h1>
-    <p>
-      If this keeps happening, contact dreamlab@zenika.com or #dreamlab on Slack.
-      You may check the console for more details about the error.
-    </p>
+    <p>If this keeps happening, contact dreamlab@zenika.com or #dreamlab on Slack.</p>
+    <p>You may check the console for more details about the error.</p>
   </div>
 </body>
 
