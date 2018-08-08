@@ -6,7 +6,7 @@
 
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import * as auth0 from "auth0-js";
+import { AuthenticationClient } from "auth0";
 import { Config } from "./config";
 
 const config = functions.config() as Config;
@@ -39,12 +39,12 @@ export const exchangeToken = functions.https.onRequest((request, response) => {
     return;
   }
 
-  const auth0WebAuth = new auth0.WebAuth({
+  const authenticationClient = new AuthenticationClient({
     domain: config.auth0.domain,
-    clientID: config.auth0.client_id
+    clientId: config.auth0.client_id
   });
 
-  auth0WebAuth.client.userInfo(accessToken, async (userInfoErr, user) => {
+  authenticationClient.getProfile(accessToken, async (userInfoErr, user: any) => {
     if (userInfoErr) {
       console.error(userInfoErr);
       response.status(401).send(errorResponse("Unauthorized"));
