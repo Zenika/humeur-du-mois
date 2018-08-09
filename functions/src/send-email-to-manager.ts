@@ -52,7 +52,7 @@ export const sendEmailToManager = functions.firestore
       from: "Humeur du mois <humeur-du-mois@zenika.com>",
       to: config.mailgun.recipient_override || recipient,
       "h:Reply-To": employee.email,
-      subject: `${employee.fullName} has shared how they feel`,
+      subject: `${employee.fullName} has shared how they feel: "${vote.value}"`,
       html: `
         <p>Hi ${employee.managerEmail},</p>
         <p>
