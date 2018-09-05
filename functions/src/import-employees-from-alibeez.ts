@@ -1,6 +1,7 @@
 import * as firebase from "firebase-admin";
 import fetch from "node-fetch";
-import {AlibeezConfig} from "./config"
+import { AlibeezConfig } from "./config";
+import partition = require("lodash.partition");
 
 interface AlibeezEmployee {
   fullName: string;
@@ -47,10 +48,14 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
     return;
   }
   const employees: AlibeezEmployee[] = await response.json();
-  const employeesWithValidEmail = employees.filter(
+  const [employeesWithValidEmail, employeesWithNoValidEmail] = partition(
+    employees,
     employee =>
       employee.zenikaEmail && employee.zenikaEmail.endsWith("@zenika.com")
   );
+  employeesWithNoValidEmail.forEach(employee => {
+    console.info("employee with no valid email: " + employee.fullName);
+  });
   const importRef = firebase
     .firestore()
     .collection("employee-imports")
