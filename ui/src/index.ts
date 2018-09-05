@@ -44,14 +44,14 @@ window.addEventListener("load", async function() {
   const changePageTo = (incoming: HTMLElement) => {
     hideAllPages();
     show(incoming);
-  };  
+  };
   const errorOut = (err: Error) => {
     console.error(err);
-    if (err.message.includes('cannot find user')) {
+    if (err.message.includes("cannot find user")) {
       changePageTo(errorUnknowUserPage);
     } else {
       changePageTo(errorPage);
-    }    
+    }
   };
   try {
     const session = await authenticateAuth0({
@@ -99,7 +99,7 @@ window.addEventListener("load", async function() {
       .get();
     const employee = employeeSnapshot.data();
     if (!employee) {
-      userEmail.innerText = userId
+      userEmail.innerText = userId;
       errorOut(new Error(`cannot find user '${userId}' in employee data`));
       return;
     }
