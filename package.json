@@ -10,7 +10,7 @@
     "watch": "run-p functions:build:watch ui:build:watch",
     "functions:build:watch": "npm --prefix functions run build:watch",
     "ui:build:watch": "npm --prefix ui run build:watch",
-    "prettier": "prettier .circleci/config.yml  functions/{**/,}*.{ts,json} ui/{**/,}*.{ts,json,html}",
+    "prettier": "prettier .circleci/config.yml  functions/{**/,}*.{ts,json} ui/{**/,}*.{ts,json}",
     "format:check": "npm run prettier -- --list-different",
     "format:fix": "npm run prettier -- --write"
   },
