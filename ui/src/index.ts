@@ -15,7 +15,7 @@ window.addEventListener("load", async function() {
   const noCampaignPage = document.getElementById("noCampaignPage")!;
   const alreadyVotedPage = document.getElementById("alreadyVotedPage")!;
   const errorPage = document.getElementById("errorPage")!;
-  const errorUnknowUserPage = document.getElementById("errorUnknowUserPage")!;
+  const unknownEmployeePage = document.getElementById("unknownEmployeePage")!;
   const pages = [
     loggingInPage,
     homePage,
@@ -24,7 +24,7 @@ window.addEventListener("load", async function() {
     noCampaignPage,
     alreadyVotedPage,
     errorPage,
-    errorUnknowUserPage
+    unknownEmployeePage
   ];
   const userId = document.getElementById("userId")!;
   const userEmail = document.getElementById("userEmail")!;
@@ -47,11 +47,7 @@ window.addEventListener("load", async function() {
   };
   const errorOut = (err: Error) => {
     console.error(err);
-    if (err.message.includes("cannot find user")) {
-      changePageTo(errorUnknowUserPage);
-    } else {
-      changePageTo(errorPage);
-    }
+    changePageTo(errorPage);
   };
   try {
     const session = await authenticateAuth0({
@@ -100,7 +96,7 @@ window.addEventListener("load", async function() {
     const employee = employeeSnapshot.data();
     if (!employee) {
       userEmail.innerText = userId;
-      errorOut(new Error(`cannot find user '${userId}' in employee data`));
+      changePageTo(unknownEmployeePage);
       return;
     }
     if (employee.managerEmail) {
