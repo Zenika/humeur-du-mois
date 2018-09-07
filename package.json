@@ -9,10 +9,14 @@
     "firebase": "firebase",
     "watch": "run-p functions:build:watch ui:build:watch",
     "functions:build:watch": "npm --prefix functions run build:watch",
-    "ui:build:watch": "npm --prefix ui run build:watch"
+    "ui:build:watch": "npm --prefix ui run build:watch",
+    "prettier": "prettier .circleci/config.yml  functions/{**/,}*.{ts,json} ui/{**/,}*.{ts,json}",
+    "format:check": "npm run prettier -- --list-different",
+    "format:fix": "npm run prettier -- --write"
   },
   "devDependencies": {
     "firebase-tools": "4.0.3",
-    "npm-run-all": "4.1.3"
+    "npm-run-all": "4.1.3",
+    "prettier": "1.14.2"
   }
 }
