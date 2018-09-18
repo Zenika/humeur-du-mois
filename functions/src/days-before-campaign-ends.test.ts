@@ -11,6 +11,16 @@ test("6 days remain", t => {
   t.is(actual, 6);
 });
 
+test("6 days remain 2", t => {
+  const now = new Date(Date.UTC(2018, 8, 20,2));
+  const actual = daysBeforeCampaignEnds(now, {
+    enabled: true,
+    startOn: 20,
+    endOn: 10
+  });
+  t.is(actual, 21);
+});
+
 test("3 days remain", t => {
   const now = new Date(Date.UTC(2049, 6, 18));
   const actual = daysBeforeCampaignEnds(now, {
