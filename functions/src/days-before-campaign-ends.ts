@@ -13,12 +13,15 @@ export const daysBeforeCampaignEnds = (
       1
     );
   }
-  let possiblyNegativeDaysBeforeCampaignEnds = campaignOptions.endOn - now.getUTCDate() + 1;
+  let possiblyNegativeDaysBeforeCampaignEnds =
+    campaignOptions.endOn - now.getUTCDate() + 1;
 
-  if (possiblyNegativeDaysBeforeCampaignEnds < 0){let lastDayOfMonth = new Date(
-    now.getUTCFullYear(),
-    now.getUTCMonth(),
-    0
-  ).getUTCDate(); return possiblyNegativeDaysBeforeCampaignEnds + lastDayOfMonth;
-  }else return possiblyNegativeDaysBeforeCampaignEnds;
+  if (possiblyNegativeDaysBeforeCampaignEnds < 0) {
+    let lastDayOfMonth = new Date(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      0
+    ).getUTCDate();
+    return possiblyNegativeDaysBeforeCampaignEnds + lastDayOfMonth;
+  } else return possiblyNegativeDaysBeforeCampaignEnds;
 };
