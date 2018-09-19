@@ -14,7 +14,7 @@ interface StatsData {
   notGreatAtAllCount: number;
 }
 
-//updateStats({value: "great", voter: "clement.fassot@zenika.com", campaign: "2018-09", recordedAt: "2018-09-19T15:30:00.00Z", agency: "Nantes"})
+//updateStats({value: "great", voter: "example@zenika.com", campaign: "2018-09", recordedAt: "2018-09-19T15:30:00.00Z", agency: "Nantes"})
 
 export const updateStats = functions.firestore
   .document("vote/{voteId}")
@@ -46,9 +46,7 @@ export const updateStats = functions.firestore
           stats.notGreatAtAllCount += 1
           break;
       }
-      console.log(stats.greatCount)
-      console.log(stats.notThatGreatCount)
-      console.log(stats.notGreatAtAllCount)
+
       return transaction.set(
         firebase
           .firestore()
