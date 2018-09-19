@@ -128,7 +128,7 @@ p {
 .loader .path {
   stroke-dasharray: 1, 200;
   stroke-dashoffset: 0;
-  animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+  animation: dash 1.5s ease-in-out infinite, colorRotation 6s ease-in-out infinite;
   stroke-linecap: round;
 }
 
@@ -153,7 +153,7 @@ p {
   }
 }
 
-@keyframes color {
+@keyframes colorRotation {
   100%,
   0% {
     stroke: #d62d20;
