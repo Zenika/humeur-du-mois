@@ -26,38 +26,45 @@ export const updateStats = functions.firestore
     const vote = voteSnapshot.data()! as Vote;
     let stats: StatsData;
     await firebase.firestore().runTransaction(async transaction => {
-      await transaction.get(firebase.firestore().collection("stats").doc(vote.campaign)).then(doc => {
-        stats = doc.data()! as StatsData
-        if(!stats){
-          stats = {
-            greatCount: 0,
-            notThatGreatCount: 0,
-            notGreatAtAllCount: 0
+      await transaction
+        .get(
+          firebase
+            .firestore()
+            .collection("stats")
+            .doc(vote.campaign)
+        )
+        .then(doc => {
+          stats = doc.data()! as StatsData;
+          if (!stats) {
+            stats = {
+              greatCount: 0,
+              notThatGreatCount: 0,
+              notGreatAtAllCount: 0
+            };
           }
-        }
-      switch (vote.value) {
-        case validVotes[0]:
-          stats.greatCount += 1
-          break;
-          case validVotes[1]:
-          stats.notThatGreatCount += 1
-          break;
-          case validVotes[2]:
-          stats.notGreatAtAllCount += 1
-          break;
-      }
+          switch (vote.value) {
+            case validVotes[0]:
+              stats.greatCount += 1;
+              break;
+            case validVotes[1]:
+              stats.notThatGreatCount += 1;
+              break;
+            case validVotes[2]:
+              stats.notGreatAtAllCount += 1;
+              break;
+          }
 
-      return transaction.set(
-        firebase
-          .firestore()
-          .collection("stats")
-          .doc(vote.campaign),
-        {
-          greatCount: stats.greatCount,
-          notThatGreatCount: stats.notThatGreatCount,
-          notGreatAtAllCount: stats.notGreatAtAllCount
-        }
-      );
+          return transaction.set(
+            firebase
+              .firestore()
+              .collection("stats")
+              .doc(vote.campaign),
+            {
+              greatCount: stats.greatCount,
+              notThatGreatCount: stats.notThatGreatCount,
+              notGreatAtAllCount: stats.notGreatAtAllCount
+            }
+          );
+        });
     });
-    })
   });
