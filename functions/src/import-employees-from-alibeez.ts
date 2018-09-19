@@ -72,7 +72,8 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
       email: employee.zenikaEmail,
       managerEmail: employee.operationalManagerShortUsername
         ? employee.operationalManagerShortUsername + "@zenika.com"
-        : null
+        : null,
+      agency: employee.geographicalAgency
     }))
     .forEach(employee =>
       batch.set(importRef.collection("employees").doc(employee.email), employee)
