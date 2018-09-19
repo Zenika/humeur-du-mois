@@ -7,6 +7,7 @@ interface AlibeezEmployee {
   fullName: string;
   zenikaEmail: string;
   operationalManagerShortUsername: string;
+  agency: string;
 }
 
 const obfuscateKey = key => {
