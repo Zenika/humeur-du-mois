@@ -18,7 +18,7 @@ interface RequestPayload {
 export interface Vote {
   value: string;
   voter: string;
-  campaign: firestore.DocumentReference;
+  campaign: string;
   recordedAt: firestore.Timestamp;
   agency: string;
 }
@@ -72,7 +72,7 @@ export const castVote = functions.https.onCall(
 
 
     const vote: Vote = {
-      campaign: db.collection("voting-campaign").doc(campaign.id),
+      campaign: campaign.id,
       recordedAt: firestore.Timestamp.fromDate(voteDate),
       voter: payload.voter,
       value: payload.vote,
