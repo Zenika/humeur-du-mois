@@ -1,20 +1,16 @@
 import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
 
-import { Config, isEnabled, asBoolean } from "./config";
+import { Config, isEnabled } from "./config";
 import { Vote } from "./cast-vote";
 
 const config = functions.config() as Config;
-
-const validVotes = ["great", "notThatGreat", "notGreatAtAll"];
 
 interface StatsData {
   greatCount: number;
   notThatGreatCount: number;
   notGreatAtAllCount: number;
 }
-
-//updateStats({value: "great", voter: "example@zenika.com", campaign: "2018-09", recordedAt: "2018-09-19T15:30:00.00Z", agency: "Nantes"})
 
 export const updateStats = functions.firestore
   .document("vote/{voteId}")
@@ -24,47 +20,50 @@ export const updateStats = functions.firestore
       return;
     }
     const vote = voteSnapshot.data()! as Vote;
-    let stats: StatsData;
+    const voteId: string = voteSnapshot.id
     await firebase.firestore().runTransaction(async transaction => {
-      await transaction
-        .get(
+      const doc = await transaction.get(
+        firebase
+          .firestore()
+          .collection("stats")
+          .doc(vote.campaign)
+      );
+      if (doc.get(voteId)) {
+        console.log("this vote has already been counted");
+        throw new functions.https.HttpsError(
+          "already-exists",
+          `This vote has already been counted`
+        );
+      }
+
+      let data = doc.data();
+      if (!data) {
+        data = {};
+        data[vote.value] = 1;
+      } else {
+        if (!data[vote.value]) {
+          data[vote.value] = 1;
+        } else {
+          data[vote.value] += 1;
+        }
+      }
+
+      return transaction
+        .set(
+          firebase
+            .firestore()
+            .collection("stats")
+            .doc(vote.campaign),
+          data
+        )
+        .set(
           firebase
             .firestore()
             .collection("stats")
             .doc(vote.campaign)
-        )
-        .then(doc => {
-          stats = doc.data()! as StatsData;
-          if (!stats) {
-            stats = {
-              greatCount: 0,
-              notThatGreatCount: 0,
-              notGreatAtAllCount: 0
-            };
-          }
-          switch (vote.value) {
-            case validVotes[0]:
-              stats.greatCount += 1;
-              break;
-            case validVotes[1]:
-              stats.notThatGreatCount += 1;
-              break;
-            case validVotes[2]:
-              stats.notGreatAtAllCount += 1;
-              break;
-          }
-
-          return transaction.set(
-            firebase
-              .firestore()
-              .collection("stats")
-              .doc(vote.campaign),
-            {
-              greatCount: stats.greatCount,
-              notThatGreatCount: stats.notThatGreatCount,
-              notGreatAtAllCount: stats.notGreatAtAllCount
-            }
-          );
-        });
+            .collection("votes")
+            .doc(voteId),
+          {}
+        );
     });
   });
