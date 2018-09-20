@@ -20,46 +20,38 @@ export const updateStats = functions.firestore
       return;
     }
     const vote = voteSnapshot.data()! as Vote;
-    const voteId: string = voteSnapshot.id
+    const voteId: string = voteSnapshot.id;
+    const statsCollection = firebase
+    .firestore()
+    .collection("stats");
+
     await firebase.firestore().runTransaction(async transaction => {
-      const doc = await transaction.get(
-        firebase
-          .firestore()
-          .collection("stats")
+    const doc = await transaction.get(
+      statsCollection
           .doc(vote.campaign)
       );
-      if (doc.get(voteId)) {
-        console.log("this vote has already been counted");
-        throw new functions.https.HttpsError(
-          "already-exists",
-          `This vote has already been counted`
-        );
+      const storedVote = await transaction.get(
+        statsCollection
+          .doc(vote.campaign).collection("votes").doc(voteId)
+      );
+
+      if (storedVote.exists) {
+        console.info("This vote("+voteId+") has already been counted, aborting;");
+        return;
       }
 
-      let data = doc.data();
-      if (!data) {
-        data = {};
-        data[vote.value] = 1;
-      } else {
-        if (!data[vote.value]) {
-          data[vote.value] = 1;
-        } else {
-          data[vote.value] += 1;
-        }
-      }
+      const inputData = doc.data() || {}
+      const oldCounters = { [vote.value]: 0, ... inputData}
+      const newCounters = { ...oldCounters, [vote.value]: oldCounters[vote.value] + 1 }
 
       return transaction
         .set(
-          firebase
-            .firestore()
-            .collection("stats")
+          statsCollection
             .doc(vote.campaign),
-          data
+            newCounters
         )
         .set(
-          firebase
-            .firestore()
-            .collection("stats")
+          statsCollection
             .doc(vote.campaign)
             .collection("votes")
             .doc(voteId),
