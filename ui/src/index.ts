@@ -4,7 +4,8 @@ import { getCampaign, castVote } from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./style.css";
 import { Stats } from "webpack";
-
+import { computeCampaign } from "./services/computeCampaign";
+import { renderTemplate } from "./services/renderTemplate";
 interface StatsData {
   [key: string]: number;
 }
@@ -73,9 +74,6 @@ window.addEventListener("load", async function() {
     }));
 
     if (voteData.length > 0) {
-      const keys = ["great", "notThatGreat", "notGreatAtAll"];
-      const emojis = ["😁", "😐", "😤"];
-
       voteData = voteData.map(row => ({
         ...row,
         counts: {
@@ -85,31 +83,13 @@ window.addEventListener("load", async function() {
       }));
       voteData = voteData.map(row => ({
         ...row,
-        campaign_date: new Date(new Date(row.campaign).getUTCFullYear(),new Date(row.campaign).getUTCMonth()).toLocaleString("en-GB",{ year: 'numeric', month: 'long'})
+        campaign_date: computeCampaign(row.campaign)
       }));
-      let htmlContent: string = `
-        <table>
-          <tr>
-           <th>Campaign</th>
-            ${emojis.map(key => `<th>${key}</th>`).join('')}
-          </tr>
-          ${voteData
-            .map(
-              row => `
-                <tr>
-                  <td>${row.campaign_date}</td>
-                  ${keys.map(key => `<td>${row.counts[key]}</td>`).join("")}
-                </tr>
-              `
-            )
-            .join("")}
-        </table>`;
 
       let statsTab = document.getElementById("statsTab");
       if (statsTab) {
-        statsTab.innerHTML = htmlContent;
+        statsTab.innerHTML = renderTemplate(voteData);
       }
-      console.info(htmlContent);
     }
   };
 
