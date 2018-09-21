@@ -1,4 +1,14 @@
-export function renderTemplate(voteData) {
+export interface StatsData {
+  [key: string]: number;
+}
+
+export type VoteData = {
+  campaign: string;
+  counts: StatsData;
+  campaign_date: string;
+}[];
+
+export function renderTemplate(voteData: VoteData) {
   const keys = ["great", "notThatGreat", "notGreatAtAll"];
   const emojis = ["😁", "😐", "😤"];
   return `

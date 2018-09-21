@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -74,36 +75,43 @@ p {
   font-weight: 300;
   cursor: pointer;
 }
-.button--display-stats
-{
+.button--display-stats {
   color: #263238;
 }
 
 table {
   color: #333;
-  border-collapse: collapse; border-spacing: 0;
-  max-width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
 }
-td, th {
+td,
+th {
   border: 1px solid transparent;
   transition: all 0.3s;
   padding: 10px;
 }
 th {
-  background: #DFDFDF;
+  background: #dfdfdf;
   font-weight: bold;
 }
 
 td {
-  background: #FAFAFA;
+  background: #fafafa;
   text-align: center;
 }
-tr:nth-child(even) td { background: #F1F1F1; }
+tr:nth-child(even) td {
+  background: #f1f1f1;
+}
 
-tr:nth-child(odd) td { background: #FEFEFE; }
+tr:nth-child(odd) td {
+  background: #fefefe;
+}
 
-tr td:hover { background: #666; color: #FFF; }
-
+tr:hover td {
+  background: #666;
+  color: #fff;
+}
 
 .button:hover {
   background: rgba(0, 0, 0, 0.08);
@@ -113,13 +121,13 @@ tr td:hover { background: #666; color: #FFF; }
 }
 
 .button--great {
-  color: #1B5E20;
+  color: #1b5e20;
 }
 .button--no-that-great {
   color: #263238;
 }
 .button--not-great-at-all {
-  color: #B71C1C;
+  color: #b71c1c;
 }
 
 .page {

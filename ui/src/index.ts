@@ -4,11 +4,8 @@ import { getCampaign, castVote } from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./style.css";
 import { Stats } from "webpack";
-import { computeCampaign } from "./services/computeCampaign";
-import { renderTemplate } from "./services/renderTemplate";
-interface StatsData {
-  [key: string]: number;
-}
+import { renderTemplate, VoteData } from "./services/renderTemplate";
+import { computeDataFromDataBase } from "./services/computeDataFromDataBase";
 
 window.addEventListener("load", async function() {
   const submitGreat = document.getElementById("submitGreat")!;
@@ -67,29 +64,10 @@ window.addEventListener("load", async function() {
     db.settings({ timestampsInSnapshots: true });
 
     const stats = await db.collection("stats").get();
-    let voteData = stats.docs.map(snapshot => ({
-      campaign: snapshot.id,
-      counts: snapshot.data() as StatsData,
-      campaign_date: ""
-    }));
-
-    if (voteData.length > 0) {
-      voteData = voteData.map(row => ({
-        ...row,
-        counts: {
-          ...{ great: 0, notGreatAtAll: 0, notThatGreat: 0 },
-          ...row.counts
-        }
-      }));
-      voteData = voteData.map(row => ({
-        ...row,
-        campaign_date: computeCampaign(row.campaign)
-      }));
-
-      let statsTab = document.getElementById("statsTab");
-      if (statsTab) {
-        statsTab.innerHTML = renderTemplate(voteData);
-      }
+    const voteData: VoteData = computeDataFromDataBase(stats);
+    let statsTab = document.getElementById("statsTab");
+    if (statsTab) {
+      statsTab.innerHTML = renderTemplate(voteData);
     }
   };
 
