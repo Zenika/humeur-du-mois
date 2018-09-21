@@ -85,13 +85,16 @@ window.addEventListener("load", async function() {
       }));
       voteData = voteData.map(row => ({
         ...row,
-        campaign_date: new Date(new Date(row.campaign).getUTCFullYear(),new Date(row.campaign).getUTCMonth()).toLocaleString("en-GB",{ year: 'numeric', month: 'long'})
+        campaign_date: new Date(
+          new Date(row.campaign).getUTCFullYear(),
+          new Date(row.campaign).getUTCMonth()
+        ).toLocaleString("en-GB", { year: "numeric", month: "long" })
       }));
       let htmlContent: string = `
         <table>
           <tr>
            <th>Campaign</th>
-            ${emojis.map(key => `<th>${key}</th>`).join('')}
+            ${emojis.map(key => `<th>${key}</th>`).join("")}
           </tr>
           ${voteData
             .map(
@@ -109,7 +112,6 @@ window.addEventListener("load", async function() {
       if (statsTab) {
         statsTab.innerHTML = htmlContent;
       }
-      console.info(htmlContent);
     }
   };
 
