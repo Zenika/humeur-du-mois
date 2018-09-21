@@ -5,7 +5,9 @@
   "scripts": {
     "build": "webpack",
     "build:prod": "npm run build -- --mode production",
-    "build:watch": "npm run build -- --watch"
+    "build:watch": "npm run build -- --watch",
+    "test": "tsc && ava",
+    "test:watch": "run-p build:watch \"test -- --watch\""
   },
   "devDependencies": {
     "@types/auth0-js": "8.11.3",
@@ -26,6 +28,7 @@
   },
   "dependencies": {
     "auth0-js": "9.7.3",
+    "ava": "0.25.0",
     "firebase": "5.3.1"
   }
 }
