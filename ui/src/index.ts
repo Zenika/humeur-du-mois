@@ -3,6 +3,11 @@ import { authenticateAuth0, authenticateFirebase } from "./auth";
 import { getCampaign, castVote } from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./style.css";
+import { Stats } from "webpack";
+
+interface StatsData {
+  [key: string]: number;
+}
 
 window.addEventListener("load", async function() {
   const submitGreat = document.getElementById("submitGreat")!;
@@ -16,6 +21,9 @@ window.addEventListener("load", async function() {
   const alreadyVotedPage = document.getElementById("alreadyVotedPage")!;
   const errorPage = document.getElementById("errorPage")!;
   const unknownEmployeePage = document.getElementById("unknownEmployeePage")!;
+  const statsPage = document.getElementById("displayStats")!;
+  const statsButton = document.getElementById("displayStatsButton")!;
+
   const pages = [
     loggingInPage,
     homePage,
@@ -24,7 +32,8 @@ window.addEventListener("load", async function() {
     noCampaignPage,
     alreadyVotedPage,
     errorPage,
-    unknownEmployeePage
+    unknownEmployeePage,
+    statsPage
   ];
   const userId = document.getElementById("userId")!;
   const userEmail = document.getElementById("userEmail")!;
@@ -45,6 +54,65 @@ window.addEventListener("load", async function() {
     hideAllPages();
     show(incoming);
   };
+
+  const displayStatsPage = (currentCampaign: string) => {
+    hideAllPages();
+    show(statsPage);
+    retrieveStatsData(currentCampaign);
+  };
+
+  const retrieveStatsData = async (campaign: string) => {
+    const db = firebase.firestore();
+    db.settings({ timestampsInSnapshots: true });
+
+    const stats = await db.collection("stats").get();
+    let voteData = stats.docs.map(snapshot => ({
+      campaign: snapshot.id,
+      counts: snapshot.data() as StatsData,
+      campaign_date: ""
+    }));
+
+    if (voteData.length > 0) {
+      const keys = ["great", "notThatGreat", "notGreatAtAll"];
+      const emojis = ["😁", "😐", "😤"];
+
+      voteData = voteData.map(row => ({
+        ...row,
+        counts: {
+          ...{ great: 0, notGreatAtAll: 0, notThatGreat: 0 },
+          ...row.counts
+        }
+      }));
+      voteData = voteData.map(row => ({
+        ...row,
+        campaign_date: new Date(new Date(row.campaign).getUTCFullYear(),new Date(row.campaign).getUTCMonth()).toLocaleString("en-GB",{ year: 'numeric', month: 'long'})
+      }));
+      let htmlContent: string = `
+        <table>
+          <tr>
+           <th>Campaign</th>
+            ${emojis.map(key => `<th>${key}</th>`).join('')}
+          </tr>
+          ${voteData
+            .map(
+              row => `
+                <tr>
+                  <td>${row.campaign_date}</td>
+                  ${keys.map(key => `<td>${row.counts[key]}</td>`).join("")}
+                </tr>
+              `
+            )
+            .join("")}
+        </table>`;
+
+      let statsTab = document.getElementById("statsTab");
+      if (statsTab) {
+        statsTab.innerHTML = htmlContent;
+      }
+      console.info(htmlContent);
+    }
+  };
+
   const errorOut = (err: Error) => {
     console.error(err);
     changePageTo(errorPage);
@@ -123,5 +191,6 @@ window.addEventListener("load", async function() {
     submitGreat.onclick = () => saveResponse("great");
     submitNotThatGreat.onclick = () => saveResponse("notThatGreat");
     submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll");
+    statsButton.onclick = () => displayStatsPage(campaign);
   }
 });
