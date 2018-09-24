@@ -112,6 +112,15 @@ jobs:
       - run: npx typescript-json-schema --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
+  check-formatting:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - attach_workspace:
+        at: .
+      - run: npm run format:check
+
   beta-validate-functions-config:
     environment:
       FIREBASE_PROJECT: beta
