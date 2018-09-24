@@ -131,7 +131,7 @@ export interface DailyAlibeezImportConfig {
   enabled: Flag;
 }
 
-export interface CollectStatsConfig{
+export interface CollectStatsConfig {
   enabled: Flag;
 }
 

@@ -1,7 +1,6 @@
 version: 2
 
 jobs:
-
   install-ui-dependencies:
     docker:
       - image: circleci/node:8
@@ -112,6 +111,15 @@ jobs:
       - run: npx typescript-json-schema --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
+  check-formatting:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: npm run format:check
+
   beta-validate-functions-config:
     environment:
       FIREBASE_PROJECT: beta
@@ -195,7 +203,6 @@ workflows:
 
   build-and-deploy:
     jobs:
-
       - install-ui-dependencies:
           filters:
             tags:
@@ -234,6 +241,12 @@ workflows:
           filters:
             tags:
               only: /.*/
+      - check-formatting:
+          requires:
+            - install-tooling-dependencies
+          filters:
+            tags:
+              only: /^v.*/
       - validate-functions-config:
           requires: &validate-functions-config-requires
             - install-tooling-dependencies

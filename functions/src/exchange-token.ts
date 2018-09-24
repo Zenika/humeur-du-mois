@@ -44,24 +44,27 @@ export const exchangeToken = functions.https.onRequest((request, response) => {
     clientId: config.auth0.client_id
   });
 
-  authenticationClient.getProfile(accessToken, async (userInfoErr, user: any) => {
-    if (userInfoErr) {
-      console.error(userInfoErr);
-      response.status(401).send(errorResponse("Unauthorized"));
-      return;
-    } else if (userId !== user.sub) {
-      response
-        .status(401)
-        .send(errorResponse("userId and accessToken do not match"));
-      return;
+  authenticationClient.getProfile(
+    accessToken,
+    async (userInfoErr, user: any) => {
+      if (userInfoErr) {
+        console.error(userInfoErr);
+        response.status(401).send(errorResponse("Unauthorized"));
+        return;
+      } else if (userId !== user.sub) {
+        response
+          .status(401)
+          .send(errorResponse("userId and accessToken do not match"));
+        return;
+      }
+      try {
+        const customToken = await exchangeTokenApp
+          .auth()
+          .createCustomToken(userId);
+        response.send({ result: { token: customToken } });
+      } catch (err) {
+        response.status(500).send(errorResponse("Error creating custom token"));
+      }
     }
-    try {
-      const customToken = await exchangeTokenApp
-        .auth()
-        .createCustomToken(userId);
-      response.send({ result: { token: customToken } });
-    } catch (err) {
-      response.status(500).send(errorResponse("Error creating custom token"));
-    }
-  });
+  );
 });

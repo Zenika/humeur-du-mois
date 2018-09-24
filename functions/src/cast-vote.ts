@@ -63,13 +63,9 @@ export const castVote = functions.https.onCall(
       .doc(payload.voter)
       .get();
     const employee = employeeSnapshot.data();
-    if(!employee){
-      throw new functions.https.HttpsError(
-        "not-found",
-        `Employee not found`
-      );
+    if (!employee) {
+      throw new functions.https.HttpsError("not-found", `Employee not found`);
     }
-
 
     const vote: Vote = {
       campaign: campaign.id,
