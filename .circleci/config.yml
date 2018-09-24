@@ -234,7 +234,8 @@ workflows:
               only: /.*/
       - check-formatting:
           requires:
-            - install-dependencies
+            - install-functions-dependencies
+            - install-ui-dependencies
           filters:
             tags:
               only: /^v.*/
