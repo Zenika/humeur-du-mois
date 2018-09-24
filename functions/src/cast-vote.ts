@@ -91,10 +91,23 @@ export const castVote = functions.https.onCall(
             }
           );
         }
-        throw err;
+        throw new functions.https.HttpsError(
+          "unknown",
+          "An unknown error happened, contact dreamlabs@zenika.com if this keeps happening",
+          {
+          }
+        );
       }
     } else {
-      await db.collection("vote").add(vote);
+      try{
+        await db.collection("vote").add(vote);
+      }catch(err){
+        throw new functions.https.HttpsError(
+          "unknown",
+          "An unknown error happened, contact dreamlabs@zenika.com if this keeps happening",
+          {
+          });
+      }
     }
   }
 );
