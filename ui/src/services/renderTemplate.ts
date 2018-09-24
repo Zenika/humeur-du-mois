@@ -5,7 +5,7 @@ export interface StatsData {
 export type VoteData = {
   campaign: string;
   counts: StatsData;
-  campaign_date: string;
+  campaignDate: string;
 }[];
 
 export function renderTemplate(voteData: VoteData) {
@@ -21,7 +21,7 @@ export function renderTemplate(voteData: VoteData) {
             .map(
               row => `
                 <tr>
-                  <td>${row.campaign_date}</td>
+                  <td>${row.campaignDate}</td>
                   ${keys.map(key => `<td>${row.counts[key]}</td>`).join("")}
                 </tr>
               `

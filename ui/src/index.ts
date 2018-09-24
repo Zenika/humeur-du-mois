@@ -4,7 +4,7 @@ import { getCampaign, castVote } from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./style.css";
 import { Stats } from "webpack";
-import { renderTemplate, VoteData } from "./services/renderTemplate";
+import { renderTemplate, VoteData, StatsData } from "./services/renderTemplate";
 import { computeDataFromDataBase } from "./services/computeDataFromDataBase";
 
 window.addEventListener("load", async function() {
@@ -21,6 +21,7 @@ window.addEventListener("load", async function() {
   const unknownEmployeePage = document.getElementById("unknownEmployeePage")!;
   const statsPage = document.getElementById("displayStats")!;
   const statsButton = document.getElementById("displayStatsButton")!;
+  const statsTab = document.getElementById("statsTab")!;
 
   const pages = [
     loggingInPage,
@@ -63,12 +64,16 @@ window.addEventListener("load", async function() {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
 
-    const stats = await db.collection("stats").get();
-    const voteData: VoteData = computeDataFromDataBase(stats);
-    let statsTab = document.getElementById("statsTab");
-    if (statsTab) {
-      statsTab.innerHTML = renderTemplate(voteData);
-    }
+    const stats: firebase.firestore.QuerySnapshot = await db
+      .collection("stats")
+      .get();
+    let voteRawData: VoteData = stats.docs.map(snapshot => ({
+      campaign: snapshot.id,
+      counts: snapshot.data() as StatsData,
+      campaignDate: ""
+    }));
+    const voteData: VoteData = computeDataFromDataBase(voteRawData);
+    statsTab.innerHTML = renderTemplate(voteData);
   };
 
   const errorOut = (err: Error) => {
