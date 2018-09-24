@@ -131,11 +131,16 @@ export interface DailyAlibeezImportConfig {
   enabled: Flag;
 }
 
+export interface CollectStatsConfig{
+  enabled: Flag;
+}
+
 export interface FeaturesConfig {
   voting_campaigns: VotingCampaignsConfig;
   reminders: RemindersConfig;
   send_vote_to_manager: SendVoteToManagerConfig;
   daily_alibeez_import: DailyAlibeezImportConfig;
+  collect_stats: CollectStatsConfig;
 }
 
 export interface AlibeezConfig {

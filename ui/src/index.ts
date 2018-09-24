@@ -3,6 +3,9 @@ import { authenticateAuth0, authenticateFirebase } from "./auth";
 import { getCampaign, castVote } from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./style.css";
+import { Stats } from "webpack";
+import { renderTemplate, VoteData, StatsData } from "./services/renderTemplate";
+import { computeDataFromDataBase } from "./services/computeDataFromDataBase";
 
 window.addEventListener("load", async function() {
   const submitGreat = document.getElementById("submitGreat")!;
@@ -16,6 +19,10 @@ window.addEventListener("load", async function() {
   const alreadyVotedPage = document.getElementById("alreadyVotedPage")!;
   const errorPage = document.getElementById("errorPage")!;
   const unknownEmployeePage = document.getElementById("unknownEmployeePage")!;
+  const statsPage = document.getElementById("displayStats")!;
+  const statsButton = document.getElementById("displayStatsButton")!;
+  const statsTab = document.getElementById("statsTab")!;
+
   const pages = [
     loggingInPage,
     homePage,
@@ -24,7 +31,8 @@ window.addEventListener("load", async function() {
     noCampaignPage,
     alreadyVotedPage,
     errorPage,
-    unknownEmployeePage
+    unknownEmployeePage,
+    statsPage
   ];
   const userId = document.getElementById("userId")!;
   const userEmail = document.getElementById("userEmail")!;
@@ -45,6 +53,29 @@ window.addEventListener("load", async function() {
     hideAllPages();
     show(incoming);
   };
+
+  const displayStatsPage = (currentCampaign: string) => {
+    hideAllPages();
+    show(statsPage);
+    retrieveStatsData(currentCampaign);
+  };
+
+  const retrieveStatsData = async (campaign: string) => {
+    const db = firebase.firestore();
+    db.settings({ timestampsInSnapshots: true });
+
+    const stats: firebase.firestore.QuerySnapshot = await db
+      .collection("stats")
+      .get();
+    let voteRawData: VoteData = stats.docs.map(snapshot => ({
+      campaign: snapshot.id,
+      counts: snapshot.data() as StatsData,
+      campaignDate: ""
+    }));
+    const voteData: VoteData = computeDataFromDataBase(voteRawData);
+    statsTab.innerHTML = renderTemplate(voteData);
+  };
+
   const errorOut = (err: Error) => {
     console.error(err);
     changePageTo(errorPage);
@@ -123,5 +154,6 @@ window.addEventListener("load", async function() {
     submitGreat.onclick = () => saveResponse("great");
     submitNotThatGreat.onclick = () => saveResponse("notThatGreat");
     submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll");
+    statsButton.onclick = () => displayStatsPage(campaign);
   }
 });
