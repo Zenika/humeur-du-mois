@@ -5,10 +5,10 @@ export type Session = {
   expiresAt: number;
 };
 
-const USER_STORAGE_KEY = "user"
-const ACCESS_TOKEN_STORAGE_KEY = "access_token"
-const ID_TOKEN_STORAGE_KEY = "id_token"
-const EXPIRES_AT_STORAGE_KEY = "expires_at"
+const USER_STORAGE_KEY = "user";
+const ACCESS_TOKEN_STORAGE_KEY = "access_token";
+const ID_TOKEN_STORAGE_KEY = "id_token";
+const EXPIRES_AT_STORAGE_KEY = "expires_at";
 
 /**
  * Restores a valid, current session from storage.
@@ -37,7 +37,10 @@ export function persist(session: Session) {
   localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(session.user));
   localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, session.accessToken);
   localStorage.setItem(ID_TOKEN_STORAGE_KEY, session.idToken);
-  localStorage.setItem(EXPIRES_AT_STORAGE_KEY, JSON.stringify(session.expiresAt));
+  localStorage.setItem(
+    EXPIRES_AT_STORAGE_KEY,
+    JSON.stringify(session.expiresAt)
+  );
 }
 
 /**
