@@ -118,7 +118,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-        at: .
+          at: .
       - run: npm run format:check
 
   beta-validate-functions-config:
@@ -232,6 +232,12 @@ workflows:
           filters:
             tags:
               only: /.*/
+      - check-formatting:
+          requires:
+            - install-dependencies
+          filters:
+            tags:
+              only: /^v.*/
       - build-functions:
           requires:
             - install-functions-dependencies
