@@ -232,13 +232,6 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - check-formatting:
-          requires:
-            - install-functions-dependencies
-            - install-ui-dependencies
-          filters:
-            tags:
-              only: /^v.*/
       - build-functions:
           requires:
             - install-functions-dependencies
@@ -250,6 +243,12 @@ workflows:
           filters:
             tags:
               only: /.*/
+      - check-formatting:
+          requires:
+            - install-tooling-dependencies
+          filters:
+            tags:
+              only: /^v.*/
       - validate-functions-config:
           requires: &validate-functions-config-requires
             - install-tooling-dependencies
