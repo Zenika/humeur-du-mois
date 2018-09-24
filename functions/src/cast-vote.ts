@@ -18,8 +18,9 @@ interface RequestPayload {
 export interface Vote {
   value: string;
   voter: string;
-  campaign: firestore.DocumentReference;
+  campaign: string;
   recordedAt: firestore.Timestamp;
+  agency: string;
 }
 
 export const castVote = functions.https.onCall(
@@ -45,12 +46,37 @@ export const castVote = functions.https.onCall(
         }
       );
     }
+    const latestImport = await db
+      .collection("employee-imports")
+      .orderBy("at", "desc")
+      .limit(1)
+      .get()
+      .then(result => result.docs[0]);
+    if (!latestImport) {
+      throw new functions.https.HttpsError(
+        "not-found",
+        `failed to load latest employees import`
+      );
+    }
+    const employeeSnapshot = await latestImport.ref
+      .collection("employees")
+      .doc(payload.voter)
+      .get();
+    const employee = employeeSnapshot.data();
+    if(!employee){
+      throw new functions.https.HttpsError(
+        "not-found",
+        `Employee not found`
+      );
+    }
+
 
     const vote: Vote = {
-      campaign: db.collection("voting-campaign").doc(campaign.id),
+      campaign: campaign.id,
       recordedAt: firestore.Timestamp.fromDate(voteDate),
       voter: payload.voter,
-      value: payload.vote
+      value: payload.vote,
+      agency: employee.agency
     };
 
     if (requireUniqueVote) {

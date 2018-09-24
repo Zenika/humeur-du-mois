@@ -21,3 +21,5 @@ export {
 export { getCampaign } from "./get-campaign";
 
 export { castVote } from "./cast-vote";
+
+export { updateStats } from "./update-stats";

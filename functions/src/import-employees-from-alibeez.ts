@@ -7,6 +7,7 @@ interface AlibeezEmployee {
   fullName: string;
   zenikaEmail: string;
   operationalManagerShortUsername: string;
+  agency: string;
 }
 
 const obfuscateKey = key => {
@@ -72,7 +73,8 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
       email: employee.zenikaEmail,
       managerEmail: employee.operationalManagerShortUsername
         ? employee.operationalManagerShortUsername + "@zenika.com"
-        : null
+        : null,
+      agency: employee.geographicalAgency
     }))
     .forEach(employee =>
       batch.set(importRef.collection("employees").doc(employee.email), employee)
