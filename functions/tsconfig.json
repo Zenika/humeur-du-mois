@@ -13,7 +13,5 @@
     "noImplicitAny": false
   },
   "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

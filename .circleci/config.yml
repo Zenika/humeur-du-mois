@@ -1,7 +1,6 @@
 version: 2
 
 jobs:
-
   install-ui-dependencies:
     docker:
       - image: circleci/node:8
@@ -204,7 +203,6 @@ workflows:
 
   build-and-deploy:
     jobs:
-
       - install-ui-dependencies:
           filters:
             tags:
