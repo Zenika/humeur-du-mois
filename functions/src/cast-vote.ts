@@ -12,15 +12,20 @@ const validVotes = ["great", "notThatGreat", "notGreatAtAll"];
 
 interface RequestPayload {
   vote: string;
-  voter: string;
+  agency: string;
+  email: string;
+  fullName: string;
+  managerEmail: string;
 }
 
 export interface Vote {
   value: string;
-  voter: string;
+  agency: string;
+  email: string;
+  fullName: string;
+  managerEmail: string;
   campaign: string;
   recordedAt: firestore.Timestamp;
-  agency: string;
 }
 
 export const castVote = functions.https.onCall(
@@ -60,7 +65,7 @@ export const castVote = functions.https.onCall(
     }
     const employeeSnapshot = await latestImport.ref
       .collection("employees")
-      .doc(payload.voter)
+      .doc(payload.email)
       .get();
     const employee = employeeSnapshot.data();
     if (!employee) {
@@ -70,9 +75,11 @@ export const castVote = functions.https.onCall(
     const vote: Vote = {
       campaign: campaign.id,
       recordedAt: firestore.Timestamp.fromDate(voteDate),
-      voter: payload.voter,
-      value: payload.vote,
-      agency: employee.agency
+      agency: payload.agency,
+      email: payload.email,
+      fullName: payload.fullName,
+      managerEmail: payload.managerEmail,
+      value: payload.vote
     };
 
     if (requireUniqueVote) {

@@ -37,11 +37,11 @@ export const sendEmailToManager = functions.firestore
 
     const employeeSnapshot = await latestImport.ref
       .collection("employees")
-      .doc(vote.voter)
+      .doc(vote.email)
       .get();
     const employee = employeeSnapshot.data();
     if (!employee) {
-      throw new Error(`cannot find user '${vote.voter}' in employee data`);
+      throw new Error(`cannot find user '${vote.email}' in employee data`);
     }
     if (!employee.managerEmail) {
       return;

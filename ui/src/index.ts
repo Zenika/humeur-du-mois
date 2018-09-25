@@ -132,7 +132,13 @@ window.addEventListener("load", async function() {
     const saveResponse = async (response: string) => {
       changePageTo(recordingPage);
       try {
-        await castVote({ vote: response, voter: employee.email });
+        await castVote({
+          vote: response,
+          agency: employee.agency,
+          email: employee.email,
+          fullName: employee.fullName,
+          managerEmail: employee.managerEmail
+        });
       } catch (err) {
         if (err.status === "ALREADY_EXISTS") {
           changePageTo(alreadyVotedPage);
