@@ -13,6 +13,7 @@ const mailgunClient = mailgun({
   apiKey: config.mailgun.api_key,
   host: config.mailgun.host
 });
+const db = firebase.firestore();
 
 export const sendEmailToManager = functions.firestore
   .document("vote/{voteId}")
@@ -24,21 +25,13 @@ export const sendEmailToManager = functions.firestore
 
     const vote = voteSnapshot.data()! as Vote;
 
-    const latestImport = await firebase
-      .firestore()
-      .collection("employee-imports")
-      .orderBy("at", "desc")
-      .limit(1)
-      .get()
-      .then(result => result.docs[0]);
-    if (!latestImport) {
-      throw new Error("cannot find latest employee data import");
-    }
-
-    const employeeSnapshot = await latestImport.ref
+    const employeeSnapshot = await db
       .collection("employees")
       .doc(vote.email)
       .get();
+    if (!employeeSnapshot) {
+      throw new Error("cannot find employee data import");
+    }
     const employee = employeeSnapshot.data();
     if (!employee) {
       throw new Error(`cannot find user '${vote.email}' in employee data`);

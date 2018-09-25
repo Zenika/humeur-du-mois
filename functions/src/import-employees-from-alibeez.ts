@@ -57,10 +57,7 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
   employeesWithNoValidEmail.forEach(employee => {
     console.info("employee with no valid email: " + employee.fullName);
   });
-  const importRef = firebase
-    .firestore()
-    .collection("employee-imports")
-    .doc(requestRef.id);
+
   const batch = firebase.firestore().batch();
 
   employeesWithValidEmail

@@ -51,22 +51,17 @@ export const castVote = functions.https.onCall(
         }
       );
     }
-    const latestImport = await db
-      .collection("employee-imports")
-      .orderBy("at", "desc")
-      .limit(1)
-      .get()
-      .then(result => result.docs[0]);
-    if (!latestImport) {
+
+    const employeeSnapshot = await db
+      .collection("employees")
+      .doc(payload.email)
+      .get();
+    if (!employeeSnapshot) {
       throw new functions.https.HttpsError(
         "not-found",
         `failed to load latest employees import`
       );
     }
-    const employeeSnapshot = await latestImport.ref
-      .collection("employees")
-      .doc(payload.email)
-      .get();
     const employee = employeeSnapshot.data();
     if (!employee) {
       throw new functions.https.HttpsError("not-found", `Employee not found`);
