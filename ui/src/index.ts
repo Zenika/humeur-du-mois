@@ -22,6 +22,13 @@ window.addEventListener("load", async function() {
   const statsPage = document.getElementById("displayStats")!;
   const statsButton = document.getElementById("displayStatsButton")!;
   const statsTab = document.getElementById("statsTab")!;
+  const homeButtons = [
+    this.document.getElementById("homeButton1"),
+    this.document.getElementById("homeButton2"),
+    this.document.getElementById("homeButton3"),
+    this.document.getElementById("homeButton4"),
+    this.document.getElementById("homeButton5")
+  ];
 
   const pages = [
     loggingInPage,
@@ -58,6 +65,11 @@ window.addEventListener("load", async function() {
     hideAllPages();
     show(statsPage);
     retrieveStatsData(currentCampaign);
+  };
+
+  const displayHomePage: any = () => {
+    hideAllPages();
+    show(homePage);
   };
 
   const retrieveStatsData = async (campaign: string) => {
@@ -155,5 +167,8 @@ window.addEventListener("load", async function() {
     submitNotThatGreat.onclick = () => saveResponse("notThatGreat");
     submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll");
     statsButton.onclick = () => displayStatsPage(campaign);
+    homeButtons.forEach(button => {
+      if (button) button.onclick = () => displayHomePage();
+    });
   }
 });
