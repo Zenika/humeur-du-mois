@@ -62,11 +62,7 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
     .collection("employee-imports")
     .doc(requestRef.id);
   const batch = firebase.firestore().batch();
-  batch.set(importRef, {
-    at: new Date().toISOString(),
-    employeeCount: employees.length,
-    employeeWithValidEmailCount: employeesWithValidEmail.length
-  });
+
   employeesWithValidEmail
     .map(employee => ({
       fullName: employee.fullName,
@@ -77,7 +73,13 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
       agency: employee.geographicalAgency
     }))
     .forEach(employee =>
-      batch.set(importRef.collection("employees").doc(employee.email), employee)
+      batch.set(
+        firebase
+          .firestore()
+          .collection("employees")
+          .doc(employee.email),
+        employee
+      )
     );
   await batch.commit();
 };
