@@ -37,6 +37,11 @@ export const sendEmailToManager = functions.firestore
       throw new Error(`cannot find user '${vote.email}' in employee data`);
     }
     if (!employee.managerEmail) {
+      console.error(
+        `Employee ${
+          employee.fullName
+        }'s manager isn't recorded into the database yet`
+      );
       return;
     }
 
