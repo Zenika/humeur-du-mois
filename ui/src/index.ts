@@ -23,11 +23,11 @@ window.addEventListener("load", async function() {
   const statsButton = document.getElementById("displayStatsButton")!;
   const statsTab = document.getElementById("statsTab")!;
   const homeButtons = [
-    this.document.getElementById("homeButton1"),
-    this.document.getElementById("homeButton2"),
-    this.document.getElementById("homeButton3"),
-    this.document.getElementById("homeButton4"),
-    this.document.getElementById("homeButton5")
+    this.document.getElementById("homeButton1")!,
+    this.document.getElementById("homeButton2")!,
+    this.document.getElementById("homeButton3")!,
+    this.document.getElementById("homeButton4")!,
+    this.document.getElementById("homeButton5")!
   ];
 
   const pages = [
@@ -62,8 +62,7 @@ window.addEventListener("load", async function() {
   };
 
   const displayStatsPage = (currentCampaign: string) => {
-    hideAllPages();
-    show(statsPage);
+    changePageTo(statsPage);
     retrieveStatsData(currentCampaign);
   };
 
@@ -168,7 +167,7 @@ window.addEventListener("load", async function() {
     submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll");
     statsButton.onclick = () => displayStatsPage(campaign);
     homeButtons.forEach(button => {
-      if (button) button.onclick = () => displayHomePage();
+      button.onclick = () => displayHomePage();
     });
   }
 });
