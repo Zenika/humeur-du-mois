@@ -29,7 +29,7 @@ export const castVote = functions.https.onCall(
         `'${payload.vote}' is not a valid value for 'vote'`
       );
     }
-    const userEmail: string = context.auth!.token.email;
+    const voterEmail: string = context.auth!.token.email;
     const voteDate = new Date();
     const campaign = computeCurrentCampaign(voteDate, {
       enabled: isEnabled(config.features.voting_campaigns),
@@ -48,7 +48,7 @@ export const castVote = functions.https.onCall(
 
     const employeeSnapshot = await db
       .collection("employees")
-      .doc(userEmail)
+      .doc(voterEmail)
       .get();
     if (!employeeSnapshot) {
       throw new functions.https.HttpsError(
