@@ -120,21 +120,14 @@ window.addEventListener("load", async function() {
       return;
     }
 
-    const latestImport = await db
-      .collection("employee-imports")
-      .orderBy("at", "desc")
-      .limit(1)
-      .get()
-      .then(result => result.docs[0]);
-    if (!latestImport) {
-      errorOut(new Error("cannot find latest employee data import"));
-      return;
-    }
-
-    const employeeSnapshot = await latestImport.ref
+    const employeeSnapshot = await db
       .collection("employees")
       .doc(userId)
       .get();
+    if (!employeeSnapshot) {
+      errorOut(new Error("cannot find latest employee data import"));
+      return;
+    }
     const employee = employeeSnapshot.data();
     if (!employee) {
       userEmail.innerText = userId;
@@ -150,7 +143,9 @@ window.addEventListener("load", async function() {
     const saveResponse = async (response: string) => {
       changePageTo(recordingPage);
       try {
-        await castVote({ vote: response, voter: employee.email });
+        await castVote({
+          vote: response
+        });
       } catch (err) {
         if (err.status === "ALREADY_EXISTS") {
           changePageTo(alreadyVotedPage);

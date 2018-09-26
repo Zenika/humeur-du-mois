@@ -21,12 +21,12 @@
   <div class="content">
     <div id="loggingInPage" class="page">
       <h2>Hi!</h2>
+      <h1>I'm logging you in...</h1>
       <div class="loader">
         <svg class="circular" viewBox="25 25 50 50">
           <circle class="path" cx="50" cy="50" r="20" fill="none" strokeWidth="2" strokeMiterlimit="10" />
         </svg>
       </div>
-      <h1>I'm logging you in...</h1>
     </div>
     <div id="homePage" class="page hidden">
       <h2>Welcome,
@@ -69,18 +69,20 @@
         </button>
       </div>
       <div id="statsTab"></div>
+
     </div>
     <div id="recordingPage" class="page hidden">
       <h2>Sit tight!</h2>
+      <h1>I'm recording your vote...</h1>
       <div class="loader">
         <svg class="circular" viewBox="25 25 50 50">
           <circle class="path" cx="50" cy="50" r="20" fill="none" strokeWidth="2" strokeMiterlimit="10" />
         </svg>
       </div>
-      <h1>I'm recording your vote...</h1>
     </div>
     <div id="thankYouPage" class="page hidden">
       <h2>Thanks!</h2>
+      <h1>Your answer was properly recorded.</h1>
       <div class="button_wrapper">
         <button class="button button--display-stats" type="button" id="homeButton2">
           <span class="button__emoji">
@@ -88,7 +90,6 @@
           </span> Home
         </button>
       </div>
-      <h1>Your answer was properly recorded.</h1>
     </div>
     <div id="noCampaignPage" class="page hidden">
       <h2>We're closed!</h2>
@@ -96,6 +97,7 @@
     </div>
     <div id="alreadyVotedPage" class="page hidden">
       <h2>We're closed!</h2>
+      <h1>Looks like you've already voted this month.</h1>
       <div class="button_wrapper">
         <button class="button button--display-stats" type="button" id="homeButton3">
           <span class="button__emoji">
@@ -103,10 +105,12 @@
           </span> Home
         </button>
       </div>
-      <h1>Looks like you've already voted this month.</h1>
     </div>
     <div id="errorPage" class="page hidden">
       <h2>There was an error!</h2>
+      <h1>Please try reloading.</h1>
+      <p>If this keeps happening, contact dreamlab@zenika.com or #dreamlab on Slack.</p>
+      <p>You may check the console for more details about the error.</p>
       <div class="button_wrapper">
         <button class="button button--display-stats" type="button" id="homeButton4">
           <span class="button__emoji">
@@ -114,12 +118,13 @@
           </span> Home
         </button>
       </div>
-      <h1>Please try reloading.</h1>
-      <p>If this keeps happening, contact dreamlab@zenika.com or #dreamlab on Slack.</p>
-      <p>You may check the console for more details about the error.</p>
     </div>
     <div id="unknownEmployeePage" class="page hidden">
       <h2>Hi!</h2>
+      <h1>I don't know you yet: <span id="userEmail"></span></h1>
+      <p>If it's your first day at Zenika you may not be able to vote today.</p>
+      <p>Come back tommorow.</p>
+      <p>If this keeps happening, contact dreamlab@zenika.com or #dreamlab on Slack.</p>
       <div class="button_wrapper">
         <button class="button button--display-stats" type="button" id="homeButton5">
           <span class="button__emoji">
@@ -127,10 +132,6 @@
           </span> Home
         </button>
       </div>
-      <h1>I don't know you yet: <span id="userEmail"></span></h1>
-      <p>If it's your first day at Zenika you may not be able to vote today.</p>
-      <p>Come back tommorow.</p>
-      <p>If this keeps happening, contact dreamlab@zenika.com or #dreamlab on Slack.</p>
     </div>
   </div>
 </body>

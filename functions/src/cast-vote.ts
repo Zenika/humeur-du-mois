@@ -2,6 +2,7 @@ import { firestore } from "firebase-admin";
 import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
+import { Employee } from "./import-employees-from-alibeez";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -12,15 +13,12 @@ const validVotes = ["great", "notThatGreat", "notGreatAtAll"];
 
 interface RequestPayload {
   vote: string;
-  voter: string;
 }
 
-export interface Vote {
+export interface Vote extends Employee {
   value: string;
-  voter: string;
   campaign: string;
   recordedAt: firestore.Timestamp;
-  agency: string;
 }
 
 export const castVote = functions.https.onCall(
@@ -31,6 +29,7 @@ export const castVote = functions.https.onCall(
         `'${payload.vote}' is not a valid value for 'vote'`
       );
     }
+    const voterEmail: string = context.auth!.token.email;
     const voteDate = new Date();
     const campaign = computeCurrentCampaign(voteDate, {
       enabled: isEnabled(config.features.voting_campaigns),
@@ -46,23 +45,19 @@ export const castVote = functions.https.onCall(
         }
       );
     }
-    const latestImport = await db
-      .collection("employee-imports")
-      .orderBy("at", "desc")
-      .limit(1)
-      .get()
-      .then(result => result.docs[0]);
-    if (!latestImport) {
+
+    const employeeSnapshot = await db
+      .collection("employees")
+      .doc(voterEmail)
+      .get();
+    if (!employeeSnapshot) {
       throw new functions.https.HttpsError(
         "not-found",
         `failed to load latest employees import`
       );
     }
-    const employeeSnapshot = await latestImport.ref
-      .collection("employees")
-      .doc(payload.voter)
-      .get();
-    const employee = employeeSnapshot.data();
+    const employee = employeeSnapshot.data() as Employee | undefined;
+
     if (!employee) {
       throw new functions.https.HttpsError("not-found", `Employee not found`);
     }
@@ -70,9 +65,8 @@ export const castVote = functions.https.onCall(
     const vote: Vote = {
       campaign: campaign.id,
       recordedAt: firestore.Timestamp.fromDate(voteDate),
-      voter: payload.voter,
       value: payload.vote,
-      agency: employee.agency
+      ...employee
     };
 
     if (requireUniqueVote) {
