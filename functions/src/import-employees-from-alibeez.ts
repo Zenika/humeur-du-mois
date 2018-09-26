@@ -7,6 +7,13 @@ interface AlibeezEmployee {
   fullName: string;
   zenikaEmail: string;
   operationalManagerShortUsername: string;
+  geographicalAgency: string;
+}
+
+export interface Employee {
+  fullName: string;
+  email: string;
+  managerEmail: string;
   agency: string;
 }
 
@@ -49,7 +56,10 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
     return;
   }
   const employees: AlibeezEmployee[] = await response.json();
-  const [employeesWithValidEmail, employeesWithNoValidEmail] = partition(
+  const [employeesWithValidEmail, employeesWithNoValidEmail]: [
+    AlibeezEmployee[],
+    AlibeezEmployee[]
+  ] = partition(
     employees,
     employee =>
       employee.zenikaEmail && employee.zenikaEmail.endsWith("@zenika.com")
@@ -61,14 +71,17 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
   const batch = firebase.firestore().batch();
 
   employeesWithValidEmail
-    .map(employee => ({
-      fullName: employee.fullName,
-      email: employee.zenikaEmail,
-      managerEmail: employee.operationalManagerShortUsername
-        ? employee.operationalManagerShortUsername + "@zenika.com"
-        : null,
-      agency: employee.geographicalAgency
-    }))
+    .map(
+      employee =>
+        ({
+          fullName: employee.fullName,
+          email: employee.zenikaEmail,
+          managerEmail: employee.operationalManagerShortUsername
+            ? employee.operationalManagerShortUsername + "@zenika.com"
+            : null,
+          agency: employee.geographicalAgency
+        } as Employee)
+    )
     .forEach(employee =>
       batch.set(
         firebase

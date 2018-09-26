@@ -2,6 +2,7 @@ import { firestore } from "firebase-admin";
 import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
+import { Employee } from "./import-employees-from-alibeez";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -12,18 +13,10 @@ const validVotes = ["great", "notThatGreat", "notGreatAtAll"];
 
 interface RequestPayload {
   vote: string;
-  agency: string;
-  email: string;
-  fullName: string;
-  managerEmail: string;
 }
 
-export interface Vote {
+export interface Vote extends Employee {
   value: string;
-  agency: string;
-  email: string;
-  fullName: string;
-  managerEmail: string;
   campaign: string;
   recordedAt: firestore.Timestamp;
 }
@@ -36,6 +29,7 @@ export const castVote = functions.https.onCall(
         `'${payload.vote}' is not a valid value for 'vote'`
       );
     }
+    const userEmail: string = context.auth!.token.email;
     const voteDate = new Date();
     const campaign = computeCurrentCampaign(voteDate, {
       enabled: isEnabled(config.features.voting_campaigns),
@@ -54,7 +48,7 @@ export const castVote = functions.https.onCall(
 
     const employeeSnapshot = await db
       .collection("employees")
-      .doc(payload.email)
+      .doc(userEmail)
       .get();
     if (!employeeSnapshot) {
       throw new functions.https.HttpsError(
@@ -62,7 +56,8 @@ export const castVote = functions.https.onCall(
         `failed to load latest employees import`
       );
     }
-    const employee = employeeSnapshot.data();
+    const employee = employeeSnapshot.data() as Employee | undefined;
+
     if (!employee) {
       throw new functions.https.HttpsError("not-found", `Employee not found`);
     }
@@ -70,11 +65,8 @@ export const castVote = functions.https.onCall(
     const vote: Vote = {
       campaign: campaign.id,
       recordedAt: firestore.Timestamp.fromDate(voteDate),
-      agency: payload.agency,
-      email: payload.email,
-      fullName: payload.fullName,
-      managerEmail: payload.managerEmail,
-      value: payload.vote
+      value: payload.vote,
+      ...employee
     };
 
     if (requireUniqueVote) {

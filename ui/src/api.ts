@@ -37,10 +37,5 @@ export const exchangeToken = (payload: {
 export const getCampaign = () =>
   call("getCampaign", {}) as Promise<{ campaign: string }>;
 
-export const castVote = (payload: {
-  vote: string;
-  agency: string;
-  email: string;
-  fullName: string;
-  managerEmail: string;
-}) => call("castVote", payload) as Promise<void>;
+export const castVote = (payload: { vote: string }) =>
+  call("castVote", payload) as Promise<void>;

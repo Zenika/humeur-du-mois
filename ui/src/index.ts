@@ -133,11 +133,7 @@ window.addEventListener("load", async function() {
       changePageTo(recordingPage);
       try {
         await castVote({
-          vote: response,
-          agency: employee.agency,
-          email: employee.email,
-          fullName: employee.fullName,
-          managerEmail: employee.managerEmail
+          vote: response
         });
       } catch (err) {
         if (err.status === "ALREADY_EXISTS") {

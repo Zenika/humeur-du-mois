@@ -60,7 +60,7 @@ export const exchangeToken = functions.https.onRequest((request, response) => {
       try {
         const customToken = await exchangeTokenApp
           .auth()
-          .createCustomToken(userId);
+          .createCustomToken(userId, { email: user.email });
         response.send({ result: { token: customToken } });
       } catch (err) {
         response.status(500).send(errorResponse("Error creating custom token"));
