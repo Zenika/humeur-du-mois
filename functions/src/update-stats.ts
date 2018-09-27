@@ -21,39 +21,40 @@ export const updateStats = functions.firestore
     }
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
-    const statsCollection = firebase.firestore().collection("stats");
-
-    await firebase.firestore().runTransaction(async transaction => {
-      const doc = await transaction.get(statsCollection.doc(vote.campaign));
-      const storedVote = await transaction.get(
-        statsCollection
-          .doc(vote.campaign)
-          .collection("votes")
-          .doc(voteId)
-      );
-
-      if (storedVote.exists) {
-        console.info(
-          "This vote(" + voteId + ") has already been counted, aborting;"
-        );
-        return;
-      }
-
-      const inputData = doc.data() || {};
-      const oldCounters = { [vote.value]: 0, ...inputData };
-      const newCounters = {
-        ...oldCounters,
-        [vote.value]: oldCounters[vote.value] + 1
-      };
-
-      return transaction
-        .set(statsCollection.doc(vote.campaign), newCounters)
-        .set(
-          statsCollection
-            .doc(vote.campaign)
-            .collection("votes")
-            .doc(voteId),
-          {}
-        );
-    });
+    updateStatsFunction(vote, voteId);
   });
+
+export const updateStatsFunction = async (vote: Vote, voteId: string) => {
+  const statsCollection = firebase.firestore().collection("stats");
+  await firebase.firestore().runTransaction(async transaction => {
+    const doc = await transaction.get(statsCollection.doc(vote.campaign));
+    const storedVote = await transaction.get(
+      statsCollection
+        .doc(vote.campaign)
+        .collection("votes")
+        .doc(voteId)
+    );
+
+    if (storedVote.exists) {
+      console.info(
+        "This vote(" + voteId + ") has already been counted, aborting;"
+      );
+      return;
+    }
+
+    const inputData = doc.data() || {};
+    const oldCounters = { [vote.value]: 0, ...inputData };
+    const newCounters = {
+      ...oldCounters,
+      [vote.value]: oldCounters[vote.value] + 1
+    };
+
+    return transaction.set(statsCollection.doc(vote.campaign), newCounters).set(
+      statsCollection
+        .doc(vote.campaign)
+        .collection("votes")
+        .doc(voteId),
+      {}
+    );
+  });
+};
