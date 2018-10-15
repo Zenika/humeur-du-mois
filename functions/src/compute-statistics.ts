@@ -33,23 +33,23 @@ export const computeStatistics = functions.https.onRequest(
 );
 
 async function deleteCollection(
-  db: FirebaseFirestore.Firestore,
+  fireStore: FirebaseFirestore.Firestore,
   collectionPath: string,
   batchSize: number
 ) {
   console.info(`Trying to delete collection ${collectionPath}`);
-  const collectionRef = db.collection(collectionPath);
+  const collectionRef = fireStore.collection(collectionPath);
   const query = collectionRef.limit(batchSize);
 
   return new Promise((resolve, reject) => {
-    deleteQueryBatch(db, query, batchSize, resolve, reject);
-  }).catch(e => {
-    console.error(e);
+    deleteQueryBatch(fireStore, query, batchSize, resolve, reject).catch(
+      reject
+    );
   });
 }
 
 async function deleteQueryBatch(
-  db: FirebaseFirestore.Firestore,
+  fireStore: FirebaseFirestore.Firestore,
   query: FirebaseFirestore.Query,
   batchSize: number,
   resolve,
@@ -64,12 +64,12 @@ async function deleteQueryBatch(
         return 0;
       }
       // Delete documents in a batch
-      const batch = db.batch();
+      const batch = fireStore.batch();
       for (const doc of snapshot.docs) {
         const collections = await doc.ref.getCollections();
         collections.forEach(collection => {
           console.log(`Found subcollection ${collection.id}`);
-          deleteCollection(db, collection.path, 100);
+          deleteCollection(fireStore, collection.path, 100).catch(reject);
         });
       }
       snapshot.docs.forEach(doc => {
@@ -90,7 +90,9 @@ async function deleteQueryBatch(
       // exploding the stack.
       process.nextTick(() => {
         console.info(`Deleting batch of size ${batchSize}`);
-        deleteQueryBatch(db, query, batchSize, resolve, reject);
+        deleteQueryBatch(fireStore, query, batchSize, resolve, reject).catch(
+          reject
+        );
       });
     })
     .catch(reject);
