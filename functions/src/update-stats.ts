@@ -12,18 +12,6 @@ interface StatsData {
   notGreatAtAllCount: number;
 }
 
-export const updateStats = functions.firestore
-  .document("vote/{voteId}")
-  .onCreate(async voteSnapshot => {
-    if (!isEnabled(config.features.collect_stats)) {
-      console.info("stats collecting is disabled; aborting");
-      return;
-    }
-    const vote = voteSnapshot.data()! as Vote;
-    const voteId: string = voteSnapshot.id;
-    updateStatsFunction(vote, voteId);
-  });
-
 export const updateStatsFunction = async (vote: Vote, voteId: string) => {
   const statsCollection = firebase.firestore().collection("stats");
   await firebase.firestore().runTransaction(async transaction => {
@@ -57,3 +45,16 @@ export const updateStatsFunction = async (vote: Vote, voteId: string) => {
       );
   });
 };
+export const updateStats = functions.firestore
+  .document("vote/{voteId}")
+  .onCreate(async voteSnapshot => {
+    if (!isEnabled(config.features.collect_stats)) {
+      console.info("stats collecting is disabled; aborting");
+      return;
+    }
+    const vote = voteSnapshot.data()! as Vote;
+    const voteId: string = voteSnapshot.id;
+    updateStatsFunction(vote, voteId).catch(e => {
+      console.error(e);
+    });
+  });
