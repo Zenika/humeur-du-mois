@@ -1,22 +1,26 @@
 import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
 
-import { Config, isEnabled } from "./config";
+import { Config, ComputeStatisticsConfigs } from "./config";
 import { updateStatsFunction } from "./update-stats";
 import { Vote } from "./cast-vote";
 
 const config = functions.config() as Config;
-const adminKey: string = config.features.compute_statistics.key;
+const computeStatisticsConfigs: ComputeStatisticsConfigs = {
+  enabled: config.features.compute_statistics.enabled,
+  key: config.features.compute_statistics.key
+};
 const db = firebase.firestore();
 
 export const computeStatistics = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
-    if (!config.features.compute_statistics.enabled) {
+    if (!computeStatisticsConfigs.enabled) {
       console.info("Compute statistics feature is disabled; aborting");
       return;
     }
     const passedData = req.get("Authorization") || "";
-    const passedKey = passedData.toString() === `Bearer ${adminKey}`;
+    const passedKey =
+      passedData.toString() === `Bearer ${computeStatisticsConfigs.key}`;
     if (!passedKey) {
       console.info("function's payload passed the wrong admin key; aborting");
       return;
@@ -67,9 +71,9 @@ async function deleteQueryBatch(
       const batch = fireStore.batch();
       for (const doc of snapshot.docs) {
         const collections = await doc.ref.getCollections();
-        collections.forEach(collection => {
+        collections.forEach(async collection => {
           console.log(`Found subcollection ${collection.id}`);
-          deleteCollection(fireStore, collection.path, 100).catch(reject);
+          await deleteCollection(fireStore, collection.path, 100).catch(reject);
         });
       }
       snapshot.docs.forEach(doc => {
@@ -88,11 +92,15 @@ async function deleteQueryBatch(
 
       // Recurse on the next process tick, to avoid
       // exploding the stack.
-      process.nextTick(() => {
+      process.nextTick(async () => {
         console.info(`Deleting batch of size ${batchSize}`);
-        deleteQueryBatch(fireStore, query, batchSize, resolve, reject).catch(
+        await deleteQueryBatch(
+          fireStore,
+          query,
+          batchSize,
+          resolve,
           reject
-        );
+        ).catch(reject);
       });
     })
     .catch(reject);
