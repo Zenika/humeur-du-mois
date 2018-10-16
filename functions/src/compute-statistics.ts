@@ -2,10 +2,9 @@ import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
 import * as firebaseTools from "firebase-tools";
 
-import { Config, ComputeStatisticsConfigs } from "./config";
+import { Config } from "./config";
 import { updateStatsFunction } from "./update-stats";
 import { Vote } from "./cast-vote";
-import { Firestore } from "@google-cloud/firestore";
 
 const config = functions.config() as Config;
 const computeStatisticsConfigs = config.features.compute_statistics;
