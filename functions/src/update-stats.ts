@@ -26,7 +26,6 @@ export const updateStatsFunction = async (vote: Vote, voteId: string) => {
     );
     //To prevent double calls to updateStats from occuring
     if (storedVote.exists) {
-      console.info(`This vote(${voteId}) has already been counted, aborting;`);
       return;
     }
     const updateCounters = {
@@ -49,7 +48,6 @@ export const updateStats = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
     if (!isEnabled(config.features.collect_stats)) {
-      console.info("stats collecting is disabled; aborting");
       return;
     }
     const vote = voteSnapshot.data()! as Vote;
