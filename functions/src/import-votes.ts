@@ -15,21 +15,9 @@ const fromJSONtoVote = (JSONString: string) => {
     if (
       "value" in supposedlyValidVote &&
       "campaign" in supposedlyValidVote &&
-      "recordedAt" in supposedlyValidVote &&
-      "fullName" in supposedlyValidVote &&
-      "email" in supposedlyValidVote &&
-      "managerEmail" in supposedlyValidVote &&
       "agency" in supposedlyValidVote
     ) {
-      validVotes.push({
-        value: supposedlyValidVote.value,
-        campaign: supposedlyValidVote.campaign,
-        recordedAt: supposedlyValidVote.recordedAt,
-        fullName: supposedlyValidVote.fullName,
-        email: supposedlyValidVote.email,
-        managerEmail: supposedlyValidVote.managerEmail,
-        agency: supposedlyValidVote.agency
-      });
+      validVotes.push(supposedlyValidVote);
     }
   }
   return validVotes;
@@ -52,17 +40,7 @@ export const importVotes = functions.https.onRequest(
     const date: firebase.firestore.Timestamp = firebase.firestore.Timestamp.fromDate(
       new Date()
     );
-    let validVotes: Vote[] = [
-      {
-        value: "",
-        campaign: "",
-        recordedAt: date,
-        fullName: "",
-        email: "",
-        managerEmail: "",
-        agency: ""
-      }
-    ];
+    let validVotes: Vote[] = [];
     try {
       validVotes = fromJSONtoVote(passedJSONString);
     } catch (e) {
