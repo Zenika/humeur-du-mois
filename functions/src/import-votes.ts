@@ -1,8 +1,10 @@
 import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
+import { firestore } from "firebase-admin";
 
 import { Config, ImportVotesConfig } from "./config";
 import { Vote, castVote } from "./cast-vote";
+import { Timestamp } from "@google-cloud/firestore";
 
 const config = functions.config() as Config;
 const importVotesConfigs: ImportVotesConfig = {
@@ -24,8 +26,25 @@ export const importVotes = functions.https.onRequest(
       console.info("Passed the wrong auth key, aborting");
       return;
     }
-    const passedJSONString = req.params.votesData;
-    const validVotes = fromJSONtoVote(passedJSONString);
+    const passedJSONString = req.body.votesData;
+    const date: firestore.Timestamp = firestore.Timestamp.fromDate(new Date());
+    let validVotes: Vote[] = [
+      {
+        value: "",
+        campaign: "",
+        recordedAt: date,
+        fullName: "",
+        email: "",
+        managerEmail: "",
+        agency: ""
+      }
+    ];
+    try {
+      validVotes = fromJSONtoVote(passedJSONString);
+    } catch (e) {
+      console.error(e);
+    }
+
     for (const validVote of validVotes) {
       await db.collection("vote").add(validVote);
     }
@@ -34,17 +53,18 @@ export const importVotes = functions.https.onRequest(
 
 const fromJSONtoVote = (JSONString: string) => {
   const supposedlyValidVotes = JSON.parse(JSONString);
+  console.info(supposedlyValidVotes);
   const validVotes: Vote[] = [];
-  for (const supposedlyValidVote of supposedlyValidVotes) {
+  for (const supposedlyValidVote of supposedlyValidVotes.votes) {
     if (
-      supposedlyValidVote &&
-      supposedlyValidVote.value &&
-      supposedlyValidVote.campaign &&
-      supposedlyValidVote.recordedAt &&
-      supposedlyValidVote.fullName &&
-      supposedlyValidVote.email &&
-      supposedlyValidVote.managerEmail &&
-      supposedlyValidVote.agency
+      //supposedlyValidVote &&
+      "value" in supposedlyValidVote &&
+      "campaign" in supposedlyValidVote &&
+      "recordedAt" in supposedlyValidVote &&
+      "fullName" in supposedlyValidVote &&
+      "email" in supposedlyValidVote &&
+      "managerEmail" in supposedlyValidVote &&
+      "agency" in supposedlyValidVote
     ) {
       validVotes.push({
         value: supposedlyValidVote.value,
@@ -57,5 +77,6 @@ const fromJSONtoVote = (JSONString: string) => {
       });
     }
   }
+  console.info(validVotes);
   return validVotes;
 };
