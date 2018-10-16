@@ -1,16 +1,14 @@
 import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
+import * as firebaseTools from "firebase-tools";
 
 import { Config, ComputeStatisticsConfigs } from "./config";
 import { updateStatsFunction } from "./update-stats";
 import { Vote } from "./cast-vote";
-import { deleteCollection } from "./firebase-delete-collection";
+import { Firestore } from "@google-cloud/firestore";
 
 const config = functions.config() as Config;
-const computeStatisticsConfigs: ComputeStatisticsConfigs = {
-  enabled: config.features.compute_statistics.enabled,
-  key: config.features.compute_statistics.key
-};
+const computeStatisticsConfigs = config.features.compute_statistics;
 const db = firebase.firestore();
 
 export const computeStatistics = functions.https.onRequest(
@@ -18,13 +16,20 @@ export const computeStatistics = functions.https.onRequest(
     if (!computeStatisticsConfigs.enabled) {
       return;
     }
-    const passedData = req.get("Authorization") || "";
-    const passedKey =
-      passedData.toString() === `Bearer ${computeStatisticsConfigs.key}`;
-    if (!passedKey) {
+    const authorizationHeader = req.get("Authorization") || "";
+    const keyIsCorrect =
+      authorizationHeader === `Bearer ${computeStatisticsConfigs.key}`;
+    if (!keyIsCorrect) {
+      res.sendStatus(401);
       return;
     }
-    await deleteCollection(db, "stats", 100);
+
+    await firebaseTools.firestore.delete("stats", {
+      project: process.env.GCLOUD_PROJECT,
+      recursive: true,
+      yes: true
+    });
+
     const votes = await db.collection("vote").get();
     for (const vote of votes.docs) {
       await updateStatsFunction(vote.data() as Vote, vote.id);
