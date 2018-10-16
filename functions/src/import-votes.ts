@@ -7,10 +7,7 @@ import { Vote, castVote } from "./cast-vote";
 import { Timestamp } from "@google-cloud/firestore";
 
 const config = functions.config() as Config;
-const importVotesConfigs: ImportVotesConfig = {
-  enabled: config.features.import_votes.enabled,
-  key: config.features.import_votes.key
-};
+const importVotesConfigs = config.features.import_votes;
 const db = firebase.firestore();
 
 export const importVotes = functions.https.onRequest(
