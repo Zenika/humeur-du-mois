@@ -1,3 +1,6 @@
 service-account.json
 .runtimeconfig.json
 node_modules/
+.vscode/
+.firebase
+firebase-debug.log
