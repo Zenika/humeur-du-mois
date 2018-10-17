@@ -3,7 +3,7 @@ import * as firebase from "firebase-admin";
 import * as firebaseTools from "firebase-tools";
 
 import { Config } from "./config";
-import { updateStatsFunction } from "./update-stats";
+import { updateStats } from "./update-stats";
 import { Vote } from "./cast-vote";
 
 const config = functions.config() as Config;
@@ -31,7 +31,7 @@ export const computeStatistics = functions.https.onRequest(
 
     const votes = await db.collection("vote").get();
     for (const vote of votes.docs) {
-      await updateStatsFunction(vote.data() as Vote, vote.id);
+      await updateStats(vote.data() as Vote, vote.id);
     }
     res.send("done");
   }
