@@ -6,7 +6,7 @@ export interface Tick {
   emittedAt: firestore.Timestamp;
 }
 
-const pubSubToFirestoreFunction = topic =>
+const pubSubToFirestoreFunction = (topic: string) =>
   functions.pubsub.topic(topic).onPublish(event =>
     firestore()
       .collection(topic)

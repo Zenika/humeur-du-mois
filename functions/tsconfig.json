@@ -7,10 +7,7 @@
     "sourceMap": true,
     "target": "es6",
     "strict": true,
-    // noImplicitAny is not compatible with firebase-functions@^1.0.0
-    // if npm run build succeeds without this line then it can be safely removed
-    // see also: https://github.com/firebase/firebase-functions/issues/213
-    "noImplicitAny": false
+    "typeRoots": ["@types"]
   },
   "compileOnSave": true,
   "include": ["src"]

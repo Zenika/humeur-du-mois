@@ -24,7 +24,7 @@ export const computeStatistics = functions.https.onRequest(
     }
 
     await firebaseTools.firestore.delete("stats", {
-      project: process.env.GCLOUD_PROJECT,
+      project: process.env.GCLOUD_PROJECT!,
       recursive: true,
       yes: true
     });

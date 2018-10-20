@@ -1,7 +1,6 @@
 import * as firebase from "firebase-admin";
 import fetch from "node-fetch";
 import { AlibeezConfig } from "./config";
-import partition = require("lodash.partition");
 
 interface AlibeezEmployee {
   fullName: string;
@@ -17,7 +16,7 @@ export interface Employee {
   agency: string;
 }
 
-const obfuscateKey = key => {
+const obfuscateKey = (key: string) => {
   if (key) {
     if (key.length > 8) {
       return `${key.substr(0, 4)}***`;
@@ -28,6 +27,10 @@ const obfuscateKey = key => {
     return null;
   }
 };
+
+const hasValidEmail = (employee: AlibeezEmployee) =>
+  employee.zenikaEmail && employee.zenikaEmail.endsWith("@zenika.com");
+const hasNoValidEmail = (employee: AlibeezEmployee) => !hasValidEmail(employee);
 
 export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
   const requestRef = await firebase
@@ -56,14 +59,8 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
     return;
   }
   const employees: AlibeezEmployee[] = await response.json();
-  const [employeesWithValidEmail, employeesWithNoValidEmail]: [
-    AlibeezEmployee[],
-    AlibeezEmployee[]
-  ] = partition(
-    employees,
-    employee =>
-      employee.zenikaEmail && employee.zenikaEmail.endsWith("@zenika.com")
-  );
+  const employeesWithValidEmail = employees.filter(hasValidEmail);
+  const employeesWithNoValidEmail = employees.filter(hasNoValidEmail);
   employeesWithNoValidEmail.forEach(employee => {
     console.info("employee with no valid email: " + employee.fullName);
   });
