@@ -3,16 +3,16 @@ import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Employee } from "./import-employees-from-alibeez";
+import { validate } from "./validator";
 
 const db = firestore();
 const config = functions.config() as Config;
 const requireUniqueVote = asBoolean(
   config.features.voting_campaigns.require_unique_vote
 );
-const validVotes = ["great", "notThatGreat", "notGreatAtAll"];
 
 interface RequestPayload {
-  vote: string;
+  vote: "great" | "notThatGreat" | "notGreatAtAll";
 }
 
 export interface Vote extends Employee {
@@ -22,8 +22,8 @@ export interface Vote extends Employee {
 }
 
 export const castVote = functions.https.onCall(
-  async (payload: RequestPayload, context) => {
-    if (!validVotes.includes(payload.vote)) {
+  async (payload, context) => {
+    if (!validate(payload, "RequestPayload")) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         `'${payload.vote}' is not a valid value for 'vote'`
