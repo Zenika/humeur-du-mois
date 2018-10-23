@@ -3,10 +3,7 @@ declare module "firebase-tools" {
     // types inferred from https://github.com/firebase/firebase-tools/blob/v5.1.1/commands/firestore-delete.js#L72
 
     // overload that deletes only one collection
-    function _delete(
-      path: string,
-      options?: DeleteOptions
-    ): Promise<void>;
+    function _delete(path: string, options?: DeleteOptions): Promise<void>;
 
     // overload that deletes all collections
     function _delete(
