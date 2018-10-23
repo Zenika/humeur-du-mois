@@ -15,6 +15,7 @@ export const computeStatistics = functions.https.onRequest(
     if (!computeStatisticsConfigs.enabled) {
       return;
     }
+
     const authorizationHeader = req.get("Authorization") || "";
     const keyIsCorrect =
       authorizationHeader === `Bearer ${computeStatisticsConfigs.key}`;
@@ -24,7 +25,7 @@ export const computeStatistics = functions.https.onRequest(
     }
 
     await firebaseTools.firestore.delete("stats", {
-      project: process.env.GCLOUD_PROJECT!,
+      project: config.service_account.project_id,
       recursive: true,
       yes: true
     });
