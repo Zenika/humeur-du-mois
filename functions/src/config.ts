@@ -134,6 +134,12 @@ export interface DailyAlibeezImportConfig {
 export interface CollectStatsConfig {
   enabled: Flag;
 }
+
+export interface ImportVotesConfig {
+  enabled: Flag;
+  key: string;
+}
+
 export interface ComputeStatisticsConfigs {
   enabled: Flag;
   key: string;
@@ -145,6 +151,7 @@ export interface FeaturesConfig {
   daily_alibeez_import: DailyAlibeezImportConfig;
   collect_stats: CollectStatsConfig;
   compute_statistics: ComputeStatisticsConfigs;
+  import_votes: ImportVotesConfig;
 }
 
 export interface AlibeezConfig {
