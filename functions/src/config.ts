@@ -140,13 +140,17 @@ export interface ImportVotesConfig {
   key: string;
 }
 
+export interface ComputeStatisticsConfigs {
+  enabled: Flag;
+  key: string;
+}
 export interface FeaturesConfig {
   voting_campaigns: VotingCampaignsConfig;
   reminders: RemindersConfig;
   send_vote_to_manager: SendVoteToManagerConfig;
   daily_alibeez_import: DailyAlibeezImportConfig;
   collect_stats: CollectStatsConfig;
-  import_votes: ImportVotesConfig;
+
 }
 
 export interface AlibeezConfig {

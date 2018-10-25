@@ -13,11 +13,11 @@ export const daysBeforeCampaignEnds = (
       1
     );
   }
-  let possiblyNegativeDaysBeforeCampaignEnds =
+  const possiblyNegativeDaysBeforeCampaignEnds =
     campaignOptions.endOn - now.getUTCDate() + 1;
 
   if (possiblyNegativeDaysBeforeCampaignEnds < 0) {
-    let lastDayOfMonth = new Date(
+    const lastDayOfMonth = new Date(
       now.getUTCFullYear(),
       now.getUTCMonth(),
       0

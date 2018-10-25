@@ -12,48 +12,47 @@ interface StatsData {
   notGreatAtAllCount: number;
 }
 
-export const updateStats = functions.firestore
+export const updateStats = async (vote: Vote, voteId: string) => {
+  const statsCollection = firebase.firestore().collection("stats");
+  await firebase.firestore().runTransaction(async transaction => {
+    const previousCounters = await transaction
+      .get(statsCollection.doc(vote.campaign))
+      .then(snapshot => snapshot.data() || {});
+    const storedVote = await transaction.get(
+      statsCollection
+        .doc(vote.campaign)
+        .collection("votes")
+        .doc(voteId)
+    );
+    //To prevent double calls to updateStats from occuring
+    if (storedVote.exists) {
+      return;
+    }
+    const updateCounters = {
+      ...previousCounters,
+      [vote.value]: (previousCounters[vote.value] || 0) + 1
+    };
+
+    return transaction
+      .set(statsCollection.doc(vote.campaign), updateCounters)
+      .set(
+        statsCollection
+          .doc(vote.campaign)
+          .collection("votes")
+          .doc(voteId),
+        {}
+      );
+  });
+};
+export const updateStatsOnVote = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
     if (!isEnabled(config.features.collect_stats)) {
-      console.info("stats collecting is disabled; aborting");
       return;
     }
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
-    const statsCollection = firebase.firestore().collection("stats");
-
-    await firebase.firestore().runTransaction(async transaction => {
-      const doc = await transaction.get(statsCollection.doc(vote.campaign));
-      const storedVote = await transaction.get(
-        statsCollection
-          .doc(vote.campaign)
-          .collection("votes")
-          .doc(voteId)
-      );
-
-      if (storedVote.exists) {
-        console.info(
-          "This vote(" + voteId + ") has already been counted, aborting;"
-        );
-        return;
-      }
-
-      const inputData = doc.data() || {};
-      const oldCounters = { [vote.value]: 0, ...inputData };
-      const newCounters = {
-        ...oldCounters,
-        [vote.value]: oldCounters[vote.value] + 1
-      };
-
-      return transaction
-        .set(statsCollection.doc(vote.campaign), newCounters)
-        .set(
-          statsCollection
-            .doc(vote.campaign)
-            .collection("votes")
-            .doc(voteId),
-          {}
-        );
+    updateStats(vote, voteId).catch(e => {
+      console.error(e);
     });
   });
