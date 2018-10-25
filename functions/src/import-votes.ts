@@ -39,11 +39,12 @@ export const importVotes = functions.https.onRequest(
       console.error(e);
       res.sendStatus(500);
     }
-    let voteBatch = db.batch();
+    const voteBatch = db.batch();
     for (const validVote of validVotes) {
       voteBatch.create(db.collection("vote").doc(), validVote);
     }
-    voteBatch.commit();
-    res.sendStatus(200);
+    voteBatch
+      .commit()
+      .then(() => res.sendStatus(200), () => res.sendStatus(500));
   }
 );
