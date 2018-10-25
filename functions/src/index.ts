@@ -22,7 +22,6 @@ export { getCampaign } from "./get-campaign";
 
 export { castVote } from "./cast-vote";
 
-
 export { updateStats } from "./update-stats";
 
 export { importVotes } from "./import-votes";

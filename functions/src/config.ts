@@ -150,7 +150,8 @@ export interface FeaturesConfig {
   send_vote_to_manager: SendVoteToManagerConfig;
   daily_alibeez_import: DailyAlibeezImportConfig;
   collect_stats: CollectStatsConfig;
-
+  compute_statistics: ComputeStatisticsConfigs;
+  import_votes: ImportVotesConfig;
 }
 
 export interface AlibeezConfig {
