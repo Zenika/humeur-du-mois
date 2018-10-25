@@ -24,7 +24,7 @@ export const sendEmailToManager = functions.firestore
     }
 
     const vote = voteSnapshot.data()! as Vote;
-    if (!("voteFromUi" in vote)) {
+    if (!vote.voteFromUi) {
       console.info("Vote doesn't come from Ui, aborting...");
       return;
     }

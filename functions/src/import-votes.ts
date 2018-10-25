@@ -10,16 +10,12 @@ const db = firebase.firestore();
 
 const fromJSONtoVote = (JSONString: string) => {
   const supposedlyValidVotes = JSON.parse(JSONString);
-  const validVotes: Vote[] = [];
-  for (const supposedlyValidVote of supposedlyValidVotes.votes) {
-    if (
-      "value" in supposedlyValidVote &&
-      "campaign" in supposedlyValidVote &&
-      "agency" in supposedlyValidVote
-    ) {
-      validVotes.push(supposedlyValidVote);
-    }
-  }
+  const validVotes: Vote[] = supposedlyValidVotes.votes.filter(
+    supposedlyValidVote =>
+      supposedlyValidVote.value &&
+      supposedlyValidVote.campaign &&
+      supposedlyValidVote.agency
+  );
   return validVotes;
 };
 
@@ -29,17 +25,13 @@ export const importVotes = functions.https.onRequest(
       console.info("Feature import votes disabled, aborting");
       return;
     }
-    const passedData = req.get("Authorization") || "";
-    const passedKey =
-      passedData.toString() === `Bearer ${importVotesConfigs.key}`;
-    if (!passedKey) {
+    const passedAuthData = req.get("Authorization") || "";
+    const passedAuthKey = passedAuthData === `Bearer ${importVotesConfigs.key}`;
+    if (!passedAuthKey) {
       console.info("Passed the wrong auth key, aborting");
       return;
     }
     const passedJSONString = req.body.votesData;
-    const date: firebase.firestore.Timestamp = firebase.firestore.Timestamp.fromDate(
-      new Date()
-    );
     let validVotes: Vote[] = [];
     try {
       validVotes = fromJSONtoVote(passedJSONString);
@@ -47,10 +39,11 @@ export const importVotes = functions.https.onRequest(
       console.error(e);
       res.sendStatus(500);
     }
-
+    let voteBatch = db.batch();
     for (const validVote of validVotes) {
-      await db.collection("vote").add(validVote);
+      voteBatch.create(db.collection("vote").doc(), validVote);
     }
+    voteBatch.commit();
     res.sendStatus(200);
   }
 );
