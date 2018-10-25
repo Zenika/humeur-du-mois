@@ -26,7 +26,7 @@ interface RequestPayload {
   accessToken?: string;
 }
 
-const errorResponse = message => ({ error: { message } });
+const errorResponse = (message: string) => ({ error: { message } });
 
 /**
  * Cannot use functions.https.onCall here because this function is called

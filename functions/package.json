@@ -14,7 +14,6 @@
     "firebase-admin": "5.13.1",
     "firebase-functions": "2.0.2",
     "firebase-tools": "^5.1.1",
-    "lodash.partition": "4.6.0",
     "mailgun-js": "0.20.0",
     "node-fetch": "2.2.0"
   },
