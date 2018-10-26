@@ -3,16 +3,16 @@ import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Employee } from "./import-employees-from-alibeez";
+import { is } from "typescript-is"
 
 const db = firestore();
 const config = functions.config() as Config;
 const requireUniqueVote = asBoolean(
   config.features.voting_campaigns.require_unique_vote
 );
-const validVotes = ["great", "notThatGreat", "notGreatAtAll"];
 
 interface RequestPayload {
-  vote: string;
+  vote: "great" | "notSoGreat" | "notGreatAtAll";
 }
 
 export interface Vote extends Employee {
@@ -23,11 +23,11 @@ export interface Vote extends Employee {
 }
 
 export const castVote = functions.https.onCall(
-  async (payload: RequestPayload, context) => {
-    if (!validVotes.includes(payload.vote)) {
+  async (payload: unknown, context) => {
+    if (!is<RequestPayload>(payload)) {
       throw new functions.https.HttpsError(
         "invalid-argument",
-        `'${payload.vote}' is not a valid value for 'vote'`
+        "value for 'vote' is not valid"
       );
     }
     const voterEmail: string = context.auth!.token.email;
@@ -51,14 +51,7 @@ export const castVote = functions.https.onCall(
       .collection("employees")
       .doc(voterEmail)
       .get();
-    if (!employeeSnapshot) {
-      throw new functions.https.HttpsError(
-        "not-found",
-        `failed to load latest employees import`
-      );
-    }
     const employee = employeeSnapshot.data() as Employee | undefined;
-
     if (!employee) {
       throw new functions.https.HttpsError("not-found", `Employee not found`);
     }
