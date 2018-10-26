@@ -20,6 +20,7 @@ export interface Vote extends Employee {
   campaign: string;
   recordedAt: firestore.Timestamp;
   voteFromUi?: boolean; //States if votes comes from Ui. If not, sendEmailToManager will abort
+  emailToManagerSent?: boolean;
 }
 
 export const castVote = functions.https.onCall(

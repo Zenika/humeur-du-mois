@@ -68,13 +68,18 @@ export const sendEmailToManager = functions.firestore
      */
     let emailSent = false;
     await firebase.firestore().runTransaction(async transaction => {
+      //Make sure we didn't send a mail already
+      if (vote.emailToManagerSent) {
+        console.info("Email already sent to manager, aborting");
+        return;
+      }
       if (!emailSent) {
         await mailgunClient.messages().send(message);
         emailSent = true;
       }
       transaction.update(voteSnapshot.ref, {
         emailToManagerSent: true,
-        voter: "*REDACTED*"
+        fullName: "*REDACTED*"
       });
     });
   });
