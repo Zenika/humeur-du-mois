@@ -56,10 +56,16 @@ export const sendEmailToManager = functions.firestore
      * - failure to update the document restarts the transaction but does not send the email again
      */
     let emailSent = false;
-    await firebase.firestore().runTransaction(async transaction => {
-      //Make sure we didn't send a mail already
-      if (vote.emailToManagerSent) {
-        console.info("Email already sent to manager, aborting");
+    await db.runTransaction(async transaction => {
+      // Make sure we didn't send a mail already
+      const transactionalVoteSnapshot = await transaction.get(voteSnapshot.ref);
+      const transactionalVote = transactionalVoteSnapshot.data() as Vote | undefined;
+      if (!transactionalVote) {
+        console.warn("vote was deleted; aborting");
+        return;
+      }
+      if (transactionalVote.emailToManagerSent) {
+        console.info("email already sent; aborting");
         return;
       }
       if (!emailSent) {
