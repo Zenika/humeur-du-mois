@@ -3,17 +3,17 @@ import fetch from "node-fetch";
 import { AlibeezConfig } from "./config";
 
 interface AlibeezEmployee {
-  fullName: string;
   zenikaEmail: string;
-  operationalManagerShortUsername: string;
-  geographicalAgency: string;
+  fullName: string | null;
+  operationalManagerShortUsername: string | null;
+  geographicalAgency: string | null;
 }
 
 export interface Employee {
-  fullName: string;
   email: string;
-  managerEmail: string;
-  agency: string;
+  fullName?: string;
+  managerEmail?: string;
+  agency?: string;
 }
 
 const obfuscateKey = (key: string) => {
@@ -26,6 +26,20 @@ const obfuscateKey = (key: string) => {
   } else {
     return null;
   }
+};
+
+const saveEmployees = async (employees: Employee[]) => {
+  const batch = firebase.firestore().batch();
+  employees.forEach(employee =>
+    batch.set(
+      firebase
+        .firestore()
+        .collection("employees")
+        .doc(employee.email),
+      employee
+    )
+  );
+  await batch.commit();
 };
 
 const hasValidEmail = (employee: AlibeezEmployee) =>
@@ -65,28 +79,13 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
     console.info("employee with no valid email: " + employee.fullName);
   });
 
-  const batch = firebase.firestore().batch();
-
-  employeesWithValidEmail
-    .map(
-      employee =>
-        ({
-          fullName: employee.fullName,
-          email: employee.zenikaEmail,
-          managerEmail: employee.operationalManagerShortUsername
-            ? employee.operationalManagerShortUsername + "@zenika.com"
-            : null,
-          agency: employee.geographicalAgency
-        } as Employee)
-    )
-    .forEach(employee =>
-      batch.set(
-        firebase
-          .firestore()
-          .collection("employees")
-          .doc(employee.email),
-        employee
-      )
-    );
-  await batch.commit();
+  const employeesToSave = employeesWithValidEmail.map(employee => ({
+    email: employee.zenikaEmail,
+    fullName: employee.fullName || undefined,
+    managerEmail: employee.operationalManagerShortUsername
+      ? employee.operationalManagerShortUsername + "@zenika.com"
+      : undefined,
+    agency: employee.geographicalAgency || undefined
+  }));
+  await saveEmployees(employeesToSave);
 };
