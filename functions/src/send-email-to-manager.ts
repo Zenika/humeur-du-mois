@@ -33,9 +33,6 @@ export const sendEmailToManager = functions.firestore
       .collection("employees")
       .doc(vote.email)
       .get();
-    if (!employeeSnapshot) {
-      throw new Error("cannot find employee data import");
-    }
     const employee = employeeSnapshot.data();
     if (!employee) {
       throw new Error(`cannot find user '${vote.email}' in employee data`);
