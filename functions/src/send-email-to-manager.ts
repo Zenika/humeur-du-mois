@@ -29,29 +29,21 @@ export const sendEmailToManager = functions.firestore
       return;
     }
 
-    const employeeSnapshot = await db
-      .collection("employees")
-      .doc(vote.email)
-      .get();
-    const employee = employeeSnapshot.data();
-    if (!employee) {
-      throw new Error(`cannot find user '${vote.email}' in employee data`);
-    }
-    if (!employee.managerEmail) {
-      console.info(`Employee ${employee.fullName}' has no manager; aborting`);
+    if (!vote.managerEmail) {
+      console.info(`Employee ${vote.fullName}' has no manager; aborting`);
       return;
     }
 
-    const recipient = redirectToVoter ? employee.email : employee.managerEmail;
+    const recipient = redirectToVoter ? vote.email : vote.managerEmail;
     const message = {
       from: "Humeur du mois <humeur-du-mois@zenika.com>",
       to: config.mailgun.recipient_override || recipient,
-      "h:Reply-To": employee.email,
-      subject: `${employee.fullName} has shared how they feel: "${vote.value}"`,
+      "h:Reply-To": vote.email,
+      subject: `${vote.fullName} has shared how they feel: "${vote.value}"`,
       html: `
-        <p>Hi ${employee.managerEmail},</p>
+        <p>Hi ${vote.managerEmail},</p>
         <p>
-          ${employee.fullName} has shared how they feel:
+          ${vote.fullName} has shared how they feel:
           "${vote.value}".
         </p>
         <p>See you soon!</p>
