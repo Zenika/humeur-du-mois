@@ -59,7 +59,9 @@ export const sendEmailToManager = functions.firestore
     await db.runTransaction(async transaction => {
       // Make sure we didn't send a mail already
       const transactionalVoteSnapshot = await transaction.get(voteSnapshot.ref);
-      const transactionalVote = transactionalVoteSnapshot.data() as Vote | undefined;
+      const transactionalVote = transactionalVoteSnapshot.data() as
+        | Vote
+        | undefined;
       if (!transactionalVote) {
         console.warn("vote was deleted; aborting");
         return;
