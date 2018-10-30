@@ -89,6 +89,10 @@ export const sendCampaignStartsReminder = functions.firestore
      * - failure to the send the email restarts the transaction
      * - failure to update the document restarts the transaction but does not send the email again
      */
+    /**
+     * FIXME: failure to send the email actually fails the transaction (and the function crashes)
+     * See potential solution at https://github.com/Zenika/humeur-du-mois-2018/issues/4
+     */
     let emailSent = false;
     await db.runTransaction(async transaction => {
       if (!emailSent) {
