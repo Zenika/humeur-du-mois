@@ -74,7 +74,8 @@ export const sendEmailToManager = functions.firestore
       }
       transaction.update(voteSnapshot.ref, {
         emailToManagerSent: true,
-        fullName: "*REDACTED*"
+        fullName: "*REDACTED*",
+        email: "*REDACTED*"
       });
     });
   });
