@@ -3,10 +3,10 @@ import { Session } from "./session-repository";
 import * as sessionRepository from "./session-repository";
 
 async function parseHash(webAuth: auth0.WebAuth) {
-  return new Promise<auth0.Auth0DecodedHash>((resolve, reject) =>
-    webAuth.parseHash((err, result) => {
+  return new Promise<auth0.Auth0DecodedHash | null>((resolve, reject) =>
+    webAuth.parseHash((err, decodedHash) => {
       window.location.hash = "";
-      return err ? reject(err) : resolve(result);
+      return err ? reject(err) : resolve(decodedHash);
     })
   );
 }
@@ -22,10 +22,10 @@ async function getUserInfo(webAuth: auth0.WebAuth, accessToken: string) {
 
 async function convertToSession(
   webAuth: auth0.WebAuth,
-  authResult: auth0.Auth0DecodedHash
+  decodedHash: auth0.Auth0DecodedHash | null
 ): Promise<Session | null> {
-  if (!authResult) return null;
-  const { accessToken, idToken, expiresIn } = authResult;
+  if (!decodedHash) return null;
+  const { accessToken, idToken, expiresIn } = decodedHash;
   if (!accessToken || !idToken || !expiresIn) return null;
   const user = await getUserInfo(webAuth, accessToken);
   const expiresAt = expiresIn * 1000 + new Date().getTime();
@@ -36,9 +36,9 @@ export async function authenticate(
   config: auth0.AuthOptions
 ): Promise<Session | null> {
   const webAuth = new auth0.WebAuth(config);
-  const authResult = await parseHash(webAuth);
+  const decodedHash = await parseHash(webAuth);
   const session =
-    (await convertToSession(webAuth, authResult)) ||
+    (await convertToSession(webAuth, decodedHash)) ||
     sessionRepository.restore();
   if (session) {
     await sessionRepository.persist(session);
