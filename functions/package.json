@@ -11,7 +11,7 @@
   "dependencies": {
     "auth0": "2.13.0",
     "cors": "2.8.4",
-    "firebase-admin": "5.13.1",
+    "firebase-admin": "6.1.0",
     "firebase-functions": "2.0.2",
     "firebase-tools": "6.0.0",
     "mailgun-js": "0.22.0",
