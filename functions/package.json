@@ -14,13 +14,13 @@
     "firebase-admin": "5.13.1",
     "firebase-functions": "2.0.2",
     "firebase-tools": "6.0.0",
-    "mailgun-js": "0.20.0",
+    "mailgun-js": "0.22.0",
     "node-fetch": "2.2.0"
   },
   "devDependencies": {
     "@types/auth0": "2.9.4",
     "@types/cors": "2.8.4",
-    "@types/mailgun-js": "0.16.0",
+    "@types/mailgun-js": "0.16.1",
     "@types/node-fetch": "2.1.2",
     "ava": "0.25.0",
     "npm-run-all": "4.1.3",
