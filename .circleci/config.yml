@@ -8,15 +8,15 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - ui-dependencies-{{ checksum "ui/package.json" }}
+            - ui-dependencies-{{ checksum "ui/package-lock.json" }}
             - ui-dependencies-
       - run:
           name: Download UI dependencies
-          command: npm --prefix ui install
+          command: npm --prefix ui ci
       - save_cache:
           paths:
             - ui/node_modules
-          key: ui-dependencies-{{ checksum "ui/package.json" }}
+          key: ui-dependencies-{{ checksum "ui/package-lock.json" }}
       - persist_to_workspace:
           root: ./
           paths:
@@ -47,15 +47,15 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - functions-dependencies-{{ checksum "functions/package.json" }}
+            - functions-dependencies-{{ checksum "functions/package-lock.json" }}
             - functions-dependencies-
       - run:
           name: Download functions dependencies
-          command: npm --prefix functions install
+          command: npm --prefix functions ci
       - save_cache:
           paths:
             - functions/node_modules
-          key: functions-dependencies-{{ checksum "functions/package.json" }}
+          key: functions-dependencies-{{ checksum "functions/package-lock.json" }}
       - persist_to_workspace:
           root: ./
           paths:
@@ -86,13 +86,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - tooling-dependencies-{{ checksum "package.json" }}
+            - tooling-dependencies-{{ checksum "package-lock.json" }}
             - tooling-dependencies-
-      - run: npm install
+      - run: npm ci
       - save_cache:
           paths:
             - node_modules
-          key: tooling-dependencies-{{ checksum "package.json" }}
+          key: tooling-dependencies-{{ checksum "package-lock.json" }}
       - persist_to_workspace:
           root: ./
           paths:
