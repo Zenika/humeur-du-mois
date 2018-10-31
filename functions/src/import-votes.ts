@@ -8,10 +8,10 @@ const config = functions.config() as Config;
 const importVotesConfigs = config.features.import_votes;
 const db = firebase.firestore();
 
-const fromJSONtoVote = supposedlyValidVotes => {
+const fromJSONtoVote = (supposedlyValidVotes: any) => {
   if (!supposedlyValidVotes.votes) return [];
   const validVotes: Vote[] = supposedlyValidVotes.votes.filter(
-    supposedlyValidVote =>
+    (supposedlyValidVote: any) =>
       supposedlyValidVote.value &&
       supposedlyValidVote.campaign &&
       supposedlyValidVote.agency

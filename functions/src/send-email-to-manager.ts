@@ -29,32 +29,21 @@ export const sendEmailToManager = functions.firestore
       return;
     }
 
-    const employeeSnapshot = await db
-      .collection("employees")
-      .doc(vote.email)
-      .get();
-    if (!employeeSnapshot) {
-      throw new Error("cannot find employee data import");
-    }
-    const employee = employeeSnapshot.data();
-    if (!employee) {
-      throw new Error(`cannot find user '${vote.email}' in employee data`);
-    }
-    if (!employee.managerEmail) {
-      console.info(`Employee ${employee.fullName}' has no manager; aborting`);
+    if (!vote.managerEmail) {
+      console.info(`Employee ${vote.fullName}' has no manager; aborting`);
       return;
     }
 
-    const recipient = redirectToVoter ? employee.email : employee.managerEmail;
+    const recipient = redirectToVoter ? vote.email : vote.managerEmail;
     const message = {
       from: "Humeur du mois <humeur-du-mois@zenika.com>",
       to: config.mailgun.recipient_override || recipient,
-      "h:Reply-To": employee.email,
-      subject: `${employee.fullName} has shared how they feel: "${vote.value}"`,
+      "h:Reply-To": vote.email,
+      subject: `${vote.fullName} has shared how they feel: "${vote.value}"`,
       html: `
-        <p>Hi ${employee.managerEmail},</p>
+        <p>Hi ${vote.managerEmail},</p>
         <p>
-          ${employee.fullName} has shared how they feel:
+          ${vote.fullName} has shared how they feel:
           "${vote.value}".
         </p>
         <p>See you soon!</p>
@@ -66,15 +55,33 @@ export const sendEmailToManager = functions.firestore
      * - failure to the send the email restarts the transaction
      * - failure to update the document restarts the transaction but does not send the email again
      */
+    /**
+     * FIXME: failure to send the email actually fails the transaction (and the function crashes)
+     * See potential solution at https://github.com/Zenika/humeur-du-mois-2018/issues/4
+     */
     let emailSent = false;
-    await firebase.firestore().runTransaction(async transaction => {
+    await db.runTransaction(async transaction => {
+      // Make sure we didn't send a mail already
+      const transactionalVoteSnapshot = await transaction.get(voteSnapshot.ref);
+      const transactionalVote = transactionalVoteSnapshot.data() as
+        | Vote
+        | undefined;
+      if (!transactionalVote) {
+        console.warn("vote was deleted; aborting");
+        return;
+      }
+      if (transactionalVote.emailToManagerSent) {
+        console.info("email already sent; aborting");
+        return;
+      }
       if (!emailSent) {
         await mailgunClient.messages().send(message);
         emailSent = true;
       }
       transaction.update(voteSnapshot.ref, {
         emailToManagerSent: true,
-        voter: "*REDACTED*"
+        fullName: "*REDACTED*",
+        email: "*REDACTED*"
       });
     });
   });
