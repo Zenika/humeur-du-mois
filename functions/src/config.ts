@@ -57,7 +57,6 @@ export interface MailgunConfig {
   domain: string;
   api_key: string;
   host?: string;
-  recipient_override?: string;
 }
 
 export interface EndOfMonthRemindersConfig {
@@ -135,15 +134,21 @@ export interface CollectStatsConfig {
   enabled: Flag;
 }
 
+export interface ComputeStatisticsConfigs {
+  enabled: Flag;
+  key: string;
+}
+
 export interface ImportVotesConfig {
   enabled: Flag;
   key: string;
 }
 
-export interface ComputeStatisticsConfigs {
+export interface EmailsConfig {
   enabled: Flag;
-  key: string;
+  recipient_override?: string;
 }
+
 export interface FeaturesConfig {
   voting_campaigns: VotingCampaignsConfig;
   reminders: RemindersConfig;
@@ -152,6 +157,7 @@ export interface FeaturesConfig {
   collect_stats: CollectStatsConfig;
   compute_statistics: ComputeStatisticsConfigs;
   import_votes: ImportVotesConfig;
+  emails: EmailsConfig;
 }
 
 export interface AlibeezConfig {
