@@ -5,6 +5,7 @@ import { Tick } from "./save-ticks";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Config, isEnabled, asNumber } from "./config";
 import { daysBeforeCampaignEnds } from "./days-before-campaign-ends";
+import { enqueue } from "./process-email-queue";
 
 const linkToApp = `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
 const db = firestore();
@@ -66,9 +67,7 @@ export const sendCampaignStartsReminder = functions.firestore
 
     const message = {
       from: config.features.reminders.voting_campaign_starts.sender,
-      to:
-        config.mailgun.recipient_override ||
-        config.features.reminders.voting_campaign_starts.recipient,
+      to: config.features.reminders.voting_campaign_starts.recipient,
       subject: `Humeur du mois is open for ${monthLongName}!`,
       html: `
         <p>Hi,</p>
@@ -84,23 +83,7 @@ export const sendCampaignStartsReminder = functions.firestore
       message
     });
 
-    /**
-     * This following has (or intends to have, at least) the following properties:
-     * - failure to the send the email restarts the transaction
-     * - failure to update the document restarts the transaction but does not send the email again
-     */
-    /**
-     * FIXME: failure to send the email actually fails the transaction (and the function crashes)
-     * See potential solution at https://github.com/Zenika/humeur-du-mois-2018/issues/4
-     */
-    let emailSent = false;
-    await db.runTransaction(async transaction => {
-      if (!emailSent) {
-        await mailgunClient.messages().send(message);
-        emailSent = true;
-      }
-      transaction.update(reminderRef, { sentAt: firestore.Timestamp.now() });
-    });
+    await enqueue(message);
   });
 
 export const sendCampaignEndsReminder = functions.firestore
@@ -157,9 +140,7 @@ export const sendCampaignEndsReminder = functions.firestore
 
     const message = {
       from: config.features.reminders.voting_campaign_ends.sender,
-      to:
-        config.mailgun.recipient_override ||
-        config.features.reminders.voting_campaign_ends.recipient,
+      to: config.features.reminders.voting_campaign_ends.recipient,
       subject: `Humeur du mois is about to close for ${monthLongName}!`,
       html: `
         <p>Hi,</p>
@@ -175,17 +156,5 @@ export const sendCampaignEndsReminder = functions.firestore
       message
     });
 
-    /**
-     * This following has (or intends to have, at least) the following properties:
-     * - failure to the send the email restarts the transaction
-     * - failure to update the document restarts the transaction but does not send the email again
-     */
-    let emailSent = false;
-    await db.runTransaction(async transaction => {
-      if (!emailSent) {
-        await mailgunClient.messages().send(message);
-        emailSent = true;
-      }
-      transaction.update(reminderRef, { sentAt: firestore.Timestamp.now() });
-    });
+    await enqueue(message);
   });

@@ -3,6 +3,7 @@ import * as firebase from "firebase-admin";
 import * as mailgun from "mailgun-js";
 import { Config, isEnabled, asBoolean } from "./config";
 import { Vote } from "./cast-vote";
+import { enqueue } from "./process-email-queue";
 
 const config = functions.config() as Config;
 const redirectToVoter = asBoolean(
@@ -37,7 +38,7 @@ export const sendEmailToManager = functions.firestore
     const recipient = redirectToVoter ? vote.email : vote.managerEmail;
     const message = {
       from: "Humeur du mois <humeur-du-mois@zenika.com>",
-      to: config.mailgun.recipient_override || recipient,
+      to: recipient,
       "h:Reply-To": vote.email,
       subject: `${vote.fullName} has shared how they feel: "${vote.value}"`,
       html: `
@@ -50,38 +51,5 @@ export const sendEmailToManager = functions.firestore
       `
     };
 
-    /**
-     * This following has (or intends to have, at least) the following properties:
-     * - failure to the send the email restarts the transaction
-     * - failure to update the document restarts the transaction but does not send the email again
-     */
-    /**
-     * FIXME: failure to send the email actually fails the transaction (and the function crashes)
-     * See potential solution at https://github.com/Zenika/humeur-du-mois-2018/issues/4
-     */
-    let emailSent = false;
-    await db.runTransaction(async transaction => {
-      // Make sure we didn't send a mail already
-      const transactionalVoteSnapshot = await transaction.get(voteSnapshot.ref);
-      const transactionalVote = transactionalVoteSnapshot.data() as
-        | Vote
-        | undefined;
-      if (!transactionalVote) {
-        console.warn("vote was deleted; aborting");
-        return;
-      }
-      if (transactionalVote.emailToManagerSent) {
-        console.info("email already sent; aborting");
-        return;
-      }
-      if (!emailSent) {
-        await mailgunClient.messages().send(message);
-        emailSent = true;
-      }
-      transaction.update(voteSnapshot.ref, {
-        emailToManagerSent: true,
-        fullName: "*REDACTED*",
-        email: "*REDACTED*"
-      });
-    });
+    await enqueue(message);
   });

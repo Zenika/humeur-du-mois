@@ -20,6 +20,10 @@ export type QueuedEmail = {
   message: mailgun.messages.SendData;
 };
 
+export const enqueue = async (message: mailgun.messages.SendData) => {
+  await db.collection(EMAILS_TO_SEND_COLLECTION_NAME).add({ message });
+};
+
 const processEmail = async (emailSnapshot: DocumentSnapshot) => {
   if (!isEnabled(config.features.emails)) {
     console.info("feature is disabled; aborting");
@@ -28,40 +32,46 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
   const { id, ref, data } = emailSnapshot;
   const queuedEmail = data()! as QueuedEmail;
   try {
-    await db.runTransaction(async transaction => {
-      transaction.create(db.collection(EMAILS_SENT_COLLECTION_NAME).doc(id), {
-        ref,
-        sentAt: firestore.Timestamp.now()
-      });
-      // transaction rolls back if this fails
-      await mailgunClient
-        .messages()
-        .send({
-          ...queuedEmail.message,
-          to:
-            config.features.emails.recipient_override || queuedEmail.message.to
-        });
-    });
+    await db
+      .collection("functions-locks")
+      .doc("processEmail")
+      .collection("locks")
+      .doc(id)
+      .create({ recordedAt: firestore.Timestamp.now() });
   } catch (err) {
     if (isAlreadyExistsError(err)) {
       console.info("email already sent; aborting");
-    } else {
-      const retryRef = db.collection(EMAILS_TO_SEND_COLLECTION_NAME).doc();
-      console.warn(`requeing ${id} as ${retryRef.id} after error:`, err);
-      try {
-        await retryRef.create({
-          ...queuedEmail,
-          retryOf: ref,
-          retriedAt: firestore.Timestamp.now()
-        });
-      } catch (err) {
-        // last hope
-        // this might blow the stack or make the function timeout
-        // but at this point we might as well try
-        await processEmail(emailSnapshot);
-      }
+      return;
     }
+    throw err;
   }
+  let sendResponse: mailgun.messages.SendResponse;
+  try {
+    sendResponse = await mailgunClient.messages().send({
+      ...queuedEmail.message,
+      to: config.features.emails.recipient_override || queuedEmail.message.to
+    });
+  } catch (err) {
+    const retryRef = db.collection(EMAILS_TO_SEND_COLLECTION_NAME).doc();
+    console.warn(`requeing ${id} as ${retryRef.id} after error:`, err);
+    // no try/catch here, load fail
+    await retryRef.create({
+      ...queuedEmail,
+      retryOf: ref,
+      retriedAt: firestore.Timestamp.now()
+    });
+    return;
+  }
+  console.info("email sent: ", JSON.stringify(sendResponse));
+  // no try/catch here, load fail
+  await db
+    .collection(EMAILS_SENT_COLLECTION_NAME)
+    .doc(id)
+    .create({
+      ref,
+      sentAt: firestore.Timestamp.now(),
+      sendResponse
+    });
 };
 
 export const processEmailQueue = functions.firestore
