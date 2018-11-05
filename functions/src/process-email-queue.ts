@@ -4,7 +4,10 @@ import { DocumentSnapshot } from "firebase-functions/lib/providers/firestore";
 import * as mailgun from "mailgun-js";
 import { Config, onlyWhenEnabled } from "./config";
 import { ensureCalledOnce } from "./ensure-called-once";
-import { DocumentReference } from "@google-cloud/firestore";
+import {
+  DocumentReference,
+  CollectionReference
+} from "@google-cloud/firestore";
 
 const config = functions.config() as Config;
 const mailgunClient = mailgun({
@@ -36,7 +39,10 @@ const requeueIfFails = async <T>(
   try {
     return fn();
   } catch (err) {
-    console.warn(`requeuing ${snapshot.id} as ${requeueRef.id} after error:`, err);
+    console.warn(
+      `requeuing ${snapshot.id} as ${requeueRef.id} after error:`,
+      err
+    );
     await requeueRef.create({
       ...snapshot.data()!,
       retryOf: snapshot.ref,
@@ -46,27 +52,33 @@ const requeueIfFails = async <T>(
   }
 };
 
-const processEmail = async (emailSnapshot: DocumentSnapshot) => {
-  const { id, ref, data } = emailSnapshot;
-  const queuedEmail = data()! as QueuedEmail;
-  const sendResponse = await requeueIfFails(
-    emailSnapshot,
-    db.collection(EMAILS_TO_SEND_COLLECTION_NAME).doc(),
-    () =>
-      mailgunClient.messages().send({
-        ...queuedEmail.message,
-        to: config.features.emails.recipient_override || queuedEmail.message.to
-      })
+type FirestoreTriggerHandler = (snapshot: DocumentSnapshot) => void;
+
+const queueWorker = <T>(
+  requeueCollection: CollectionReference,
+  logCollection: CollectionReference,
+  worker: (snapshot: DocumentSnapshot) => T
+) => async (snapshot: DocumentSnapshot) => {
+  const taskResponse = await requeueIfFails(
+    snapshot,
+    requeueCollection.doc(),
+    () => worker(snapshot)
   );
+  logCollection.doc(snapshot.id).create({
+    ref: snapshot.ref,
+    processedAt: firestore.Timestamp.now(),
+    taskResponse
+  });
+};
+
+const processEmail = async (emailSnapshot: DocumentSnapshot) => {
+  const { message } = emailSnapshot.data()! as QueuedEmail;
+  const sendResponse = await mailgunClient.messages().send({
+    ...message,
+    to: config.features.emails.recipient_override || message.to
+  });
   console.info("email sent: ", JSON.stringify(sendResponse));
-  await db
-    .collection(EMAILS_SENT_COLLECTION_NAME)
-    .doc(id)
-    .create({
-      ref,
-      sentAt: firestore.Timestamp.now(),
-      sendResponse
-    });
+  return sendResponse;
 };
 
 export const processEmailQueue = functions.firestore
@@ -74,6 +86,14 @@ export const processEmailQueue = functions.firestore
   .onCreate(
     onlyWhenEnabled(
       config.features.emails,
-      ensureCalledOnce(db, "process-email-queue", processEmail)
+      ensureCalledOnce(
+        db,
+        "process-email-queue",
+        queueWorker(
+          db.collection(EMAILS_TO_SEND_COLLECTION_NAME),
+          db.collection(EMAILS_SENT_COLLECTION_NAME),
+          processEmail
+        )
+      )
     )
   );
