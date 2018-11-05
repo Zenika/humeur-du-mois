@@ -1,9 +1,9 @@
 import * as functions from "firebase-functions";
 import { firestore } from "firebase-admin";
+import { DocumentSnapshot } from "firebase-functions/lib/providers/firestore";
 import * as mailgun from "mailgun-js";
 import { Config, isEnabled } from "./config";
-import { isAlreadyExistsError } from "./already-exists";
-import { DocumentSnapshot } from "firebase-functions/lib/providers/firestore";
+import { ensureCalledOnce } from "./ensure-called-once";
 
 const config = functions.config() as Config;
 const mailgunClient = mailgun({
@@ -31,20 +31,6 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
   }
   const { id, ref, data } = emailSnapshot;
   const queuedEmail = data()! as QueuedEmail;
-  try {
-    await db
-      .collection("functions-locks")
-      .doc("processEmail")
-      .collection("locks")
-      .doc(id)
-      .create({ recordedAt: firestore.Timestamp.now() });
-  } catch (err) {
-    if (isAlreadyExistsError(err)) {
-      console.info("email already sent; aborting");
-      return;
-    }
-    throw err;
-  }
   let sendResponse: mailgun.messages.SendResponse;
   try {
     sendResponse = await mailgunClient.messages().send({
@@ -76,4 +62,4 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
 
 export const processEmailQueue = functions.firestore
   .document(`${EMAILS_TO_SEND_COLLECTION_NAME}/{id}`)
-  .onCreate(processEmail);
+  .onCreate(ensureCalledOnce(db, "process-email-queue", processEmail));
