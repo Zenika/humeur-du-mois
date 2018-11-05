@@ -25,12 +25,13 @@ export const enqueue = async (message: mailgun.messages.SendData) => {
   await db.collection(EMAILS_TO_SEND_COLLECTION_NAME).add({ message });
 };
 
+type Producer<T> = () => T;
 type AsyncProducer<T> = () => Promise<T>;
 
 const requeueIfFails = async <T>(
   snapshot: DocumentSnapshot,
   requeueRef: DocumentReference,
-  fn: AsyncProducer<T>
+  fn: Producer<T> | AsyncProducer<T>
 ): Promise<T> => {
   try {
     return fn();
