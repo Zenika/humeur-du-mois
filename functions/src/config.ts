@@ -3,6 +3,7 @@
  */
 
 type Flag = "true" | "false";
+
 type DayOfMonth =
   | "1"
   | "2"
@@ -32,7 +33,9 @@ type DayOfMonth =
   | "26"
   | "27"
   | "28";
+
 type DaysBefore = DayOfMonth;
+
 export type Feature = { enabled: Flag };
 
 export const asNumber = (dayOfMonth: DayOfMonth | DaysBefore): number => {
@@ -46,6 +49,28 @@ export const asBoolean = (flag: Flag): boolean => {
 export const isEnabled = (feature: Feature): boolean => {
   return asBoolean(feature.enabled);
 };
+
+type Consumer<Args extends any[]> = (...args: Args) => void;
+
+/**
+ * Shortcuts a function based on a feature flag.
+ *
+ * @param feature feature to test
+ * @param fn function to shortcut
+ */
+export const onlyWhenEnabled = <Args extends any[]>(
+  feature: Feature,
+  fn: Consumer<Args>
+): Consumer<Args> => {
+  return (...args: Args) => {
+    if (!isEnabled(feature)) {
+      console.info("feature disabled; aborting");
+      return;
+    }
+    return fn(...args);
+  };
+};
+
 
 export interface Auth0Config {
   client_id: string;
