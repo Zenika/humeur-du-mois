@@ -54,7 +54,7 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
   } catch (err) {
     const retryRef = db.collection(EMAILS_TO_SEND_COLLECTION_NAME).doc();
     console.warn(`requeing ${id} as ${retryRef.id} after error:`, err);
-    // no try/catch here, load fail
+    // no try/catch here, loud fail
     await retryRef.create({
       ...queuedEmail,
       retryOf: ref,
@@ -63,7 +63,7 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
     return;
   }
   console.info("email sent: ", JSON.stringify(sendResponse));
-  // no try/catch here, load fail
+  // no try/catch here, loud fail
   await db
     .collection(EMAILS_SENT_COLLECTION_NAME)
     .doc(id)
