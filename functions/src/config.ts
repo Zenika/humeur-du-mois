@@ -33,6 +33,7 @@ type DayOfMonth =
   | "27"
   | "28";
 type DaysBefore = DayOfMonth;
+export type Feature = { enabled: Flag };
 
 export const asNumber = (dayOfMonth: DayOfMonth | DaysBefore): number => {
   return Number(dayOfMonth);
@@ -42,9 +43,7 @@ export const asBoolean = (flag: Flag): boolean => {
   return flag === "true";
 };
 
-export const isEnabled = <Feature extends { enabled: Flag }>(
-  feature: Feature
-): boolean => {
+export const isEnabled = (feature: Feature): boolean => {
   return asBoolean(feature.enabled);
 };
 

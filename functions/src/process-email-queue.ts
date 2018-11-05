@@ -4,6 +4,7 @@ import { DocumentSnapshot } from "firebase-functions/lib/providers/firestore";
 import * as mailgun from "mailgun-js";
 import { Config, isEnabled } from "./config";
 import { ensureCalledOnce } from "./ensure-called-once";
+import { whenEnabled } from "./when-enabled";
 
 const config = functions.config() as Config;
 const mailgunClient = mailgun({
@@ -25,10 +26,6 @@ export const enqueue = async (message: mailgun.messages.SendData) => {
 };
 
 const processEmail = async (emailSnapshot: DocumentSnapshot) => {
-  if (!isEnabled(config.features.emails)) {
-    console.info("feature is disabled; aborting");
-    return;
-  }
   const { id, ref, data } = emailSnapshot;
   const queuedEmail = data()! as QueuedEmail;
   let sendResponse: mailgun.messages.SendResponse;
@@ -62,4 +59,9 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
 
 export const processEmailQueue = functions.firestore
   .document(`${EMAILS_TO_SEND_COLLECTION_NAME}/{id}`)
-  .onCreate(ensureCalledOnce(db, "process-email-queue", processEmail));
+  .onCreate(
+    whenEnabled(
+      config.features.emails,
+      ensureCalledOnce(db, "process-email-queue", processEmail)
+    )
+  );
