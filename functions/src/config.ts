@@ -50,6 +50,10 @@ export const isEnabled = (feature: Feature): boolean => {
   return asBoolean(feature.enabled);
 };
 
+export const isDisabled = (feature: Feature): boolean => {
+  return !isEnabled(feature);
+};
+
 type Consumer<Args extends any[]> = (...args: Args) => void;
 
 /**
@@ -63,7 +67,7 @@ export const onlyWhenEnabled = <Args extends any[]>(
   fn: Consumer<Args>
 ): Consumer<Args> => {
   return (...args: Args) => {
-    if (!isEnabled(feature)) {
+    if (isDisabled(feature)) {
       console.info("feature disabled; aborting");
       return;
     }
