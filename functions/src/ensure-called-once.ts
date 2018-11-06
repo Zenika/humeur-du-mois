@@ -1,5 +1,5 @@
 import { firestore } from "firebase-admin";
-import { isAlreadyExistsError } from "./already-exists";
+import { isDocumentAlreadyExistsError } from "./already-exists";
 import { DocumentSnapshot } from "firebase-functions/lib/providers/firestore";
 
 /**
@@ -29,7 +29,7 @@ export const acquireLock = async (
       .create({ recordedAt: firestore.Timestamp.now() });
     return true;
   } catch (err) {
-    if (isAlreadyExistsError(err)) {
+    if (isDocumentAlreadyExistsError(err)) {
       return false;
     }
     throw err;
