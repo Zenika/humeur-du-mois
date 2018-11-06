@@ -66,15 +66,14 @@ export const onlyWhenEnabled = <Args extends any[]>(
   feature: Feature,
   fn: Consumer<Args>
 ): Consumer<Args> => {
-  return (...args: Args) => {
-    if (isDisabled(feature)) {
+  if (isEnabled(feature)) {
+    return fn;
+  } else {
+    return (...args: Args) => {
       console.info("feature disabled; aborting");
-      return;
-    }
-    return fn(...args);
-  };
+    };
+  }
 };
-
 
 export interface Auth0Config {
   client_id: string;
