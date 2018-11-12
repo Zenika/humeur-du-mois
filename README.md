@@ -21,6 +21,8 @@ The app uses Firebase so you must have permission to access. Contact dsi@zenika.
 - `cd functions && npm install && cd ..`
 - `cd ui && npm install && cd ..`
 - `npm run firebase login`
+- `npm run firebase use default`
+- `npm run --silent firebase functions:config:get > functions/.runtimeconfig.json`
 
 ### Commands
 
