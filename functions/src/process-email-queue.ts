@@ -64,7 +64,7 @@ const queueWorker = <T>(
     requeueCollection.doc(),
     () => worker(snapshot)
   );
-  logCollection.doc(snapshot.id).create({
+  await logCollection.doc(snapshot.id).create({
     ref: snapshot.ref,
     processedAt: firestore.Timestamp.now(),
     taskResponse

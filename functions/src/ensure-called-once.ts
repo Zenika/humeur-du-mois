@@ -52,11 +52,15 @@ export const ensureCalledOnce = (
   fn: FirestoreTriggerHandler
 ): FirestoreTriggerHandler => {
   return async (snapshot: DocumentSnapshot) => {
-    const lockAcquired = await acquireLock(firestoreInstance, functionName, snapshot.id);
+    const lockAcquired = await acquireLock(
+      firestoreInstance,
+      functionName,
+      snapshot.id
+    );
     if (!lockAcquired) {
       console.info("duplicate call detected; aborting");
       return;
     }
-    return fn(snapshot);
+    fn(snapshot);
   };
 };
