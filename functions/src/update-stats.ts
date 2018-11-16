@@ -59,7 +59,7 @@ export const updateCampaignStatsOnVote = functions.firestore
     });
   });
 
-export const updateAgencyStatsOnVote = functions.firestore
+export const updateCampaignAgencyStatsOnVote = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
     if (!isEnabled(config.features.collect_stats)) {
@@ -73,8 +73,8 @@ export const updateAgencyStatsOnVote = functions.firestore
       voteId,
       firebase
         .firestore()
-        .collection(`stats-agency`)
-        .doc(vote.agency)
+        .collection(`stats-campaign-agency`)
+        .doc(`${vote.campaign}_${vote.agency}`)
     ).catch(e => {
       console.error(e);
     });

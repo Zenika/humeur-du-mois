@@ -1,4 +1,3 @@
-import firebase from "firebase/app";
 import { computeCampaignLabel } from "./computeCampaignLabel";
 import { VoteData } from "./renderTemplate";
 
