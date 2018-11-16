@@ -12,15 +12,17 @@ interface StatsData {
   notGreatAtAllCount: number;
 }
 
-export const updateStats = async (vote: Vote, voteId: string, statsDocument: FirebaseFirestore.DocumentReference) => {
+export const updateStats = async (
+  vote: Vote,
+  voteId: string,
+  statsDocument: FirebaseFirestore.DocumentReference
+) => {
   await firebase.firestore().runTransaction(async transaction => {
     const previousCounters = await transaction
       .get(statsDocument)
       .then(snapshot => snapshot.data() || {});
     const storedVote = await transaction.get(
-      statsDocument
-        .collection("votes")
-        .doc(voteId)
+      statsDocument.collection("votes").doc(voteId)
     );
     //To prevent double calls to updateStats from occuring
     if (storedVote.exists) {
@@ -33,36 +35,47 @@ export const updateStats = async (vote: Vote, voteId: string, statsDocument: Fir
 
     return transaction
       .set(statsDocument, updateCounters)
-      .set(
-        statsDocument
-          .collection("votes")
-          .doc(voteId),
-        {}
-      );
+      .set(statsDocument.collection("votes").doc(voteId), {});
   });
 };
 export const updateCampaignStatsOnVote = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
     if (!isEnabled(config.features.collect_stats)) {
+      console.info("feature is disabled; aborting");
       return;
     }
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
-    updateStats(vote, voteId, firebase.firestore().collection(`stats-campaign`).doc(vote.campaign)).catch(e => {
+    updateStats(
+      vote,
+      voteId,
+      firebase
+        .firestore()
+        .collection(`stats-campaign`)
+        .doc(vote.campaign)
+    ).catch(e => {
       console.error(e);
     });
   });
 
-  export const updateAgencyStatsOnVote = functions.firestore
+export const updateAgencyStatsOnVote = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
     if (!isEnabled(config.features.collect_stats)) {
+      console.info("feature is disabled; aborting");
       return;
     }
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
-    updateStats(vote, voteId, firebase.firestore().collection(`stats-agency`).doc(vote.agency)).catch(e => {
+    updateStats(
+      vote,
+      voteId,
+      firebase
+        .firestore()
+        .collection(`stats-agency`)
+        .doc(vote.agency)
+    ).catch(e => {
       console.error(e);
-    }); 
+    });
   });
