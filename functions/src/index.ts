@@ -26,6 +26,6 @@ export { updateStats } from "./update-stats";
 
 export { importVotes } from "./import-votes";
 
-export { updateStatsOnVote } from "./update-stats";
+export { updateCampaignStatsOnVote, updateAgencyStatsOnVote } from "./update-stats";
 
 export { computeStatistics } from "./compute-statistics";

@@ -12,15 +12,13 @@ interface StatsData {
   notGreatAtAllCount: number;
 }
 
-export const updateStats = async (vote: Vote, voteId: string) => {
-  const statsCollection = firebase.firestore().collection("stats");
+export const updateStats = async (vote: Vote, voteId: string, statsDocument: FirebaseFirestore.DocumentReference) => {
   await firebase.firestore().runTransaction(async transaction => {
     const previousCounters = await transaction
-      .get(statsCollection.doc(vote.campaign))
+      .get(statsDocument)
       .then(snapshot => snapshot.data() || {});
     const storedVote = await transaction.get(
-      statsCollection
-        .doc(vote.campaign)
+      statsDocument
         .collection("votes")
         .doc(voteId)
     );
@@ -34,17 +32,16 @@ export const updateStats = async (vote: Vote, voteId: string) => {
     };
 
     return transaction
-      .set(statsCollection.doc(vote.campaign), updateCounters)
+      .set(statsDocument, updateCounters)
       .set(
-        statsCollection
-          .doc(vote.campaign)
+        statsDocument
           .collection("votes")
           .doc(voteId),
         {}
       );
   });
 };
-export const updateStatsOnVote = functions.firestore
+export const updateCampaignStatsOnVote = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
     if (!isEnabled(config.features.collect_stats)) {
@@ -52,7 +49,20 @@ export const updateStatsOnVote = functions.firestore
     }
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
-    updateStats(vote, voteId).catch(e => {
+    updateStats(vote, voteId, firebase.firestore().collection(`stats-campaign`).doc(vote.campaign)).catch(e => {
       console.error(e);
     });
+  });
+
+  export const updateAgencyStatsOnVote = functions.firestore
+  .document("vote/{voteId}")
+  .onCreate(async voteSnapshot => {
+    if (!isEnabled(config.features.collect_stats)) {
+      return;
+    }
+    const vote = voteSnapshot.data()! as Vote;
+    const voteId: string = voteSnapshot.id;
+    updateStats(vote, voteId, firebase.firestore().collection(`stats-agency`).doc(vote.agency)).catch(e => {
+      console.error(e);
+    }); 
   });
