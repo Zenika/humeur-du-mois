@@ -52,8 +52,12 @@ body {
 
 p {
   line-height: 140%;
-  margin: 8px 0 0 0;
+  margin: 8px;
   font-size: 14px;
+}
+
+select {
+  margin: 8px;
 }
 
 .button__wrapper {
@@ -146,7 +150,7 @@ tr:hover td {
 }
 
 .loader:before {
-  content: '';
+  content: "";
   display: block;
   padding-top: 100%;
 }
@@ -167,7 +171,8 @@ tr:hover td {
 .loader .path {
   stroke-dasharray: 1, 200;
   stroke-dashoffset: 0;
-  animation: dash 1.5s ease-in-out infinite, colorRotation 6s ease-in-out infinite;
+  animation: dash 1.5s ease-in-out infinite,
+    colorRotation 6s ease-in-out infinite;
   stroke-linecap: round;
 }
 
