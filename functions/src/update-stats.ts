@@ -38,7 +38,7 @@ export const updateStats = async (
       .set(statsDocument.collection("votes").doc(voteId), {});
   });
 };
-export const updateCampaignStatsOnVote = functions.firestore
+export const updateStatsOnVote = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
     if (!isEnabled(config.features.collect_stats)) {
@@ -57,17 +57,6 @@ export const updateCampaignStatsOnVote = functions.firestore
     ).catch(e => {
       console.error(e);
     });
-  });
-
-export const updateCampaignAgencyStatsOnVote = functions.firestore
-  .document("vote/{voteId}")
-  .onCreate(async voteSnapshot => {
-    if (!isEnabled(config.features.collect_stats)) {
-      console.info("feature is disabled; aborting");
-      return;
-    }
-    const vote = voteSnapshot.data()! as Vote;
-    const voteId: string = voteSnapshot.id;
     updateStats(
       vote,
       voteId,
