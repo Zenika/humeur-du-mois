@@ -32,21 +32,21 @@ body {
   width: 400px;
 }
 
-.page h2 {
+.page h1 {
   color: #ffa100;
   font-weight: 400;
   font-size: 16px;
   margin: 0 0 16px;
 }
 
-.page h1 {
+.page h2 {
   font-size: 22px;
   font-weight: 300;
   color: rgba(0, 0, 0, 0.6);
   margin: 0;
 }
 
-.page h1 + * {
+.page h2 + * {
   margin-top: 20px;
 }
 
