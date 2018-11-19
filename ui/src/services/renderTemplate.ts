@@ -8,7 +8,9 @@ export type VoteData = {
   campaignDate: string;
 }[];
 
-export function renderTemplate(voteData: VoteData) {
+export function renderTemplate(voteData?: VoteData) {
+  if (!voteData)
+    return `Oops, something went wrong. We got no data to show you, try reloading and contacting dreamlabs if this keeps happening`;
   const keys = ["great", "notThatGreat", "notGreatAtAll"];
   const emojis = ["😁", "😐", "😤"];
   return `

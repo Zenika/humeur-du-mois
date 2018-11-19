@@ -6,12 +6,6 @@ import { Vote } from "./cast-vote";
 
 const config = functions.config() as Config;
 
-interface StatsData {
-  greatCount: number;
-  notThatGreatCount: number;
-  notGreatAtAllCount: number;
-}
-
 export const updateStats = async (
   vote: Vote,
   voteId: string,
