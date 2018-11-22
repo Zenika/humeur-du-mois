@@ -3,7 +3,6 @@ import { authenticateAuth0, authenticateFirebase } from "./auth";
 import { getCampaign, castVote } from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./style.css";
-import { Stats } from "webpack";
 import { renderTemplate, VoteData, StatsData } from "./services/renderTemplate";
 import { computeDataFromDataBase } from "./services/computeDataFromDataBase";
 
@@ -22,6 +21,9 @@ window.addEventListener("load", async function() {
   const statsPage = document.getElementById("displayStats")!;
   const statsButton = document.getElementById("displayStatsButton")!;
   const statsTab = document.getElementById("statsTab")!;
+  const agencySelector: HTMLSelectElement = <HTMLSelectElement>(
+    document.getElementById("agencySelector")!
+  );
   const homeButtons = [
     this.document.getElementById("homeButton1")!,
     this.document.getElementById("homeButton2")!,
@@ -47,6 +49,24 @@ window.addEventListener("load", async function() {
   const managerName = document.getElementById("managerName")!;
   const hideClass = "hidden";
 
+  let voteData: VoteData;
+  let selectedAgency = "";
+
+  const htmlLoader = `<h1>Hold on, we're retrieving the data you requested ...</h1>
+  <div class="loader">
+    <svg class="circular" viewBox="25 25 50 50">
+      <circle
+        class="path"
+        cx="50"
+        cy="50"
+        r="20"
+        fill="none"
+        strokeWidth="2"
+        strokeMiterlimit="10"
+      />
+    </svg>
+  </div>`;
+
   const show = (element: HTMLElement) => {
     element.classList.remove(hideClass);
   };
@@ -61,9 +81,11 @@ window.addEventListener("load", async function() {
     show(incoming);
   };
 
-  const displayStatsPage = (currentCampaign: string) => {
+  const displayStatsPage = async (agency?: string) => {
     changePageTo(statsPage);
-    retrieveStatsData(currentCampaign);
+    statsTab.innerHTML = htmlLoader;
+    voteData = await retrieveStatsData(agency);
+    displayStatsData(voteData, agency);
   };
 
   const displayHomePage: any = () => {
@@ -71,20 +93,33 @@ window.addEventListener("load", async function() {
     show(homePage);
   };
 
-  const retrieveStatsData = async (campaign: string) => {
+  const retrieveStatsData = async (agency?: string) => {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
+    const collectionName = agency ? `stats-campaign-agency` : `stats-campaign`;
 
     const stats: firebase.firestore.QuerySnapshot = await db
-      .collection("stats")
+      .collection(collectionName)
       .get();
-    let voteRawData: VoteData = stats.docs.map(snapshot => ({
+    return stats.docs.map(snapshot => ({
       campaign: snapshot.id,
       counts: snapshot.data() as StatsData,
       campaignDate: ""
     }));
-    const voteData: VoteData = computeDataFromDataBase(voteRawData);
-    statsTab.innerHTML = renderTemplate(voteData);
+  };
+
+  const displayStatsData = (voteData: VoteData, agency?: string) => {
+    statsTab.innerHTML = renderTemplate(
+      computeDataFromDataBase(
+        agency ? filterStatsData(voteData, agency) : voteData
+      )
+    );
+  };
+
+  const filterStatsData = (voteRawData: VoteData, agency: string) => {
+    return voteRawData.filter(
+      rawVote => rawVote.campaign.split("_")[1] === agency
+    );
   };
 
   const errorOut = (err: Error) => {
@@ -160,9 +195,27 @@ window.addEventListener("load", async function() {
     submitGreat.onclick = () => saveResponse("great");
     submitNotThatGreat.onclick = () => saveResponse("notThatGreat");
     submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll");
-    statsButton.onclick = () => displayStatsPage(campaign);
+    statsButton.onclick = () => {
+      const selectedAgency =
+        agencySelector.options[agencySelector.selectedIndex].value;
+      displayStatsPage(selectedAgency === "" ? undefined : selectedAgency);
+    };
     homeButtons.forEach(button => {
       button.onclick = () => displayHomePage();
     });
+    agencySelector.onchange = async () => {
+      const newSelectedAgency =
+        agencySelector.options[agencySelector.selectedIndex].value;
+      if (selectedAgency === "" && newSelectedAgency !== "") {
+        voteData = await retrieveStatsData(newSelectedAgency);
+      } else if (selectedAgency !== "" && newSelectedAgency === "") {
+        voteData = await retrieveStatsData();
+      }
+      selectedAgency = newSelectedAgency;
+      displayStatsData(
+        voteData,
+        selectedAgency === "" ? undefined : selectedAgency
+      );
+    };
   }
 });

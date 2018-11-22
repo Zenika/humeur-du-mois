@@ -9,7 +9,11 @@ service cloud.firestore {
       allow read: if authenticated();
     }
 
-     match /stats/{document=**} {
+     match /stats-campaign/{document=**} {
+      allow read: if authenticated();
+    }
+
+    match /stats-campaign-agency/{document=**} {
       allow read: if authenticated();
     }
 

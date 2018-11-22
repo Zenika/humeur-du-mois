@@ -6,23 +6,17 @@ import { Vote } from "./cast-vote";
 
 const config = functions.config() as Config;
 
-interface StatsData {
-  greatCount: number;
-  notThatGreatCount: number;
-  notGreatAtAllCount: number;
-}
-
-export const updateStats = async (vote: Vote, voteId: string) => {
-  const statsCollection = firebase.firestore().collection("stats");
+export const updateStats = async (
+  vote: Vote,
+  voteId: string,
+  statsDocument: FirebaseFirestore.DocumentReference
+) => {
   await firebase.firestore().runTransaction(async transaction => {
     const previousCounters = await transaction
-      .get(statsCollection.doc(vote.campaign))
+      .get(statsDocument)
       .then(snapshot => snapshot.data() || {});
     const storedVote = await transaction.get(
-      statsCollection
-        .doc(vote.campaign)
-        .collection("votes")
-        .doc(voteId)
+      statsDocument.collection("votes").doc(voteId)
     );
     //To prevent double calls to updateStats from occuring
     if (storedVote.exists) {
@@ -34,25 +28,37 @@ export const updateStats = async (vote: Vote, voteId: string) => {
     };
 
     return transaction
-      .set(statsCollection.doc(vote.campaign), updateCounters)
-      .set(
-        statsCollection
-          .doc(vote.campaign)
-          .collection("votes")
-          .doc(voteId),
-        {}
-      );
+      .set(statsDocument, updateCounters)
+      .set(statsDocument.collection("votes").doc(voteId), {});
   });
 };
 export const updateStatsOnVote = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
     if (!isEnabled(config.features.collect_stats)) {
+      console.info("feature is disabled; aborting");
       return;
     }
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
-    updateStats(vote, voteId).catch(e => {
+    updateStats(
+      vote,
+      voteId,
+      firebase
+        .firestore()
+        .collection(`stats-campaign`)
+        .doc(vote.campaign)
+    ).catch(e => {
+      console.error(e);
+    });
+    updateStats(
+      vote,
+      voteId,
+      firebase
+        .firestore()
+        .collection(`stats-campaign-agency`)
+        .doc(`${vote.campaign}_${vote.agency}`)
+    ).catch(e => {
       console.error(e);
     });
   });
