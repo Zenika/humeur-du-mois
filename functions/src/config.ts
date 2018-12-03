@@ -3,6 +3,7 @@
  */
 
 type Flag = "true" | "false";
+
 type DayOfMonth =
   | "1"
   | "2"
@@ -32,7 +33,10 @@ type DayOfMonth =
   | "26"
   | "27"
   | "28";
+
 type DaysBefore = DayOfMonth;
+
+export type Feature = { enabled: Flag };
 
 export const asNumber = (dayOfMonth: DayOfMonth | DaysBefore): number => {
   return Number(dayOfMonth);
@@ -42,10 +46,33 @@ export const asBoolean = (flag: Flag): boolean => {
   return flag === "true";
 };
 
-export const isEnabled = <Feature extends { enabled: Flag }>(
-  feature: Feature
-): boolean => {
+export const isEnabled = (feature: Feature): boolean => {
   return asBoolean(feature.enabled);
+};
+
+export const isDisabled = (feature: Feature): boolean => {
+  return !isEnabled(feature);
+};
+
+type Consumer<Args extends any[]> = (...args: Args) => void;
+
+/**
+ * Shortcuts a function based on a feature flag.
+ *
+ * @param feature feature to test
+ * @param fn function to shortcut
+ */
+export const onlyWhenEnabled = <Args extends any[]>(
+  feature: Feature,
+  fn: Consumer<Args>
+): Consumer<Args> => {
+  if (isEnabled(feature)) {
+    return fn;
+  } else {
+    return (...args: Args) => {
+      console.info("feature disabled; aborting");
+    };
+  }
 };
 
 export interface Auth0Config {
@@ -57,7 +84,6 @@ export interface MailgunConfig {
   domain: string;
   api_key: string;
   host?: string;
-  recipient_override?: string;
 }
 
 export interface EndOfMonthRemindersConfig {
@@ -135,15 +161,21 @@ export interface CollectStatsConfig {
   enabled: Flag;
 }
 
+export interface ComputeStatisticsConfigs {
+  enabled: Flag;
+  key: string;
+}
+
 export interface ImportVotesConfig {
   enabled: Flag;
   key: string;
 }
 
-export interface ComputeStatisticsConfigs {
+export interface EmailsConfig {
   enabled: Flag;
-  key: string;
+  recipient_override?: string;
 }
+
 export interface FeaturesConfig {
   voting_campaigns: VotingCampaignsConfig;
   reminders: RemindersConfig;
@@ -152,6 +184,7 @@ export interface FeaturesConfig {
   collect_stats: CollectStatsConfig;
   compute_statistics: ComputeStatisticsConfigs;
   import_votes: ImportVotesConfig;
+  emails: EmailsConfig;
 }
 
 export interface AlibeezConfig {

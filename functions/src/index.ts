@@ -18,6 +18,8 @@ export {
   sendCampaignEndsReminder
 } from "./send-reminders";
 
+export { processEmailQueue } from "./process-email-queue";
+
 export { getCampaign } from "./get-campaign";
 
 export { castVote } from "./cast-vote";
