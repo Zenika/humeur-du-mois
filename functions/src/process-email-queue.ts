@@ -22,10 +22,13 @@ export const EMAILS_SENT_COLLECTION_NAME = "emails-sent";
 
 export type QueuedEmail = {
   message: mailgun.messages.SendData;
+  recordedAt: firestore.Timestamp;
 };
 
 export const enqueue = async (message: mailgun.messages.SendData) => {
-  await db.collection(EMAILS_TO_SEND_COLLECTION_NAME).add({ message });
+  await db
+    .collection(EMAILS_TO_SEND_COLLECTION_NAME)
+    .add({ message, recordedAt: firestore.Timestamp.now() });
 };
 
 type Producer<T> = () => T;
