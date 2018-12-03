@@ -7,9 +7,10 @@ import { Vote } from "./cast-vote";
 const config = functions.config() as Config;
 
 export const updateStats = async (
-  vote: Vote,
+  voteValue: string,
   voteId: string,
-  statsDocument: FirebaseFirestore.DocumentReference
+  statsDocument: FirebaseFirestore.DocumentReference,
+  additionnalFields: object = {}
 ) => {
   await firebase.firestore().runTransaction(async transaction => {
     const previousCounters = await transaction
@@ -24,9 +25,9 @@ export const updateStats = async (
     }
     const updateCounters = {
       ...previousCounters,
-      [vote.value]: (previousCounters[vote.value] || 0) + 1
+      ...additionnalFields,
+      [voteValue]: (previousCounters[voteValue] || 0) + 1
     };
-
     return transaction
       .set(statsDocument, updateCounters)
       .set(statsDocument.collection("votes").doc(voteId), {});
@@ -42,7 +43,7 @@ export const updateStatsOnVote = functions.firestore
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
     updateStats(
-      vote,
+      vote.value,
       voteId,
       firebase
         .firestore()
@@ -52,12 +53,13 @@ export const updateStatsOnVote = functions.firestore
       console.error(e);
     });
     updateStats(
-      vote,
+      vote.value,
       voteId,
       firebase
         .firestore()
         .collection(`stats-campaign-agency`)
-        .doc(`${vote.campaign}_${vote.agency}`)
+        .doc(`${vote.campaign}_${vote.agency}`),
+      { agency: vote.agency }
     ).catch(e => {
       console.error(e);
     });
