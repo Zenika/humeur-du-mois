@@ -1,4 +1,4 @@
-import firebase, { FirebaseError } from "firebase/app";
+import firebase from "firebase/app";
 import { authenticateAuth0, authenticateFirebase } from "./auth";
 import { getCampaign, castVote } from "./api";
 import { AUTH0_CONFIG } from "./config";
