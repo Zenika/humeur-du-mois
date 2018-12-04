@@ -101,11 +101,28 @@ window.addEventListener("load", async function() {
     const stats: firebase.firestore.QuerySnapshot = await db
       .collection(collectionName)
       .get();
+
     return stats.docs.map(snapshot => ({
       campaign: snapshot.id,
       counts: snapshot.data() as StatsData,
       campaignDate: ""
     }));
+  };
+
+  const fillAgenciesList = (agencyList: Set<string>) => {
+    agencySelector.childNodes.forEach(child => {
+      agencySelector.removeChild(child);
+    });
+    const globalElement = this.document.createElement("option");
+    globalElement.innerText = "Global";
+    globalElement.setAttribute("value", "");
+    agencySelector.appendChild(globalElement);
+    agencyList.forEach(agency => {
+      const element = this.document.createElement("option");
+      element.innerText = agency;
+      element.setAttribute("value", agency);
+      agencySelector.appendChild(element);
+    });
   };
 
   const displayStatsData = (voteData: VoteData, agency?: string) => {
@@ -117,9 +134,7 @@ window.addEventListener("load", async function() {
   };
 
   const filterStatsData = (voteRawData: VoteData, agency: string) => {
-    return voteRawData.filter(
-      rawVote => rawVote.campaign.split("_")[1] === agency
-    );
+    return voteRawData.filter(rawVote => rawVote.counts.agency === agency);
   };
 
   const errorOut = (err: Error) => {
@@ -196,9 +211,7 @@ window.addEventListener("load", async function() {
     submitNotThatGreat.onclick = () => saveResponse("notThatGreat");
     submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll");
     statsButton.onclick = () => {
-      const selectedAgency =
-        agencySelector.options[agencySelector.selectedIndex].value;
-      displayStatsPage(selectedAgency === "" ? undefined : selectedAgency);
+      displayStatsPage();
     };
     homeButtons.forEach(button => {
       button.onclick = () => displayHomePage();
@@ -211,11 +224,23 @@ window.addEventListener("load", async function() {
       } else if (selectedAgency !== "" && newSelectedAgency === "") {
         voteData = await retrieveStatsData();
       }
+
       selectedAgency = newSelectedAgency;
       displayStatsData(
         voteData,
         selectedAgency === "" ? undefined : selectedAgency
       );
     };
+    const statsCampaignAgency: firebase.firestore.QuerySnapshot = await firebase
+      .firestore()
+      .collection(`stats-campaign-agency`)
+      .get();
+    fillAgenciesList(
+      new Set(
+        statsCampaignAgency.docs.map(
+          snapshot => (snapshot.data() as StatsData).agency
+        )
+      )
+    );
   }
 });

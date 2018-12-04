@@ -32,13 +32,15 @@ export const computeStatistics = functions.https.onRequest(
 
     const votes = await db.collection("vote").get();
     for (const vote of votes.docs) {
+      const voteData = vote.data() as Vote;
       await updateStats(
-        vote.data() as Vote,
+        voteData.value,
         vote.id,
         firebase
           .firestore()
           .collection(`stats-campaign`)
-          .doc(vote.id)
+          .doc(vote.id),
+        { agency: voteData.agency }
       );
     }
     res.send("done");

@@ -1,11 +1,12 @@
 export interface StatsData {
-  [key: string]: number;
+  [key: string]: any;
 }
 
 export type VoteData = {
   campaign: string;
   counts: StatsData;
   campaignDate: string;
+  agency?: string;
 }[];
 
 export function renderTemplate(voteData?: VoteData) {
