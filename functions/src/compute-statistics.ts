@@ -3,8 +3,13 @@ import * as firebase from "firebase-admin";
 import * as firebaseTools from "firebase-tools";
 
 import { Config } from "./config";
-import { updateStats } from "./update-stats";
+import { getStatsPathsToUpdate } from "./update-stats";
 import { Vote } from "./cast-vote";
+
+interface Path {
+  counters: any;
+  path: FirebaseFirestore.DocumentReference;
+}
 
 const config = functions.config() as Config;
 const computeStatisticsConfigs = config.features.compute_statistics;
@@ -24,25 +29,40 @@ export const computeStatistics = functions.https.onRequest(
       return;
     }
 
-    await firebaseTools.firestore.delete("stats", {
-      project: config.service_account.project_id,
-      recursive: true,
-      yes: true
-    });
-
     const votes = await db.collection("vote").get();
+    let paths: any;
+    paths = {};
     for (const vote of votes.docs) {
       const voteData = vote.data() as Vote;
-      await updateStats(
-        voteData.value,
-        vote.id,
-        firebase
-          .firestore()
-          .collection(`stats-campaign`)
-          .doc(vote.id),
-        { agency: voteData.agency }
-      );
+      const pathsToAdd = getStatsPathsToUpdate(voteData);
+      for (const path of pathsToAdd) {
+        if (paths[path.path]) {
+          paths[path.path] = {
+            counters: {
+              ...paths[path.path].counters,
+              ...{ agency: voteData.agency },
+              [voteData.value]:
+                (paths[path.path].counters[voteData.value] || 0) + 1
+            },
+            path: path
+          };
+        } else {
+          paths[path.path] = {
+            counters: {
+              ...{ agency: voteData.agency },
+              [voteData.value]: 1
+            },
+            path: path
+          };
+        }
+      }
     }
-    res.send("done");
+    for (const key of Object.keys(paths)) {
+      const path = paths[key];
+      db.runTransaction(async transaction => {
+        return transaction.set(path.path, path.counters);
+      });
+    }
+    res.sendStatus(200);
   }
 );

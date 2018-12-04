@@ -33,6 +33,20 @@ export const updateStats = async (
       .set(statsDocument.collection("votes").doc(voteId), {});
   });
 };
+
+export const getStatsPathsToUpdate = (vote: Vote) => {
+  const paths = [
+    firebase
+      .firestore()
+      .collection(`stats-campaign`)
+      .doc(vote.campaign),
+    firebase
+      .firestore()
+      .collection(`stats-campaign-agency`)
+      .doc(`${vote.campaign}_${vote.agency}`)
+  ];
+  return paths;
+};
 export const updateStatsOnVote = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
@@ -42,25 +56,10 @@ export const updateStatsOnVote = functions.firestore
     }
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
-    updateStats(
-      vote.value,
-      voteId,
-      firebase
-        .firestore()
-        .collection(`stats-campaign`)
-        .doc(vote.campaign)
-    ).catch(e => {
-      console.error(e);
-    });
-    updateStats(
-      vote.value,
-      voteId,
-      firebase
-        .firestore()
-        .collection(`stats-campaign-agency`)
-        .doc(`${vote.campaign}_${vote.agency}`),
-      { agency: vote.agency }
-    ).catch(e => {
-      console.error(e);
+    const paths = getStatsPathsToUpdate(vote);
+    paths.forEach(path => {
+      updateStats(vote.value, voteId, path).catch(e => {
+        console.error(e);
+      });
     });
   });
