@@ -3,7 +3,7 @@ import * as firebase from "firebase-admin";
 import * as firebaseTools from "firebase-tools";
 
 import { Config } from "./config";
-import { getStatsPathsToUpdate } from "./update-stats";
+import { getStatsRefsToUpdate } from "./update-stats";
 import { Vote } from "./cast-vote";
 
 interface Path {
@@ -30,39 +30,43 @@ export const computeStatistics = functions.https.onRequest(
     }
 
     const votes = await db.collection("vote").get();
-    let paths: any;
+    let paths: {
+      [key: string]: {
+        counters: { [key: string]: any };
+        path: FirebaseFirestore.DocumentReference;
+      };
+    };
     paths = {};
     for (const vote of votes.docs) {
       const voteData = vote.data() as Vote;
-      const pathsToAdd = getStatsPathsToUpdate(voteData);
-      for (const path of pathsToAdd) {
-        if (paths[path.path]) {
-          paths[path.path] = {
+      const refsToAdd = getStatsRefsToUpdate(voteData);
+      for (const refToAdd of refsToAdd) {
+        if (paths[refToAdd.path]) {
+          paths[refToAdd.path] = {
             counters: {
-              ...paths[path.path].counters,
+              ...paths[refToAdd.path].counters,
               ...{ agency: voteData.agency },
               [voteData.value]:
-                (paths[path.path].counters[voteData.value] || 0) + 1
+                (paths[refToAdd.path].counters[voteData.value] || 0) + 1
             },
-            path: path
+            path: refToAdd
           };
         } else {
-          paths[path.path] = {
+          paths[refToAdd.path] = {
             counters: {
               ...{ agency: voteData.agency },
               [voteData.value]: 1
             },
-            path: path
+            path: refToAdd
           };
         }
       }
     }
-    for (const key of Object.keys(paths)) {
-      const path = paths[key];
-      db.runTransaction(async transaction => {
-        return transaction.set(path.path, path.counters);
-      });
-    }
+    await Promise.all(
+      Object.keys(paths).map(refPath =>
+        paths[refPath].path.set(paths[refPath].counters)
+      )
+    );
     res.sendStatus(200);
   }
 );

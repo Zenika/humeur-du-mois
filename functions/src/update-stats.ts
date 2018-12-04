@@ -34,7 +34,7 @@ export const updateStats = async (
   });
 };
 
-export const getStatsPathsToUpdate = (vote: Vote) => {
+export const getStatsRefsToUpdate = (vote: Vote) => {
   const paths = [
     firebase
       .firestore()
@@ -56,7 +56,7 @@ export const updateStatsOnVote = functions.firestore
     }
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
-    const paths = getStatsPathsToUpdate(vote);
+    const paths = getStatsRefsToUpdate(vote);
     paths.forEach(path => {
       updateStats(vote.value, voteId, path).catch(e => {
         console.error(e);
