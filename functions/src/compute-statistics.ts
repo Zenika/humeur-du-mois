@@ -55,7 +55,9 @@ export const computeStatistics = functions.https.onRequest(
         return countersByRef;
       }, new Map())
       .forEach((counters, ref) => {
-        db.doc(ref).set(counters);
+        db.doc(ref)
+          .set(counters)
+          .catch(err => console.error(err));
       });
 
     res.sendStatus(200);
