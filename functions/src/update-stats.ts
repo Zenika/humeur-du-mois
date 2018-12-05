@@ -35,17 +35,27 @@ export const updateStats = async (
 };
 
 export const getStatsRefsToUpdate = (vote: Vote) => {
-  const paths = [
-    firebase
-      .firestore()
-      .collection(`stats-campaign`)
-      .doc(vote.campaign),
-    firebase
-      .firestore()
-      .collection(`stats-campaign-agency`)
-      .doc(`${vote.campaign}_${vote.agency}`)
+  return [
+    {
+      ref: firebase
+        .firestore()
+        .collection(`stats-campaign`)
+        .doc(vote.campaign),
+      additionnalFields: {
+        campaign: vote.campaign
+      }
+    },
+    {
+      ref: firebase
+        .firestore()
+        .collection(`stats-campaign-agency`)
+        .doc(`${vote.campaign}_${vote.agency}`),
+      additionnalFields: {
+        campaign: vote.campaign,
+        agency: vote.agency
+      }
+    }
   ];
-  return paths;
 };
 export const updateStatsOnVote = functions.firestore
   .document("vote/{voteId}")
@@ -58,8 +68,10 @@ export const updateStatsOnVote = functions.firestore
     const voteId: string = voteSnapshot.id;
     const paths = getStatsRefsToUpdate(vote);
     paths.forEach(path => {
-      updateStats(vote.value, voteId, path).catch(e => {
-        console.error(e);
-      });
+      updateStats(vote.value, voteId, path.ref, path.additionnalFields).catch(
+        e => {
+          console.error(e);
+        }
+      );
     });
   });
