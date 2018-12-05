@@ -67,11 +67,14 @@ export const updateStatsOnVote = functions.firestore
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
     const statsRefs = getStatsRefsToUpdate(vote);
-    paths.forEach(path => {
-      updateStats(vote.value, voteId, path.ref, path.additionnalFields).catch(
-        e => {
-          console.error(e);
-        }
-      );
+    statsRefs.forEach(statsRef => {
+      updateStats(
+        vote.value,
+        voteId,
+        statsRef.ref,
+        statsRef.additionnalFields
+      ).catch(e => {
+        console.error(e);
+      });
     });
   });
