@@ -33,17 +33,18 @@ export const computeStatistics = functions.https.onRequest(
     const votes = await db.collection("vote").get();
 
     votes.docs
-      .map(vote => {
-        const voteData = vote.data() as Vote;
-        return getStatsRefsToUpdate(voteData).map(row => {
-          return {
-            ref: row.ref,
-            voteValue: voteData.value,
-            additionalFields: row.additionnalFields
-          };
-        });
+      .map(voteSnapshot => {
+        const vote = voteSnapshot.data() as Vote;
+        return getStatsRefsToUpdate(vote).map(statsRef => ({
+          ...statsRef,
+          voteValue: vote.value,
+          additionalFields: statsRef.additionnalFields
+        }));
       })
-      .reduce((accumulator, row) => [...accumulator, ...row], [])
+      .reduce(
+        (refsForAllVote, refForAVote) => [...refsForAllVote, ...refForAVote],
+        []
+      )
       .reduce((countersByRef, row) => {
         const counters = countersByRef.get(row.ref.path);
         countersByRef.set(row.ref.path, {
@@ -63,5 +64,3 @@ export const computeStatistics = functions.https.onRequest(
     res.sendStatus(200);
   }
 );
-
-//computeStatistics.post({headers:{ 'Authorization': 'Bearer 31110062-dffd-4a64-938d-75dd14371830'}})
