@@ -219,6 +219,11 @@ jobs:
     environment:
       GCLOUD_PROJECT: humeur-du-mois-2018-beta
 
+  prod-deploy-app-engine-cron:
+    <<: *deploy-app-engine-cron
+    environment:
+      GCLOUD_PROJECT: humeur-du-mois-2018-prod
+
 workflows:
   version: 2
 
