@@ -9,13 +9,6 @@ const config = functions.config() as Config;
 const computeStatisticsConfigs = config.features.compute_statistics;
 const db = firebase.firestore();
 
-//not the best but otherwise values show as NaN
-const defaultCounters = {
-  great: 0,
-  notThatGreat: 0,
-  notGreatAtAll: 0
-};
-
 export const computeStatistics = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
     if (!computeStatisticsConfigs.enabled) {
@@ -32,34 +25,37 @@ export const computeStatistics = functions.https.onRequest(
 
     const votes = await db.collection("vote").get();
 
-    votes.docs
+    const statisticsData = votes.docs
       .map(voteSnapshot => {
         const vote = voteSnapshot.data() as Vote;
         return getStatsRefsToUpdate(vote).map(statsRef => ({
           ...statsRef,
-          voteValue: vote.value,
-          additionalFields: statsRef.additionnalFields
+          voteValue: vote.value
         }));
       })
       .reduce(
         (refsForAllVote, refForAVote) => [...refsForAllVote, ...refForAVote],
         []
       )
-      .reduce((countersByRef, row) => {
-        const counters = countersByRef.get(row.ref.path);
-        countersByRef.set(row.ref.path, {
-          ...row.additionalFields,
-          ...defaultCounters,
-          ...counters,
-          [row.voteValue]: (counters ? counters[row.voteValue] : 0) + 1
-        });
-        return countersByRef;
-      }, new Map())
-      .forEach((counters, ref) => {
-        db.doc(ref)
-          .set(counters)
-          .catch(err => console.error(err));
-      });
+      .reduce(
+        (countersByRef, row) => {
+          const counters = countersByRef[row.ref.path] || {};
+          countersByRef[row.ref.path] = {
+            ...row.additionnalFields,
+            ...counters,
+            [row.voteValue]: (counters[row.voteValue] || 0) + 1
+          };
+          return countersByRef;
+        },
+        {} as { [key: string]: any }
+      );
+
+    Object.keys(statisticsData).forEach(key => {
+      const row = statisticsData[key];
+      db.doc(key)
+        .set(row)
+        .catch(err => console.error(err));
+    });
 
     res.sendStatus(200);
   }
