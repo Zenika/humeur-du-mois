@@ -33,6 +33,30 @@ export const updateStats = async (
       .set(statsDocument.collection("votes").doc(voteId), {});
   });
 };
+
+export const getStatsRefsToUpdate = (vote: Vote) => {
+  return [
+    {
+      ref: firebase
+        .firestore()
+        .collection(`stats-campaign`)
+        .doc(vote.campaign),
+      additionnalFields: {
+        campaign: vote.campaign
+      }
+    },
+    {
+      ref: firebase
+        .firestore()
+        .collection(`stats-campaign-agency`)
+        .doc(`${vote.campaign}_${vote.agency}`),
+      additionnalFields: {
+        campaign: vote.campaign,
+        agency: vote.agency
+      }
+    }
+  ];
+};
 export const updateStatsOnVote = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
@@ -42,25 +66,15 @@ export const updateStatsOnVote = functions.firestore
     }
     const vote = voteSnapshot.data()! as Vote;
     const voteId: string = voteSnapshot.id;
-    updateStats(
-      vote.value,
-      voteId,
-      firebase
-        .firestore()
-        .collection(`stats-campaign`)
-        .doc(vote.campaign)
-    ).catch(e => {
-      console.error(e);
-    });
-    updateStats(
-      vote.value,
-      voteId,
-      firebase
-        .firestore()
-        .collection(`stats-campaign-agency`)
-        .doc(`${vote.campaign}_${vote.agency}`),
-      { agency: vote.agency }
-    ).catch(e => {
-      console.error(e);
+    const statsRefs = getStatsRefsToUpdate(vote);
+    statsRefs.forEach(statsRef => {
+      updateStats(
+        vote.value,
+        voteId,
+        statsRef.ref,
+        statsRef.additionnalFields
+      ).catch(e => {
+        console.error(e);
+      });
     });
   });

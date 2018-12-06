@@ -1,9 +1,8 @@
 import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
-import * as firebaseTools from "firebase-tools";
 
 import { Config } from "./config";
-import { updateStats } from "./update-stats";
+import { getStatsRefsToUpdate } from "./update-stats";
 import { Vote } from "./cast-vote";
 
 const config = functions.config() as Config;
@@ -24,25 +23,40 @@ export const computeStatistics = functions.https.onRequest(
       return;
     }
 
-    await firebaseTools.firestore.delete("stats", {
-      project: config.service_account.project_id,
-      recursive: true,
-      yes: true
+    const votes = await db.collection("vote").get();
+
+    const statisticsData = votes.docs
+      .map(voteSnapshot => {
+        const vote = voteSnapshot.data() as Vote;
+        return getStatsRefsToUpdate(vote).map(statsRef => ({
+          ...statsRef,
+          voteValue: vote.value
+        }));
+      })
+      .reduce(
+        (refsForAllVote, refForAVote) => [...refsForAllVote, ...refForAVote],
+        []
+      )
+      .reduce(
+        (countersByRef, row) => {
+          const counters = countersByRef[row.ref.path] || {};
+          countersByRef[row.ref.path] = {
+            ...row.additionnalFields,
+            ...counters,
+            [row.voteValue]: (counters[row.voteValue] || 0) + 1
+          };
+          return countersByRef;
+        },
+        {} as { [key: string]: any }
+      );
+
+    Object.keys(statisticsData).forEach(key => {
+      const row = statisticsData[key];
+      db.doc(key)
+        .set(row)
+        .catch(err => console.error(err));
     });
 
-    const votes = await db.collection("vote").get();
-    for (const vote of votes.docs) {
-      const voteData = vote.data() as Vote;
-      await updateStats(
-        voteData.value,
-        vote.id,
-        firebase
-          .firestore()
-          .collection(`stats-campaign`)
-          .doc(vote.id),
-        { agency: voteData.agency }
-      );
-    }
-    res.send("done");
+    res.sendStatus(200);
   }
 );

@@ -100,6 +100,7 @@ window.addEventListener("load", async function() {
 
     const stats: firebase.firestore.QuerySnapshot = await db
       .collection(collectionName)
+      .orderBy("campaign", "desc")
       .get();
 
     return stats.docs.map(snapshot => ({
