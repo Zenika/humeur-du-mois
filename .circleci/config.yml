@@ -126,6 +126,12 @@ jobs:
     docker: *validate-functions-config-docker
     steps: *validate-functions-config-steps
 
+  prod-validate-functions-config:
+    environment:
+      FIREBASE_PROJECT: prod
+    docker: *validate-functions-config-docker
+    steps: *validate-functions-config-steps
+
   deploy-firebase-app:
     environment:
       FIREBASE_PROJECT: default
@@ -140,6 +146,12 @@ jobs:
   beta-deploy-firebase-app:
     environment:
       FIREBASE_PROJECT: beta
+    docker: *deploy-firebase-app-docker
+    steps: *deploy-firebase-app-steps
+
+  prod-deploy-firebase-app:
+    environment:
+      FIREBASE_PROJECT: prod
     docker: *deploy-firebase-app-docker
     steps: *deploy-firebase-app-steps
 
@@ -176,6 +188,15 @@ jobs:
     docker: *google-cloud-sdk
     steps:
       - run: echo $BETA_GCLOUD_SERVICE_ACCOUNT_KEY > gcloud-service-key.json
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - gcloud-service-key.json
+
+  prod-set-up-gcloud:
+    docker: *google-cloud-sdk
+    steps:
+      - run: echo $PROD_GCLOUD_SERVICE_ACCOUNT_KEY > gcloud-service-key.json
       - persist_to_workspace:
           root: ./
           paths:
@@ -306,3 +327,28 @@ workflows:
             - beta-set-up-gcloud
             - beta-deploy-firebase-app
           filters: *filters-for-beta
+
+      - prod-set-up-gcloud:
+          filters: &filters-for-prod
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.+-prod.*/
+      - prod-validate-functions-config:
+          requires: *validate-functions-config-requires
+          filters: *filters-for-prod
+      - prod-deploy-firebase-app:
+          requires:
+            - install-tooling-dependencies
+            - build-ui
+            - build-ui-for-production
+            - lint-functions
+            - build-functions
+            - prod-validate-functions-config
+          filters: *filters-for-prod
+      - prod-deploy-app-engine-cron:
+          requires:
+            - install-app-engine-cron-dependencies
+            - prod-set-up-gcloud
+            - prod-deploy-firebase-app
+          filters: *filters-for-prod
