@@ -1,6 +1,7 @@
 {
   "projects": {
     "default": "humeur-du-mois-2018",
-    "beta": "humeur-du-mois-2018-beta"
+    "beta": "humeur-du-mois-2018-beta",
+    "prod": "humeur-du-mois-2018-prod"
   }
 }
