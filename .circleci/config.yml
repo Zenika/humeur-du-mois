@@ -331,7 +331,7 @@ workflows:
       - prod-set-up-gcloud:
           filters: &filters-for-prod
             branches:
-              ignore: /.*/
+              only: test-prod-deploy
             tags:
               only: /^v.+-prod.*/
       - prod-validate-functions-config:
