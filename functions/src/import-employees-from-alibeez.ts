@@ -11,9 +11,9 @@ interface AlibeezEmployee {
 
 export interface Employee {
   email: string;
-  fullName: string | null;
-  managerEmail: string | null;
-  agency: string | null;
+  fullName?: string;
+  managerEmail?: string;
+  agency?: string;
 }
 
 const obfuscateKey = (key: string) => {
@@ -81,11 +81,11 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
 
   const employeesToSave = employeesWithValidEmail.map(employee => ({
     email: employee.zenikaEmail,
-    fullName: employee.fullName,
+    fullName: employee.fullName || undefined,
     managerEmail: employee.operationalManagerShortUsername
       ? employee.operationalManagerShortUsername + "@zenika.com"
-      : null,
-    agency: employee.geographicalAgency
+      : undefined,
+    agency: employee.geographicalAgency || undefined
   }));
   await saveEmployees(employeesToSave);
 };
