@@ -2,7 +2,8 @@ import firebase from "firebase/app";
 import { authenticateAuth0, authenticateFirebase } from "./auth";
 import { getCampaign, castVote } from "./api";
 import { AUTH0_CONFIG } from "./config";
-import "./style.css";
+import "./styles/style.css";
+import "./styles/navbar.css";
 import { renderTemplate, VoteData, StatsData } from "./services/renderTemplate";
 import { computeDataFromDataBase } from "./services/computeDataFromDataBase";
 
@@ -24,13 +25,7 @@ window.addEventListener("load", async function() {
   const agencySelector: HTMLSelectElement = <HTMLSelectElement>(
     document.getElementById("agencySelector")!
   );
-  const homeButtons = [
-    this.document.getElementById("homeButton1")!,
-    this.document.getElementById("homeButton2")!,
-    this.document.getElementById("homeButton3")!,
-    this.document.getElementById("homeButton4")!,
-    this.document.getElementById("homeButton5")!
-  ];
+  const homeButton = this.document.getElementById("homeButton")!;
 
   const pages = [
     loggingInPage,
@@ -88,7 +83,7 @@ window.addEventListener("load", async function() {
     displayStatsData(voteData, agency);
   };
 
-  const displayHomePage: any = () => {
+  const displayHomePage = () => {
     hideAllPages();
     show(homePage);
   };
@@ -166,11 +161,6 @@ window.addEventListener("load", async function() {
     const response = await getCampaign();
     const campaign = response.campaign;
 
-    if (!campaign) {
-      changePageTo(noCampaignPage);
-      return;
-    }
-
     const employeeSnapshot = await db
       .collection("employees")
       .doc(userId)
@@ -189,7 +179,6 @@ window.addEventListener("load", async function() {
       managerName.innerText = employee.managerEmail;
       show(managerNotice);
     }
-    changePageTo(homePage);
 
     const saveResponse = async (response: string) => {
       changePageTo(recordingPage);
@@ -207,16 +196,22 @@ window.addEventListener("load", async function() {
       }
       changePageTo(thankYouPage);
     };
-
     submitGreat.onclick = () => saveResponse("great");
     submitNotThatGreat.onclick = () => saveResponse("notThatGreat");
     submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll");
+
     statsButton.onclick = () => {
       displayStatsPage();
     };
-    homeButtons.forEach(button => {
-      button.onclick = () => displayHomePage();
-    });
+    homeButton.onclick = () => {
+      if (campaign) {
+        displayHomePage();
+      } else {
+        changePageTo(noCampaignPage);
+        return;
+      }
+    };
+
     agencySelector.onchange = async () => {
       const newSelectedAgency =
         agencySelector.options[agencySelector.selectedIndex].value;
@@ -243,5 +238,12 @@ window.addEventListener("load", async function() {
         )
       )
     );
+
+    if (!campaign) {
+      changePageTo(noCampaignPage);
+      return;
+    }
+
+    changePageTo(homePage);
   }
 });

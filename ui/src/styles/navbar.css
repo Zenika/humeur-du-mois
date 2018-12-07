@@ -1,0 +1,63 @@
+.navbar {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  justify-content: space-between;
+  background-color: #af1e31;
+  color: #fff;
+  height: 64px;
+  align-items: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  z-index: 10;
+}
+
+.navbar .brand {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  color: #fff;
+}
+
+.navbar .brand img {
+  height: 23px;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+.navbar * {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .about > a {
+  display: flex;
+  align-items: center;
+  margin-right: 1.5rem;
+  color: #fff;
+  text-decoration: unset;
+}
+
+.navbar .about > a svg {
+  margin-right: 0rem;
+  fill: #fff;
+  height: 0.8rem !important;
+}
+
+.navbar button {
+  display: flex;
+  text-align: center;
+  margin: 0px 8px;
+  padding: 16px 16px 16px 0px;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  width: auto;
+  height: 100%;
+  background: #af1e31;
+  color: #fff;
+  border: none;
+}
+.navbar button:hover {
+  filter: brightness(0.9);
+}
