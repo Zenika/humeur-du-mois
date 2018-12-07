@@ -13,9 +13,8 @@ async function parseHash(webAuth: auth0.WebAuth) {
 
 async function getUserInfo(webAuth: auth0.WebAuth, accessToken: string) {
   return new Promise<auth0.Auth0UserProfile>((resolve, reject) =>
-    webAuth.client.userInfo(
-      accessToken,
-      (err, result) => (err ? reject(err) : resolve(result))
+    webAuth.client.userInfo(accessToken, (err, result) =>
+      err ? reject(err) : resolve(result)
     )
   );
 }
