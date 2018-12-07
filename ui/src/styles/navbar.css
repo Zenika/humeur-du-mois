@@ -4,10 +4,10 @@
   justify-content: space-between;
   background-color: #af1e31;
   color: #fff;
-  height: 64px;
   align-items: stretch;
   display: flex;
   flex: 0 0 auto;
+  flex-wrap: wrap;
   z-index: 10;
 }
 
@@ -44,7 +44,8 @@
   height: 0.8rem !important;
 }
 
-.navbar button {
+.navbar button,
+.navbar a {
   display: flex;
   text-align: center;
   margin: 0px 8px;
@@ -53,11 +54,14 @@
   justify-content: flex-start;
   cursor: pointer;
   width: auto;
-  height: 100%;
   background: #af1e31;
   color: #fff;
   border: none;
 }
 .navbar button:hover {
   filter: brightness(0.9);
+}
+
+.navbar > * {
+  min-height: 48px;
 }
