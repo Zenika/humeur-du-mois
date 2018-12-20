@@ -100,8 +100,17 @@ tr:hover td {
   background: #666;
   color: #fff;
 }
-.button__emoji {
-  margin: 0px 16px;
+
+.button--big {
+  display: flex;
+  width: 100%;
+  background: transparent;
+  margin: 8px 0;
+  padding: 16px 0;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  align-items: center;
+  cursor: pointer;
 }
 
 .button--great {
@@ -112,6 +121,10 @@ tr:hover td {
 }
 .button--not-great-at-all {
   color: #b71c1c;
+}
+
+.button__emoji {
+  margin: 0px 16px;
 }
 
 .page {
