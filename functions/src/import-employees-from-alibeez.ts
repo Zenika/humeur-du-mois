@@ -50,7 +50,9 @@ const hasValidEmail = (employee: AlibeezEmployee) =>
   employee.zenikaEmail && employee.zenikaEmail.endsWith("@zenika.com");
 const hasNoValidEmail = (employee: AlibeezEmployee) => !hasValidEmail(employee);
 
-export const importEmployeesFromAlibeez = async (config: AlibeezImportConfig) => {
+export const importEmployeesFromAlibeez = async (
+  config: AlibeezImportConfig
+) => {
   const requestRef = await firebase
     .firestore()
     .collection("alibeez-requests")
