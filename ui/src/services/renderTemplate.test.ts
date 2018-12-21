@@ -24,7 +24,7 @@ test("renderTemplate", t => {
     </tr>
 
         <tr>
-          <td>September 2018</td>
+          <td class="table__light">September 2018</td>
           <td>4</td><td>1</td><td>0</td>
         </tr>
   </table>

@@ -24,7 +24,7 @@ export function renderTemplate(voteData?: VoteData) {
             .map(
               row => `
                 <tr>
-                  <td>${row.campaignDate}</td>
+                  <td class="table__light">${row.campaignDate}</td>
                   ${keys.map(key => `<td>${row.counts[key]}</td>`).join("")}
                 </tr>
               `

@@ -68,24 +68,28 @@
     </div>
     <div class="content">
       <div id="loggingInPage" class="page">
-        <h1>Hi!</h1>
-        <h2>I'm logging you in...</h2>
-        <div class="loader">
-          <svg class="circular" viewBox="25 25 50 50">
-            <circle
-              class="path"
-              cx="50"
-              cy="50"
-              r="20"
-              fill="none"
-              strokeWidth="2"
-              strokeMiterlimit="10"
-            />
-          </svg>
-        </div>
+        <h1 class="page__title">Hi!</h1>
+        <h2>
+          <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+              <circle
+                class="path"
+                cx="50"
+                cy="50"
+                r="20"
+                fill="none"
+                strokeWidth="2"
+                strokeMiterlimit="10"
+              />
+            </svg>
+          </div>
+          I'm logging you in...
+        </h2>
       </div>
       <div id="homePage" class="page hidden">
-        <h1>Welcome, <span id="userId"></span></h1>
+        <h1 class="page__title">
+          <span>Welcome, <span id="userId"></span></span>
+        </h1>
         <h2>How have you been at Zenika?</h2>
         <div class="button__wrapper">
           <button
@@ -115,61 +119,67 @@
         </span>
       </div>
       <div id="displayStats" class="page hidden">
-        <h1>Statistics</h1>
-        <div class="button_wrapper">
-          <p>Stats by agency:</p>
-          <select id="agencySelector"> </select>
-        </div>
+        <h1 class="page__title">
+          Stats
+          <div class="button_wrapper">
+            <select id="agencySelector"> </select>
+          </div>
+        </h1>
+        <h2>Stats for agency: <span id="agencyName"></span></h2>
         <div id="statsTab"></div>
       </div>
       <div id="recordingPage" class="page hidden">
-        <h1>Sit tight!</h1>
-        <h2>I'm recording your vote...</h2>
-        <div class="loader">
-          <svg class="circular" viewBox="25 25 50 50">
-            <circle
-              class="path"
-              cx="50"
-              cy="50"
-              r="20"
-              fill="none"
-              strokeWidth="2"
-              strokeMiterlimit="10"
-            />
-          </svg>
-        </div>
+        <h1 class="page__title">Sit tight!</h1>
+        <h2>
+          <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+              <circle
+                class="path"
+                cx="50"
+                cy="50"
+                r="20"
+                fill="none"
+                strokeWidth="2"
+                strokeMiterlimit="10"
+              />
+            </svg>
+          </div>
+          I'm recording your vote...
+        </h2>
       </div>
       <div id="thankYouPage" class="page hidden">
-        <h1>Thanks!</h1>
+        <h1 class="page__title">Thanks!</h1>
         <h2>Your answer was properly recorded.</h2>
       </div>
       <div id="noCampaignPage" class="page hidden">
-        <h1>We're closed!</h1>
+        <h1 class="page__title">We're closed!</h1>
         <h2>There is no voting going on right now.</h2>
       </div>
-    </div>
-    <div id="alreadyVotedPage" class="page hidden">
-      <h1>We're closed!</h1>
-      <h2>Looks like you've already voted this month.</h2>
-    </div>
-    <div id="errorPage" class="page hidden">
-      <h1>There was an error!</h1>
-      <h2>Please try reloading.</h2>
-      <p>
-        If this keeps happening, contact dreamlab@zenika.com or #dreamlab on
-        Slack.
-      </p>
-      <p>You may check the console for more details about the error.</p>
-    </div>
-    <div id="unknownEmployeePage" class="page hidden">
-      <h1>Hi!</h1>
-      <h2>I don't know you yet: <span id="userEmail"></span></h2>
-      <p>If it's your first day at Zenika you may not be able to vote today.</p>
-      <p>Come back tommorow.</p>
-      <p>
-        If this keeps happening, contact dreamlab@zenika.com or #dreamlab on
-        Slack.
-      </p>
+      <div id="alreadyVotedPage" class="page hidden">
+        <h1 class="page__title">We're closed!</h1>
+        <h2>Looks like you've already voted this month.</h2>
+      </div>
+      <div id="errorPage" class="page hidden">
+        <h1 class="page__title">There was an error!</h1>
+        <h2>Please try reloading.</h2>
+        <p>
+          If this keeps happening, contact dreamlab@zenika.com or #dreamlab on
+          Slack.
+        </p>
+        <p>You may check the console for more details about the error.</p>
+      </div>
+      <div id="unknownEmployeePage" class="page hidden">
+        <h1 class="page__title">Hi!</h1>
+        <h2>I don't know you yet: <span id="userEmail"></span></h2>
+        <p>
+          If it's your first day at Zenika you may not be able to vote today.
+        </p>
+        <p>Come back tommorow.</p>
+        <p>
+          If this keeps happening, contact dreamlab@zenika.com or #dreamlab on
+          Slack.
+        </p>
+      </div>
     </div>
   </body>
 </html>

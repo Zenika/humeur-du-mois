@@ -2,13 +2,17 @@
   align-items: center;
   background-color: #ffffff;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
   color: #af1e31;
   display: flex;
   flex-wrap: wrap;
   flex: 0 0 auto;
-  height: 44px;
+  height: 60px;
   justify-content: space-between;
+  left: 0;
   padding: 8px;
+  position: fixed;
+  width: 100%;
   z-index: 10;
 }
 
