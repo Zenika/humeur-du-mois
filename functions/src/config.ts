@@ -187,9 +187,13 @@ export interface FeaturesConfig {
   emails: EmailsConfig;
 }
 
+export interface AlibeezKeysConfig {
+  [key: string]: string;
+}
+
 export interface AlibeezConfig {
   url: string;
-  key: string;
+  keys: AlibeezKeysConfig;
 }
 
 export interface ServiceAccountConfig {

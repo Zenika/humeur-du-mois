@@ -11,5 +11,10 @@ export const importEmployeesFromAlibeezDaily = functions.firestore
       console.info("feature is disabled; aborting");
       return;
     }
-    await importEmployeesFromAlibeez(config.alibeez);
+    for (const key of Object.values(config.alibeez.keys)) {
+      await importEmployeesFromAlibeez({
+        url: config.alibeez.url,
+        key
+      });
+    }
   });

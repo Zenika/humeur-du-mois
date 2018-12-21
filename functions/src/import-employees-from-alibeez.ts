@@ -1,12 +1,16 @@
 import * as firebase from "firebase-admin";
 import fetch from "node-fetch";
-import { AlibeezConfig } from "./config";
 
 interface AlibeezEmployee {
   zenikaEmail: string;
   fullName: string | null;
   operationalManagerShortUsername: string | null;
   geographicalAgency: string | null;
+}
+
+interface AlibeezImportConfig {
+  url: string;
+  key: string;
 }
 
 export interface Employee {
@@ -46,7 +50,7 @@ const hasValidEmail = (employee: AlibeezEmployee) =>
   employee.zenikaEmail && employee.zenikaEmail.endsWith("@zenika.com");
 const hasNoValidEmail = (employee: AlibeezEmployee) => !hasValidEmail(employee);
 
-export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
+export const importEmployeesFromAlibeez = async (config: AlibeezImportConfig) => {
   const requestRef = await firebase
     .firestore()
     .collection("alibeez-requests")
