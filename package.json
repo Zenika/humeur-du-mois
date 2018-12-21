@@ -3,8 +3,8 @@
   "scripts": {
     "start": "run-p serve functions:build:watch ui:build:watch",
     "start:shell": "run-p functions:shell functions:build:watch ui:build:watch",
-    "serve": "npx node@6.11.5 ./node_modules/firebase-tools/bin/firebase serve",
-    "functions:shell": "npx node@6.11.5 ./node_modules/firebase-tools/bin/firebase functions:shell",
+    "serve": "npx node@6.11.5 ./node_modules/firebase-tools/lib/bin/firebase serve",
+    "functions:shell": "npx node@6.11.5 ./node_modules/firebase-tools/Lib/bin/firebase functions:shell",
     "deploy": "npm run firebase deploy",
     "firebase": "firebase",
     "watch": "run-p functions:build:watch ui:build:watch",
