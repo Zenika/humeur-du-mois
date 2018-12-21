@@ -1,67 +1,107 @@
 .navbar {
-  padding-left: 1.5em;
-  padding-right: 1.5em;
-  justify-content: space-between;
-  background-color: #af1e31;
-  color: #fff;
-  align-items: stretch;
+  align-items: center;
+  background-color: #ffffff;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  color: #af1e31;
   display: flex;
-  flex: 0 0 auto;
   flex-wrap: wrap;
+  flex: 0 0 auto;
+  height: 44px;
+  justify-content: space-between;
+  padding: 8px;
   z-index: 10;
 }
 
-.navbar .brand {
-  margin-left: 10px;
-  display: flex;
+.navbar__brand {
   align-items: center;
+  display: flex;
   font-size: 20px;
-  color: #fff;
+  width: 230px;
 }
 
-.navbar .brand img {
-  height: 23px;
-  margin-left: 6px;
-  margin-right: 6px;
-}
-
-.navbar * {
+.navbar__navigation {
   display: flex;
-  align-items: center;
+  height: 100%;
+  justify-content: center;
+  padding: 0 16px;
+  position: relative;
+}
+.navbar__navigation::before {
+  background-color: rgba(0, 0, 0, 0.1);
+  content: "";
+  height: 60%;
+  left: 8px;
+  position: absolute;
+  top: 20%;
+  width: 1px;
+}
+.navbar__navigation::after {
+  background-color: rgba(0, 0, 0, 0.1);
+  content: "";
+  height: 60%;
+  position: absolute;
+  right: 8px;
+  top: 20%;
+  width: 1px;
 }
 
-.navbar .about > a {
-  display: flex;
+.navbar__button {
   align-items: center;
-  margin-right: 1.5rem;
-  color: #fff;
-  text-decoration: unset;
-}
-
-.navbar .about > a svg {
-  margin-right: 0rem;
-  fill: #fff;
-  height: 0.8rem !important;
-}
-
-.navbar button,
-.navbar a {
-  display: flex;
-  text-align: center;
-  margin: 0px 8px;
-  padding: 16px 16px 16px 0px;
-  align-items: center;
-  justify-content: flex-start;
+  background: transparent;
+  border-radius: 4px;
+  border: 0;
+  color: inherit;
   cursor: pointer;
-  width: auto;
-  background: #af1e31;
-  color: #fff;
-  border: none;
+  display: inline-flex;
+  height: 100%;
+  margin: 0 2px;
+  outline: 0;
+  padding: 0 24px;
+  text-decoration: none;
+  transition: background-color 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
-.navbar button:hover {
-  filter: brightness(0.9);
+.navbar__button:hover {
+  background-color: rgba(177, 0, 61, 0.15);
+}
+.navbar__button--disabled {
+  cursor: initial;
+}
+.navbar__button--disabled:hover {
+  background-color: transparent;
 }
 
-.navbar > * {
-  min-height: 48px;
+.navbar__button-emoji {
+  fill: #af1e31;
+  font-size: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin-right: 8px;
+  width: 20px;
+}
+
+.navbar__about {
+  display: flex;
+  height: 100%;
+  justify-content: flex-end;
+  width: 230px;
+}
+
+@media (max-width: 780px) {
+  .navbar__brand {
+    font-size: 16px;
+    padding: 0 0 0 8px;
+    width: auto;
+  }
+  .navbar__button {
+    padding: 0 16px;
+  }
+  .navbar__button-text {
+    display: none;
+  }
+  .navbar__button-emoji {
+    margin: 0;
+  }
+  .navbar__about {
+    width: auto;
+  }
 }
