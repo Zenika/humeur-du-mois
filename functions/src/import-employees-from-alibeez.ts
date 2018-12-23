@@ -2,11 +2,29 @@ import * as firebase from "firebase-admin";
 import fetch from "node-fetch";
 import { AlibeezConfig } from "./config";
 
+interface AlibeezSuccessResponse {
+  employees: AlibeezEmployee[];
+  size: number;
+  errors: { [key: string]: AlibeezError };
+}
+
+interface AlibeezError {
+  statusCode: number;
+  statusText: string;
+  errorCode: string;
+  errorMessage: string;
+}
 interface AlibeezEmployee {
-  zenikaEmail: string;
+  email: string;
   fullName: string | null;
-  operationalManagerShortUsername: string | null;
-  geographicalAgency: string | null;
+  manager: AlibeezManager | null;
+  location: string | null;
+  division: string | null;
+}
+
+interface AlibeezManager {
+  fullName: string;
+  email: string;
 }
 
 export interface Employee {
@@ -15,6 +33,16 @@ export interface Employee {
   managerEmail: string | null;
   agency: string | null;
 }
+
+/**
+ * This ensures that the agency name
+ * that will be used for the stats
+ * match the ones that are contained
+ * in the votes imported from ZenApp
+ */
+const AGENCY_MAP: { [key: string]: string } = {
+  Montreal: "Montréal"
+};
 
 const obfuscateKey = (key: string) => {
   if (key) {
@@ -29,6 +57,9 @@ const obfuscateKey = (key: string) => {
 };
 
 const saveEmployees = async (employees: Employee[]) => {
+  // FIXME: this only works with 500 employees or less
+  // because Firestore batches are limited to this number of items.
+  // FIXME: this keeps employees that have left in the collection
   const batch = firebase.firestore().batch();
   employees.forEach(employee =>
     batch.set(
@@ -43,7 +74,7 @@ const saveEmployees = async (employees: Employee[]) => {
 };
 
 const hasValidEmail = (employee: AlibeezEmployee) =>
-  employee.zenikaEmail && employee.zenikaEmail.endsWith("@zenika.com");
+  employee.email.endsWith("@zenika.com");
 const hasNoValidEmail = (employee: AlibeezEmployee) => !hasValidEmail(employee);
 
 export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
@@ -72,7 +103,7 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
   if (!response.ok) {
     return;
   }
-  const employees: AlibeezEmployee[] = await response.json();
+  const { employees } = (await response.json()) as AlibeezSuccessResponse;
   const employeesWithValidEmail = employees.filter(hasValidEmail);
   const employeesWithNoValidEmail = employees.filter(hasNoValidEmail);
   employeesWithNoValidEmail.forEach(employee => {
@@ -80,12 +111,10 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
   });
 
   const employeesToSave = employeesWithValidEmail.map(employee => ({
-    email: employee.zenikaEmail,
+    email: employee.email,
     fullName: employee.fullName,
-    managerEmail: employee.operationalManagerShortUsername
-      ? employee.operationalManagerShortUsername + "@zenika.com"
-      : null,
-    agency: employee.geographicalAgency
+    managerEmail: employee.manager ? employee.manager.email : null,
+    agency: AGENCY_MAP[employee.location || ""] || employee.location
   }));
   await saveEmployees(employeesToSave);
 };
