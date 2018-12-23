@@ -53,14 +53,16 @@ export const computeStatistics = functions.https.onRequest(
     // we should really batch this because this could
     // represent hundreds of documents
     // eg for 5 years and 10 agencies -> 660 documents
-    for (const key of Object.keys(statisticsData)) {
-      console.log(`writing ${key}`);
-      const row = statisticsData[key];
-      await db
-        .doc(key)
-        .set(row)
-        .catch(err => console.error(err));
-    }
+    await Promise.all(
+      Object.keys(statisticsData).map(key => {
+        console.log(`writing ${key}`);
+        const row = statisticsData[key];
+        return db
+          .doc(key)
+          .set(row)
+          .catch(err => console.error(err));
+      })
+    );
 
     res.sendStatus(200);
   }
