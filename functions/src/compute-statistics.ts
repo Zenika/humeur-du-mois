@@ -50,12 +50,17 @@ export const computeStatistics = functions.https.onRequest(
         {} as { [key: string]: any }
       );
 
-    Object.keys(statisticsData).forEach(key => {
+    // we should really batch this because this could
+    // represent hundreds of documents
+    // eg for 5 years and 10 agencies -> 660 documents
+    for (const key of Object.keys(statisticsData)) {
+      console.log(`writing ${key}`);
       const row = statisticsData[key];
-      db.doc(key)
+      await db
+        .doc(key)
         .set(row)
         .catch(err => console.error(err));
-    });
+    }
 
     res.sendStatus(200);
   }
