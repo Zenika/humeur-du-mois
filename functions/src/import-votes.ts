@@ -16,6 +16,10 @@ const fromJSONtoVote = (supposedlyValidVotes: any) => {
       supposedlyValidVote.campaign &&
       supposedlyValidVote.agency
   );
+  console.info(
+    `ignored ${supposedlyValidVotes.votes.length -
+      validVotes.length} votes because they did not match the expected schema`
+  );
   return validVotes;
 };
 
