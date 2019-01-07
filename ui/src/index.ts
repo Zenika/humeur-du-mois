@@ -109,17 +109,17 @@ window.addEventListener("load", async function() {
     tabList.childNodes.forEach(child => {
       tabList.removeChild(child);
     });
-    const WorldElement = this.document.createElement("li");
+    const WorldElement = this.document.createElement("button");
     WorldElement.innerText = "World";
     WorldElement.setAttribute("class", "active");
     WorldElement.setAttribute("id", "world-tab");
     selectedTab = WorldElement;
     tabList.appendChild(WorldElement);
     agencyList.forEach(agency => {
-      const element = this.document.createElement("li");
-      element.innerText = agency;
-      element.setAttribute("id", `${agency}-tab`);
-      tabList.appendChild(element);
+      const button = this.document.createElement("button");
+      button.innerText = agency;
+      button.setAttribute("id", `${agency}-tab`);
+      tabList.appendChild(button);
     });
 
     // Sadly the only way to iterate over children ...

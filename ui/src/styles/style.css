@@ -204,24 +204,25 @@ tr:hover td {
   list-style-type: none;
   border-bottom: 1px solid #ddd;
 }
-.tab-content .nav-tabs > li {
+.tab-content .nav-tabs > button {
   float: left;
   margin-bottom: -1px;
 }
-.tab-content .nav-tabs > li {
+.tab-content .nav-tabs > button {
   float: left;
-  margin-right: 2px;
+  margin: 2px;
   line-height: 1.42857143;
   padding: 10px;
   border: 1px solid transparent;
   border-radius: 4px;
+  min-width: 6rem;
 }
-.tab-content .nav-tabs > li:hover {
+.tab-content .nav-tabs > button:hover {
   background-color: rgba(177, 0, 61, 0.15);
 }
-.tab-content .nav-tabs > li.active,
-.tab-content .nav-tabs > li.active:hover,
-.tab-content .nav-tabs > li.active:focus {
+.tab-content .nav-tabs > button.active,
+.tab-content .nav-tabs > button.active:hover,
+.tab-content .nav-tabs > button.active:focus {
   color: #555;
   cursor: default;
   background-color: rgba(177, 0, 61, 0.15);
