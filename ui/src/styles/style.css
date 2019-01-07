@@ -197,19 +197,19 @@ tr:hover td {
   margin: 2rem;
 }
 .tab-content .nav-tabs {
-  float: left;
   width: auto;
   margin: 0;
-  padding: 0;
+  padding: 10px 0;
   list-style-type: none;
   border-bottom: 1px solid #ddd;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .tab-content .nav-tabs > button {
-  float: left;
   margin-bottom: -1px;
 }
 .tab-content .nav-tabs > button {
-  float: left;
   margin: 2px;
   line-height: 1.42857143;
   padding: 10px;
@@ -229,7 +229,6 @@ tr:hover td {
   border: 1px solid #ddd;
 }
 .tab-content .tab-content {
-  float: left;
   width: 100%;
 }
 .tab-content .tab-content > .tab-pane {
