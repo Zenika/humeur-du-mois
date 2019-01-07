@@ -193,6 +193,56 @@ tr:hover td {
   stroke-linecap: round;
 }
 
+.tab-content {
+  margin: 2rem;
+}
+.tab-content .nav-tabs {
+  float: left;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  border-bottom: 1px solid #ddd;
+}
+.tab-content .nav-tabs > li {
+  float: left;
+  margin-bottom: -1px;
+}
+.tab-content .nav-tabs > li {
+  float: left;
+  margin-right: 2px;
+  line-height: 1.42857143;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.tab-content .nav-tabs > li:hover {
+  background-color: rgba(177, 0, 61, 0.15);
+}
+.tab-content .nav-tabs > li.active,
+.tab-content .nav-tabs > li.active:hover,
+.tab-content .nav-tabs > li.active:focus {
+  color: #555;
+  cursor: default;
+  background-color: rgba(177, 0, 61, 0.15);
+  border: 1px solid #ddd;
+}
+.tab-content .tab-content {
+  float: left;
+  width: 100%;
+}
+.tab-content .tab-content > .tab-pane {
+  display: none;
+}
+.tab-content .tab-content > .tab-pane.active {
+  display: block;
+  padding: 2.5% 3.5%;
+  background-color: #efefef;
+}
+.tab-content .tab-content > .active {
+  display: block;
+}
+
 @keyframes rotate {
   100% {
     transform: rotate(360deg);
