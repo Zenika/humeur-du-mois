@@ -21,11 +21,8 @@ window.addEventListener("load", async function() {
   const unknownEmployeePage = document.getElementById("unknownEmployeePage")!;
   const statsPage = document.getElementById("displayStats")!;
   const statsButton = document.getElementById("displayStatsButton")!;
-  const agencyName = document.getElementById("agencyName")!;
   const statsTab = document.getElementById("statsTab")!;
-  const agencySelector: HTMLSelectElement = <HTMLSelectElement>(
-    document.getElementById("agencySelector")!
-  );
+  const tabList = document.getElementById("tab-list")!;
   const homeButton = this.document.getElementById("homeButton")!;
 
   const pages = [
@@ -47,6 +44,7 @@ window.addEventListener("load", async function() {
 
   let voteData: VoteData;
   let selectedAgency = "";
+  let selectedTab: HTMLElement = this.document.getElementById("world-tab")!;
 
   const htmlLoader = `<h1>Hold on, we're retrieving the data you requested ...</h1>
   <div class="loader">
@@ -77,7 +75,7 @@ window.addEventListener("load", async function() {
     show(incoming);
   };
 
-  const displayStatsPage = async (agency?: string) => {
+  const displayStatsPage = async (agency: string) => {
     changePageTo(statsPage);
     statsTab.innerHTML = htmlLoader;
     voteData = await retrieveStatsData(agency);
@@ -89,10 +87,11 @@ window.addEventListener("load", async function() {
     show(homePage);
   };
 
-  const retrieveStatsData = async (agency?: string) => {
+  const retrieveStatsData = async (agency: string) => {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
-    const collectionName = agency ? `stats-campaign-agency` : `stats-campaign`;
+    const collectionName =
+      agency !== "World" ? `stats-campaign-agency` : `stats-campaign`;
 
     const stats: firebase.firestore.QuerySnapshot = await db
       .collection(collectionName)
@@ -107,26 +106,42 @@ window.addEventListener("load", async function() {
   };
 
   const fillAgenciesList = (agencyList: Set<string>) => {
-    agencySelector.childNodes.forEach(child => {
-      agencySelector.removeChild(child);
+    tabList.childNodes.forEach(child => {
+      tabList.removeChild(child);
     });
-    const globalElement = this.document.createElement("option");
-    globalElement.innerText = "Global";
-    agencyName.innerText = "Global";
-    globalElement.setAttribute("value", "");
-    agencySelector.appendChild(globalElement);
+    const WorldElement = this.document.createElement("li");
+    WorldElement.innerText = "World";
+    WorldElement.setAttribute("class", "active");
+    WorldElement.setAttribute("id", "world-tab");
+    selectedTab = WorldElement;
+    tabList.appendChild(WorldElement);
     agencyList.forEach(agency => {
-      const element = this.document.createElement("option");
+      const element = this.document.createElement("li");
       element.innerText = agency;
-      element.setAttribute("value", agency);
-      agencySelector.appendChild(element);
+      element.setAttribute("id", `${agency}-tab`);
+      tabList.appendChild(element);
     });
+
+    // Sadly the only way to iterate over children ...
+    for (let i = 0; i < tabList.children.length; ++i) {
+      let child = tabList.children[i];
+      child.addEventListener("click", async () => {
+        const newSelectedAgency = child.textContent || "";
+        voteData = await retrieveStatsData(newSelectedAgency);
+        selectedTab.removeAttribute("class");
+        selectedTab = document.getElementById(child.id)!;
+        selectedTab.setAttribute("class", "active");
+
+        selectedAgency = newSelectedAgency;
+        displayStatsData(voteData, selectedAgency);
+      });
+    }
   };
 
-  const displayStatsData = (voteData: VoteData, agency?: string) => {
+  const displayStatsData = (voteData: VoteData, agency: string) => {
     statsTab.innerHTML = renderTemplate(
       computeDataFromDataBase(
-        agency ? filterStatsData(voteData, agency) : voteData
+        agency !== "World" ? filterStatsData(voteData, agency) : voteData
       )
     );
   };
@@ -203,7 +218,7 @@ window.addEventListener("load", async function() {
     submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll");
 
     statsButton.onclick = () => {
-      displayStatsPage();
+      displayStatsPage("World");
     };
     homeButton.onclick = () => {
       if (campaign) {
@@ -214,22 +229,6 @@ window.addEventListener("load", async function() {
       }
     };
 
-    agencySelector.onchange = async () => {
-      const newSelectedAgency =
-        agencySelector.options[agencySelector.selectedIndex].value;
-      if (selectedAgency === "" && newSelectedAgency !== "") {
-        voteData = await retrieveStatsData(newSelectedAgency);
-      } else if (selectedAgency !== "" && newSelectedAgency === "") {
-        voteData = await retrieveStatsData();
-      }
-      agencyName.innerText = newSelectedAgency;
-
-      selectedAgency = newSelectedAgency;
-      displayStatsData(
-        voteData,
-        selectedAgency === "" ? undefined : selectedAgency
-      );
-    };
     const statsCampaignAgency: firebase.firestore.QuerySnapshot = await firebase
       .firestore()
       .collection(`stats-campaign-agency`)
