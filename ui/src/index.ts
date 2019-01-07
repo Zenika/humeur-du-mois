@@ -21,6 +21,7 @@ window.addEventListener("load", async function() {
   const unknownEmployeePage = document.getElementById("unknownEmployeePage")!;
   const statsPage = document.getElementById("displayStats")!;
   const statsButton = document.getElementById("displayStatsButton")!;
+  const agencyName = document.getElementById("agencyName")!;
   const statsTab = document.getElementById("statsTab")!;
   const agencySelector: HTMLSelectElement = <HTMLSelectElement>(
     document.getElementById("agencySelector")!
@@ -111,6 +112,7 @@ window.addEventListener("load", async function() {
     });
     const globalElement = this.document.createElement("option");
     globalElement.innerText = "Global";
+    agencyName.innerText = "Global";
     globalElement.setAttribute("value", "");
     agencySelector.appendChild(globalElement);
     agencyList.forEach(agency => {
@@ -220,6 +222,7 @@ window.addEventListener("load", async function() {
       } else if (selectedAgency !== "" && newSelectedAgency === "") {
         voteData = await retrieveStatsData();
       }
+      agencyName.innerText = newSelectedAgency;
 
       selectedAgency = newSelectedAgency;
       displayStatsData(

@@ -22,55 +22,74 @@
 
   <body>
     <div class="navbar">
-      <div class="brand">😁 Humeur du mois</div>
-      <div class="navigation">
-        <button type="button" id="homeButton">
-          <span class="button__emoji"> 🗳️ </span> Vote
+      <div class="navbar__brand">
+        <div class="navbar__button navbar__button--disabled">
+          <span class="navbar__button-emoji">😁</span>
+          <span class="navbar__button-text">Humeur du mois</span>
+        </div>
+      </div>
+      <div class="navbar__navigation">
+        <button type="button" class="navbar__button" id="homeButton">
+          <svg viewBox="0 0 24 24" class="navbar__button-emoji">
+            <path
+              d="M18 13h-.68l-2 2h1.91L19 17H5l1.78-2h2.05l-2-2H6l-3 3v4c0 1.1.89 2 1.99 2H19c1.1 0 2-.89 2-2v-4l-3-3zm-1-5.05l-4.95 4.95-3.54-3.54 4.95-4.95L17 7.95zm-4.24-5.66L6.39 8.66c-.39.39-.39 1.02 0 1.41l4.95 4.95c.39.39 1.02.39 1.41 0l6.36-6.36c.39-.39.39-1.02 0-1.41L14.16 2.3c-.38-.4-1.01-.4-1.4-.01z"
+            />
+            <path fill="none" d="M0 0h24v24H0V0z" />
+          </svg>
+          <span class="navbar__button-text">Vote</span>
         </button>
-        <button type="button" id="displayStatsButton">
-          <span class="button__emoji"> 📊 </span> Stats
+        <button type="button" class="navbar__button" id="displayStatsButton">
+          <svg viewBox="0 0 24 24" class="navbar__button-emoji">
+            <path
+              d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"
+            />
+            <path d="M0 0h24v24H0z" fill="none" />
+          </svg>
+          <span class="navbar__button-text">Stats</span>
         </button>
       </div>
-
-      <div class="about">
+      <div class="navbar__about">
         <a
+          class="navbar__button"
           href="https://github.com/Zenika/humeur-du-mois-2018"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span class="button__emoji">
-            <svg viewBox="0 0 284 277">
-              <g>
-                <path
-                  d="M141.888675,0.0234927555 C63.5359948,0.0234927555 0,63.5477395 0,141.912168 C0,204.6023 40.6554239,257.788232 97.0321356,276.549924 C104.12328,277.86336 106.726656,273.471926 106.726656,269.724287 C106.726656,266.340838 106.595077,255.16371 106.533987,243.307542 C67.0604204,251.890693 58.7310279,226.56652 58.7310279,226.56652 C52.2766299,210.166193 42.9768456,205.805304 42.9768456,205.805304 C30.1032937,196.998939 43.9472374,197.17986 43.9472374,197.17986 C58.1953153,198.180797 65.6976425,211.801527 65.6976425,211.801527 C78.35268,233.493192 98.8906827,227.222064 106.987463,223.596605 C108.260955,214.426049 111.938106,208.166669 115.995895,204.623447 C84.4804813,201.035582 51.3508808,188.869264 51.3508808,134.501475 C51.3508808,119.01045 56.8936274,106.353063 65.9701981,96.4165325 C64.4969882,92.842765 59.6403297,78.411417 67.3447241,58.8673023 C67.3447241,58.8673023 79.2596322,55.0538738 106.374213,73.4114319 C117.692318,70.2676443 129.83044,68.6910512 141.888675,68.63701 C153.94691,68.6910512 166.09443,70.2676443 177.433682,73.4114319 C204.515368,55.0538738 216.413829,58.8673023 216.413829,58.8673023 C224.13702,78.411417 219.278012,92.842765 217.804802,96.4165325 C226.902519,106.353063 232.407672,119.01045 232.407672,134.501475 C232.407672,188.998493 199.214632,200.997988 167.619331,204.510665 C172.708602,208.913848 177.243363,217.54869 177.243363,230.786433 C177.243363,249.771339 177.078889,265.050898 177.078889,269.724287 C177.078889,273.500121 179.632923,277.92445 186.825101,276.531127 C243.171268,257.748288 283.775,204.581154 283.775,141.912168 C283.775,63.5477395 220.248404,0.0234927555 141.888675,0.0234927555"
-                />
-              </g>
-            </svg>
-          </span>
-          <span>Contribute</span>
+          <svg viewBox="0 0 284 277" class="navbar__button-emoji">
+            <g>
+              <path
+                d="M141.888675,0.0234927555 C63.5359948,0.0234927555 0,63.5477395 0,141.912168 C0,204.6023 40.6554239,257.788232 97.0321356,276.549924 C104.12328,277.86336 106.726656,273.471926 106.726656,269.724287 C106.726656,266.340838 106.595077,255.16371 106.533987,243.307542 C67.0604204,251.890693 58.7310279,226.56652 58.7310279,226.56652 C52.2766299,210.166193 42.9768456,205.805304 42.9768456,205.805304 C30.1032937,196.998939 43.9472374,197.17986 43.9472374,197.17986 C58.1953153,198.180797 65.6976425,211.801527 65.6976425,211.801527 C78.35268,233.493192 98.8906827,227.222064 106.987463,223.596605 C108.260955,214.426049 111.938106,208.166669 115.995895,204.623447 C84.4804813,201.035582 51.3508808,188.869264 51.3508808,134.501475 C51.3508808,119.01045 56.8936274,106.353063 65.9701981,96.4165325 C64.4969882,92.842765 59.6403297,78.411417 67.3447241,58.8673023 C67.3447241,58.8673023 79.2596322,55.0538738 106.374213,73.4114319 C117.692318,70.2676443 129.83044,68.6910512 141.888675,68.63701 C153.94691,68.6910512 166.09443,70.2676443 177.433682,73.4114319 C204.515368,55.0538738 216.413829,58.8673023 216.413829,58.8673023 C224.13702,78.411417 219.278012,92.842765 217.804802,96.4165325 C226.902519,106.353063 232.407672,119.01045 232.407672,134.501475 C232.407672,188.998493 199.214632,200.997988 167.619331,204.510665 C172.708602,208.913848 177.243363,217.54869 177.243363,230.786433 C177.243363,249.771339 177.078889,265.050898 177.078889,269.724287 C177.078889,273.500121 179.632923,277.92445 186.825101,276.531127 C243.171268,257.748288 283.775,204.581154 283.775,141.912168 C283.775,63.5477395 220.248404,0.0234927555 141.888675,0.0234927555"
+              />
+            </g>
+          </svg>
+          <span class="navbar__button-text">Contribute</span>
         </a>
       </div>
     </div>
     <div class="content">
       <div id="loggingInPage" class="page">
-        <h1>Hi!</h1>
-        <h2>I'm logging you in...</h2>
-        <div class="loader">
-          <svg class="circular" viewBox="25 25 50 50">
-            <circle
-              class="path"
-              cx="50"
-              cy="50"
-              r="20"
-              fill="none"
-              strokeWidth="2"
-              strokeMiterlimit="10"
-            />
-          </svg>
-        </div>
+        <h1 class="page__title">Hi!</h1>
+        <h2>
+          <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+              <circle
+                class="path"
+                cx="50"
+                cy="50"
+                r="20"
+                fill="none"
+                strokeWidth="2"
+                strokeMiterlimit="10"
+              />
+            </svg>
+          </div>
+          I'm logging you in...
+        </h2>
       </div>
       <div id="homePage" class="page hidden">
-        <h1>Welcome, <span id="userId"></span></h1>
+        <h1 class="page__title">
+          <span>Welcome, <span id="userId"></span></span>
+        </h1>
         <h2>How have you been at Zenika?</h2>
         <div class="button__wrapper">
           <button
@@ -100,61 +119,67 @@
         </span>
       </div>
       <div id="displayStats" class="page hidden">
-        <h1>Statistics</h1>
-        <div class="button_wrapper">
-          <p>Stats by agency:</p>
-          <select id="agencySelector"> </select>
-        </div>
+        <h1 class="page__title">
+          Stats
+          <div class="button_wrapper">
+            <select id="agencySelector"> </select>
+          </div>
+        </h1>
+        <h2>Stats for agency: <span id="agencyName"></span></h2>
         <div id="statsTab"></div>
       </div>
       <div id="recordingPage" class="page hidden">
-        <h1>Sit tight!</h1>
-        <h2>I'm recording your vote...</h2>
-        <div class="loader">
-          <svg class="circular" viewBox="25 25 50 50">
-            <circle
-              class="path"
-              cx="50"
-              cy="50"
-              r="20"
-              fill="none"
-              strokeWidth="2"
-              strokeMiterlimit="10"
-            />
-          </svg>
-        </div>
+        <h1 class="page__title">Sit tight!</h1>
+        <h2>
+          <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+              <circle
+                class="path"
+                cx="50"
+                cy="50"
+                r="20"
+                fill="none"
+                strokeWidth="2"
+                strokeMiterlimit="10"
+              />
+            </svg>
+          </div>
+          I'm recording your vote...
+        </h2>
       </div>
       <div id="thankYouPage" class="page hidden">
-        <h1>Thanks!</h1>
+        <h1 class="page__title">Thanks!</h1>
         <h2>Your answer was properly recorded.</h2>
       </div>
       <div id="noCampaignPage" class="page hidden">
-        <h1>We're closed!</h1>
+        <h1 class="page__title">We're closed!</h1>
         <h2>There is no voting going on right now.</h2>
       </div>
-    </div>
-    <div id="alreadyVotedPage" class="page hidden">
-      <h1>We're closed!</h1>
-      <h2>Looks like you've already voted this month.</h2>
-    </div>
-    <div id="errorPage" class="page hidden">
-      <h1>There was an error!</h1>
-      <h2>Please try reloading.</h2>
-      <p>
-        If this keeps happening, contact dreamlab@zenika.com or #dreamlab on
-        Slack.
-      </p>
-      <p>You may check the console for more details about the error.</p>
-    </div>
-    <div id="unknownEmployeePage" class="page hidden">
-      <h1>Hi!</h1>
-      <h2>I don't know you yet: <span id="userEmail"></span></h2>
-      <p>If it's your first day at Zenika you may not be able to vote today.</p>
-      <p>Come back tommorow.</p>
-      <p>
-        If this keeps happening, contact dreamlab@zenika.com or #dreamlab on
-        Slack.
-      </p>
+      <div id="alreadyVotedPage" class="page hidden">
+        <h1 class="page__title">We're closed!</h1>
+        <h2>Looks like you've already voted this month.</h2>
+      </div>
+      <div id="errorPage" class="page hidden">
+        <h1 class="page__title">There was an error!</h1>
+        <h2>Please try reloading.</h2>
+        <p>
+          If this keeps happening, contact dreamlab@zenika.com or #dreamlab on
+          Slack.
+        </p>
+        <p>You may check the console for more details about the error.</p>
+      </div>
+      <div id="unknownEmployeePage" class="page hidden">
+        <h1 class="page__title">Hi!</h1>
+        <h2>I don't know you yet: <span id="userEmail"></span></h2>
+        <p>
+          If it's your first day at Zenika you may not be able to vote today.
+        </p>
+        <p>Come back tommorow.</p>
+        <p>
+          If this keeps happening, contact dreamlab@zenika.com or #dreamlab on
+          Slack.
+        </p>
+      </div>
     </div>
   </body>
 </html>
