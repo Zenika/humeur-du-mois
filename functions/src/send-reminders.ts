@@ -7,9 +7,11 @@ import { Config, isEnabled, asNumber } from "./config";
 import { daysBeforeCampaignEnds } from "./days-before-campaign-ends";
 import { enqueue } from "./process-email-queue";
 
-const linkToApp = `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
 const db = firestore();
 const config = functions.config() as Config;
+const linkToApp =
+  config.features.reminders.app_link ||
+  `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
 const campaignConfig = {
   enabled: isEnabled(config.features.voting_campaigns),
   startOn: asNumber(config.features.voting_campaigns.start_on),

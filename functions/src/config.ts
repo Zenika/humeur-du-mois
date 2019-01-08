@@ -127,6 +127,7 @@ export interface VotingCampaignEndsReminderConfig {
 export interface RemindersConfig {
   voting_campaign_starts: VotingCampaignStartsReminderConfig;
   voting_campaign_ends: VotingCampaignEndsReminderConfig;
+  app_link: String;
 }
 
 /**
