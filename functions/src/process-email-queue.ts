@@ -80,6 +80,15 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
     ...message,
     to: config.features.emails.recipient_override || message.to
   });
+
+  db.collection(EMAILS_TO_SEND_COLLECTION_NAME)
+    .doc(emailSnapshot.id)
+    .update({
+      message: {
+        ...message,
+        html: ""
+      }
+    });
   console.info("email sent: ", JSON.stringify(sendResponse));
   return sendResponse;
 };
