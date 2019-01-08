@@ -16,6 +16,12 @@ const mailgunClient = mailgun({
 });
 const db = firebase.firestore();
 
+const voteMap: { [key: string]: string } = {
+  great: "Great",
+  notThatGreat: "Not that great",
+  notGreatAtAll: "Not great at all"
+};
+
 export const sendEmailToManager = functions.firestore
   .document("vote/{voteId}")
   .onCreate(async voteSnapshot => {
@@ -45,7 +51,7 @@ export const sendEmailToManager = functions.firestore
         <p>Hi ${vote.managerEmail},</p>
         <p>
           ${vote.fullName} has shared how they feel:
-          "${vote.value}".
+          "${voteMap[vote.value]}".
         </p>
         <p>See you soon!</p>
       `
