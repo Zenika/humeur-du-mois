@@ -81,7 +81,8 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
     to: config.features.emails.recipient_override || message.to
   });
 
-  db.collection(EMAILS_TO_SEND_COLLECTION_NAME)
+  await db
+    .collection(EMAILS_TO_SEND_COLLECTION_NAME)
     .doc(emailSnapshot.id)
     .update({
       message: {
