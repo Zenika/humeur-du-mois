@@ -80,6 +80,13 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
     ...message,
     to: config.features.emails.recipient_override || message.to
   });
+
+  await emailSnapshot.ref.update({
+    message: {
+      ...message,
+      html: ""
+    }
+  });
   console.info("email sent: ", JSON.stringify(sendResponse));
   return sendResponse;
 };
