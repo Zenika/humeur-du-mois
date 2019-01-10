@@ -46,7 +46,7 @@ export const sendEmailToManager = functions.firestore
       from: "Humeur du mois <humeur-du-mois@zenika.com>",
       to: recipient,
       "h:Reply-To": vote.email,
-      subject: `${vote.fullName} has shared how they feel: "${vote.value}"`,
+      subject: `${vote.fullName} has shared how they feel`,
       html: `
         <p>Hi ${vote.managerEmail},</p>
         <p>
