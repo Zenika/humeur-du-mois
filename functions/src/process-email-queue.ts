@@ -82,11 +82,11 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
   });
 
   await emailSnapshot.ref.update({
-      message: {
-        ...message,
-        html: ""
-      }
-    });
+    message: {
+      ...message,
+      html: ""
+    }
+  });
   console.info("email sent: ", JSON.stringify(sendResponse));
   return sendResponse;
 };
