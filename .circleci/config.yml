@@ -111,6 +111,17 @@ jobs:
       - run: npx typescript-json-schema --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
+  prod-check-config:
+    environment:
+      FIREBASE_PROJECT: prod
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: npm run config:check
+
   check-formatting:
     docker:
       - image: circleci/node:8
@@ -342,6 +353,10 @@ workflows:
       - prod-validate-functions-config:
           requires: *validate-functions-config-requires
           filters: *filters-for-prod
+      - prod-check-config:
+          requires:
+            - prod-validate-functions-config
+          filters: *filters-for-prod
       - prod-deploy-firebase-app:
           requires:
             - install-tooling-dependencies
@@ -349,7 +364,7 @@ workflows:
             - build-ui-for-production
             - lint-functions
             - build-functions
-            - prod-validate-functions-config
+            - prod-check-config
           filters: *filters-for-prod
       - prod-deploy-app-engine-cron:
           requires:
