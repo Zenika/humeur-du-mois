@@ -42,8 +42,7 @@ const checkConfig = config => {
     errors.push("- voting_campaign doesn't end on the 5th");
   }
 
-  if (errors.length > 1) throw Error(errors.join("\n"));
-  else console.log("Config looks fine, continuing...");
+  return errors;
 };
 
 if (require.main === module) {
@@ -52,7 +51,10 @@ if (require.main === module) {
   });
 
   const config = JSON.parse(response);
-  checkConfig(config);
+  const errors = checkConfig(config);
+
+  if (errors.length > 1) throw Error(errors.join("\n"));
+  else console.log("Config looks fine, continuing...");
 }
 
 exports.checkConfig = checkConfig;
