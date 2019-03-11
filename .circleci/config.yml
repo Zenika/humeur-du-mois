@@ -366,15 +366,11 @@ workflows:
       - prod-check-config-test:
           requires:
             - install-tooling-dependencies
-          filters:
-            branches:
-              only: check-config
+          filters: *filters-for-prod
       - prod-check-config:
           requires:
             - prod-check-config-test
-          filters:
-            branches:
-              only: check-config
+          filters: *filters-for-prod
       - prod-deploy-firebase-app:
           requires:
             - install-tooling-dependencies
