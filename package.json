@@ -12,7 +12,8 @@
     "ui:build:watch": "npm --prefix ui run build:watch",
     "prettier": "prettier .circleci/config.yml  functions/{**/,}*.{ts,json} ui/{**/,}*.{ts,json,html}",
     "format:check": "npm run prettier -- --list-different",
-    "format:fix": "npm run prettier -- --write"
+    "format:fix": "npm run prettier -- --write",
+    "config:check": "node ./deployment/check-config/check-config.js"
   },
   "devDependencies": {
     "firebase-tools": "6.0.0",
