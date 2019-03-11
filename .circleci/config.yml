@@ -354,9 +354,9 @@ workflows:
           requires: *validate-functions-config-requires
           filters: *filters-for-prod
       - prod-check-config:
-          requires:
-            - prod-validate-functions-config
-          filters: *filters-for-prod
+          filters:
+            branch:
+              - check-config
       - prod-deploy-firebase-app:
           requires:
             - install-tooling-dependencies
