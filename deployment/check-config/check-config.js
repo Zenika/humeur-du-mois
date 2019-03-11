@@ -46,11 +46,11 @@ const checkConfig = config => {
   else console.log("Config looks fine, continuing...");
 };
 
-const response = execSync("npm --silent run firebase functions:config:get", {
-  encoding: "utf8"
-});
-
 if (require.main === module) {
+  const response = execSync("npm --silent run firebase functions:config:get", {
+    encoding: "utf8"
+  });
+
   const config = JSON.parse(response);
   checkConfig(config);
 }
