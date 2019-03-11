@@ -1,17 +1,40 @@
 const test = require("ava");
-const { execSync } = require("child_process");
 const { checkConfig } = require("./check-config");
 
 test("Config is suitable for production", t => {
   try {
-    const response = execSync(
-      "npm --silent run firebase functions:config:get",
-      {
-        encoding: "utf8"
+    const config = {
+      features: {
+        emails: {
+          enabled: true
+        },
+        collect_stats: {
+          enabled: true
+        },
+        import_votes: {
+          enabled: true
+        },
+        send_vote_to_manager: {
+          enabled: true
+        },
+        reminders: {
+          voting_campaign_ends: {
+            enabled: true
+          },
+          voting_campaign_starts: {
+            enabled: true
+          }
+        },
+        compute_statistics: {
+          enabled: true
+        },
+        voting_campaigns: {
+          enabled: true,
+          start_on: 25,
+          end_on: 5
+        }
       }
-    );
-
-    const config = JSON.parse(response);
+    };
     checkConfig(config);
     t.pass();
   } catch (err) {
@@ -49,8 +72,8 @@ test("Config is not suitable for production", t => {
         },
         voting_campaigns: {
           enabled: false,
-          start_on: 25,
-          end_on: 5
+          start_on: 2,
+          end_on: 6
         }
       }
     };

@@ -1,3 +1,5 @@
+const { execSync } = require("child_process");
+
 const checkConfig = config => {
   const computeStatisticsConfigs = config.features.compute_statistics;
   const emailsConfig = config.features.emails;
@@ -43,5 +45,14 @@ const checkConfig = config => {
   if (errors.length > 1) throw Error(errors.join("\n"));
   else console.log("Config looks fine, continuing...");
 };
+
+const response = execSync("npm --silent run firebase functions:config:get", {
+  encoding: "utf8"
+});
+
+if (require.main === module) {
+  const config = JSON.parse(response);
+  checkConfig(config);
+}
 
 exports.checkConfig = checkConfig;
