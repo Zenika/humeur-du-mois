@@ -6,32 +6,32 @@ test("Config is suitable for production", t => {
     const config = {
       features: {
         emails: {
-          enabled: true
+          enabled: "true"
         },
         collect_stats: {
-          enabled: true
+          enabled: "true"
         },
         import_votes: {
-          enabled: false
+          enabled: "false"
         },
         send_vote_to_manager: {
-          enabled: true
+          enabled: "true"
         },
         reminders: {
           voting_campaign_ends: {
-            enabled: true
+            enabled: "true"
           },
           voting_campaign_starts: {
-            enabled: true
+            enabled: "true"
           }
         },
         compute_statistics: {
-          enabled: false
+          enabled: "false"
         },
         voting_campaigns: {
-          enabled: true,
-          start_on: 25,
-          end_on: 5
+          enabled: "true",
+          start_on: "25",
+          end_on: "5"
         }
       }
     };
@@ -48,32 +48,32 @@ test("Config is not suitable for production", t => {
     const config = {
       features: {
         emails: {
-          enabled: false
+          enabled: "false"
         },
         collect_stats: {
-          enabled: false
+          enabled: "false"
         },
         import_votes: {
-          enabled: true
+          enabled: "true"
         },
         send_vote_to_manager: {
-          enabled: false
+          enabled: "false"
         },
         reminders: {
           voting_campaign_ends: {
-            enabled: false
+            enabled: "false"
           },
           voting_campaign_starts: {
-            enabled: false
+            enabled: "false"
           }
         },
         compute_statistics: {
-          enabled: true
+          enabled: "true"
         },
         voting_campaigns: {
-          enabled: false,
-          start_on: 2,
-          end_on: 6
+          enabled: "false",
+          start_on: "2",
+          end_on: "6"
         }
       }
     };
