@@ -123,14 +123,14 @@ jobs:
       - run: node_modules/.bin/firebase --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN functions:config:get > ./deployment/check-config/config.json
       - run: npm run config:check
 
-  prod-check-config-test:
+  test-tooling:
     docker:
       - image: circleci/node:8
     steps:
       - checkout
       - attach_workspace:
           at: ./
-      - run: npm run config:test
+      - run: npm run test
 
   check-formatting:
     docker:
@@ -360,16 +360,18 @@ workflows:
               only: test-prod-deploy
             tags:
               only: /^v.+-prod.*/
+      - test-tooling:
+          requires:
+            - install-tooling-dependencies
+          filters:
+            tags:
+              only: /.*/
       - prod-validate-functions-config:
           requires: *validate-functions-config-requires
           filters: *filters-for-prod
-      - prod-check-config-test:
-          requires:
-            - install-tooling-dependencies
-          filters: *filters-for-prod
       - prod-check-config:
           requires:
-            - prod-check-config-test
+            - test-tooling
           filters: *filters-for-prod
       - prod-deploy-firebase-app:
           requires:

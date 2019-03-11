@@ -13,7 +13,7 @@
     "prettier": "prettier .circleci/config.yml  functions/{**/,}*.{ts,json} ui/{**/,}*.{ts,json,html}",
     "format:check": "npm run prettier -- --list-different",
     "format:fix": "npm run prettier -- --write",
-    "config:test": "ava ./deployment/check-config/**.test.js",
+    "test": "ava ./deployment/check-config/**.test.js",
     "config:check": "node ./deployment/check-config/check-config.js ./config.json "
   },
   "devDependencies": {
