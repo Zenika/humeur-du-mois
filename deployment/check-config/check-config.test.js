@@ -12,7 +12,7 @@ test("Config is suitable for production", t => {
           enabled: true
         },
         import_votes: {
-          enabled: true
+          enabled: false
         },
         send_vote_to_manager: {
           enabled: true
@@ -26,7 +26,7 @@ test("Config is suitable for production", t => {
           }
         },
         compute_statistics: {
-          enabled: true
+          enabled: false
         },
         voting_campaigns: {
           enabled: true,
@@ -54,7 +54,7 @@ test("Config is not suitable for production", t => {
           enabled: false
         },
         import_votes: {
-          enabled: false
+          enabled: true
         },
         send_vote_to_manager: {
           enabled: false
@@ -68,7 +68,7 @@ test("Config is not suitable for production", t => {
           }
         },
         compute_statistics: {
-          enabled: false
+          enabled: true
         },
         voting_campaigns: {
           enabled: false,
