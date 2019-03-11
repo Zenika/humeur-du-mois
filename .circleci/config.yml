@@ -120,8 +120,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: node_modules/.bin/firebase --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN functions:config:get > config.json
-      - run: npm run config:check
+      - run: node_modules/.bin/firebase --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN functions:config:get > config.json && npm run config:check
 
   prod-check-config-test:
     docker:
