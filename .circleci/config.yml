@@ -121,7 +121,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: node_modules/.bin/firebase --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN functions:config:get > ./deployment/check-config/config.json
-      - run: npm run config:check
+      - run: npm run config:check ./config.json
 
   test-tooling:
     docker:
