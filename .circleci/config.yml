@@ -363,9 +363,7 @@ workflows:
       - test-tooling:
           requires:
             - install-tooling-dependencies
-          filters:
-            tags:
-              only: /.*/
+          filters: *filters-for-prod
       - prod-validate-functions-config:
           requires: *validate-functions-config-requires
           filters: *filters-for-prod
