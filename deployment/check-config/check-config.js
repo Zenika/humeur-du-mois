@@ -44,7 +44,7 @@ const checkConfig = config => {
 };
 
 if (require.main === module) {
-  const config = require(process.argv.slice(2)[0]);
+  const config = require(process.argv[2]);
 
   const errors = checkConfig(config);
 

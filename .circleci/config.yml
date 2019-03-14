@@ -379,6 +379,7 @@ workflows:
             - build-ui
             - build-ui-for-production
             - lint-functions
+            - prod-validate-functions-config
             - build-functions
             - prod-check-config
           filters: *filters-for-prod
