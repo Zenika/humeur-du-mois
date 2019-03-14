@@ -111,6 +111,27 @@ jobs:
       - run: npx typescript-json-schema --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
+  prod-check-config:
+    environment:
+      FIREBASE_PROJECT: prod
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: node_modules/.bin/firebase --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN functions:config:get > ./deployment/check-config/config.json
+      - run: npm run config:check ./config.json
+
+  test-tooling:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: npm run test
+
   check-formatting:
     docker:
       - image: circleci/node:8
@@ -339,8 +360,18 @@ workflows:
               only: test-prod-deploy
             tags:
               only: /^v.+-prod.*/
+      - test-tooling:
+          requires:
+            - install-tooling-dependencies
+          filters:
+            tags:
+              only: /.*/
       - prod-validate-functions-config:
           requires: *validate-functions-config-requires
+          filters: *filters-for-prod
+      - prod-check-config:
+          requires:
+            - test-tooling
           filters: *filters-for-prod
       - prod-deploy-firebase-app:
           requires:
@@ -348,8 +379,9 @@ workflows:
             - build-ui
             - build-ui-for-production
             - lint-functions
-            - build-functions
             - prod-validate-functions-config
+            - build-functions
+            - prod-check-config
           filters: *filters-for-prod
       - prod-deploy-app-engine-cron:
           requires:
