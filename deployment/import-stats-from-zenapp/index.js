@@ -62,7 +62,8 @@ if (
  * @typedef {{ good: number, normal: number, bad: number }} MoodStats
  * @typedef {{ value: number }} MonthValue
  * @typedef {{ value: number }} YearValue
- * @typedef {[MoodStats, MonthValue, YearValue]} Row
+ * @typedef {{ name: string }} AgencyValue
+ * @typedef {[MoodStats, MonthValue, YearValue, AgencyValue?]} Row
  * @typedef {Array<{ row: Row }>} Data
  * @typedef {{ results: [{ columns: Columns, data: Data }] }} ZenAppExport
  * @type {ZenAppExport}
@@ -70,30 +71,42 @@ if (
 const zenAppExportGlobalData = JSON.parse(
   fs.readFileSync(zenAppExportGlobalDataFilePath).toString()
 );
+/**
+ * @type {ZenAppExport}
+ */
 const zenAppExportAgencyData = JSON.parse(
   fs.readFileSync(zenAppExportAgencyDataFilePath).toString()
 );
 
 /**
- * @type {{great: number, notThatGreat: number, notGreatAtAll: number, campaign: string}[]}
+ * @typedef {{great: number, notThatGreat: number, notGreatAtAll: number}} MoodExport
+ * @type {{mood: MoodExport, campaign: string}[]}
  */
 const globalStats = zenAppExportGlobalData.results[0].data.map(
   ({ row: [{ good, normal, bad }, { value: month }, { value: year }] }) => ({
-    great: good,
-    notThatGreat: normal,
-    notGreatAtAll: bad,
+    mood: {
+      great: good,
+      notThatGreat: normal,
+      notGreatAtAll: bad
+    },
     campaign: new Date(Date.UTC(year, month - 1)).toISOString().substr(0, 7)
   })
 );
 
 /**
- * @type {{great: number, notThatGreat: number, notGreatAtAll: number, campaign: string}[]}
+ * @type {{mood: MoodExport, agency: string, campaign: string}[]}
  */
 const agencyStats = zenAppExportAgencyData.results[0].data.map(
-  ({ row: [{ good, normal, bad }, { value: month }, { value: year }] }) => ({
-    great: good,
-    notThatGreat: normal,
-    notGreatAtAll: bad,
+  ({
+    row: [
+      { good, normal, bad },
+      { value: month },
+      { value: year },
+      { name: agency }
+    ]
+  }) => ({
+    mood: { great: good, notThatGreat: normal, notGreatAtAll: bad },
+    agency,
     campaign: new Date(Date.UTC(year, month - 1)).toISOString().substr(0, 7)
   })
 );
@@ -102,7 +115,7 @@ sendData(globalStats);
 sendData(agencyStats);
 
 /**
- * @param {{great: number, notThatGreat: number, notGreatAtAll: number, campaign: string}[]} stats
+ * @param {{mood: MoodExport, campaign: string}[]} stats
  */
 async function sendData(stats) {
   const leftToSend = [...stats];
