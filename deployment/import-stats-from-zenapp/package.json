@@ -1,0 +1,12 @@
+{
+  "name": "humeur-du-mois-2018-import-stats-from-zenapp",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "request-promise-native": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/request-promise-native": "^1.0.15",
+    "prettier": "^1.15.3"
+  }
+}
