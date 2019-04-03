@@ -12,24 +12,50 @@ type Statistic = {
   campaign: string;
   agency?: string;
 };
+type StatisticToInsert = {
+  great?: number;
+  notThatGreat?: number;
+  notGreatAtAll?: number;
+  campaign: string;
+  agency?: string;
+};
 
 const config = functions.config() as Config;
 const importStatsConfigs = config.features.import_stats;
 const db = firebase.firestore();
 
-const fromJSONtoStats = (supposedlyValidStats: any) => {
-  if (!supposedlyValidStats.stats) return [];
-  const validStats: Statistic[] = supposedlyValidStats.stats.filter(
-    (supposedlyValidStat: any) =>
-      supposedlyValidStat.mood &&
-      typeof supposedlyValidStat.mood === "object" &&
-      supposedlyValidStat.campaign
-  );
+const fromJSONtoStats = (
+  supposedlyValidStats: any
+): [Map<string, StatisticToInsert>, boolean] => {
+  const validStats = new Map<string, StatisticToInsert>();
+  let isAgencyStats = false;
+  if (!supposedlyValidStats.stats) return [validStats, isAgencyStats];
+  supposedlyValidStats.stats
+    .filter(
+      (supposedlyValidStat: any) =>
+        supposedlyValidStat.mood &&
+        typeof supposedlyValidStat.mood === "object" &&
+        supposedlyValidStat.campaign
+    )
+    .forEach((validStat: Statistic) => {
+      if (validStat.agency) {
+        isAgencyStats = true;
+        validStats.set(
+          `${validStat.campaign}_${validStat.agency}`,
+          assignValidStatsToDbObject(validStat)
+        );
+      } else {
+        validStats.set(
+          `${validStat.campaign}`,
+          assignValidStatsToDbObject(validStat)
+        );
+      }
+    });
   console.info(
     `ignored ${supposedlyValidStats.stats.length -
-      validStats.length} votes because they did not match the expected schema`
+      validStats.size} votes because they did not match the expected schema`
   );
-  return validStats;
+  return [validStats, isAgencyStats];
 };
 
 export const importStats = functions.https.onRequest(
@@ -46,15 +72,14 @@ export const importStats = functions.https.onRequest(
       res.sendStatus(403);
       return;
     }
-    let validStats: Statistic[] = [];
-    if (req.body) {
-      validStats = fromJSONtoStats(req.body);
-    } else {
+    if (!req.body) {
       console.error("statsData is null, aborting");
       res.sendStatus(422);
       return;
     }
-    if (validStats.length < 0) {
+    const [validStats, isAgencyStats] = fromJSONtoStats(req.body);
+
+    if (validStats.size < 0) {
       console.error("statsData is empty, aborting");
       res.sendStatus(422);
       return;
@@ -62,73 +87,61 @@ export const importStats = functions.https.onRequest(
     /* Security mesure, to make sure we don't miss any of thoose. But it should really be called with
      * only agencies stats or only global stats
      */
-    const validAgencyStats = validStats.filter(validStat => validStat.agency);
-    const validGlobalStats = validStats.filter(validStat => !validStat.agency);
-    if (validAgencyStats.length > 0) {
-      computeAgencyStats(validAgencyStats, res)
-        .commit()
-        .then(() => res.sendStatus(200))
-        .catch(e => {
-          console.error(e);
-          res.sendStatus(500);
-        });
-    } else if (validGlobalStats.length > 0) {
-      computeGlobalStats(validGlobalStats, res)
-        .commit()
-        .then(() => res.sendStatus(200))
-        .catch(e => {
-          console.error(e);
-          res.sendStatus(500);
-        });
-    } else {
+    if (validStats.size < 0) {
       console.error("No data found, nothing was inserted");
       res.sendStatus(500);
+      return;
     }
+    console.info("isAgencyStats", isAgencyStats);
+    console.info("validStats", validStats);
+    const statsBatch = isAgencyStats
+      ? computeAgencyStats(validStats)
+      : computeGlobalStats(validStats);
+    statsBatch
+      .commit()
+      .then(() => res.sendStatus(200))
+      .catch(e => {
+        console.error(e);
+        res.sendStatus(500);
+      });
   }
 );
 
 const computeAgencyStats = (
-  validStats: Statistic[],
-  res: functions.Response
+  validStats: Map<string, StatisticToInsert>
 ): FirebaseFirestore.WriteBatch => {
   const statsBatch = db.batch();
-  for (const validStat of validStats) {
-    const validStatToInsert = assignValidStatsToDbObject(
-      { campaign: validStat.campaign, agency: validStat.agency },
-      validStat
-    );
+  validStats.forEach((validStat, _) => {
     statsBatch.create(
       db
         .collection("stats-campaign-agency")
         .doc(`${validStat.campaign}_${validStat.agency}`),
-      validStatToInsert
+      validStat
     );
-  }
+  });
   return statsBatch;
 };
 
 const computeGlobalStats = (
-  validStats: Statistic[],
-  res: functions.Response
+  validStats: Map<string, StatisticToInsert>
 ): FirebaseFirestore.WriteBatch => {
   const statsBatch = db.batch();
-  for (const validStat of validStats) {
-    const validStatToInsert = assignValidStatsToDbObject(
-      { campaign: validStat.campaign },
-      validStat
-    );
+  validStats.forEach((validStat, _) => {
     statsBatch.create(
       db.collection("stats-campaign").doc(`${validStat.campaign}`),
-      validStatToInsert
+      validStat
     );
-  }
+  });
   return statsBatch;
 };
 
 const assignValidStatsToDbObject = (
-  validStatToInsert: { campaign: string; agency?: string },
   validStat: Statistic
-) => {
+): StatisticToInsert => {
+  const validStatToInsert = { campaign: validStat.campaign };
+  if (validStat.agency) {
+    Object.assign(validStatToInsert, { agency: validStat.agency });
+  }
   // Surely there's a better way to do this
   if (validStat.mood.great) {
     Object.assign(validStatToInsert, {

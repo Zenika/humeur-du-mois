@@ -59,7 +59,7 @@ if (
 
 /**
  * @typedef {["mood", "month", "year"]} Columns
- * @typedef {{ good: number, normal: number, bad: number }} MoodStats
+ * @typedef {{ good: number, normal: number, bad: number, number: number }} MoodStats
  * @typedef {{ value: number }} MonthValue
  * @typedef {{ value: number }} YearValue
  * @typedef {{ name: string }} AgencyValue
@@ -86,11 +86,13 @@ const zenAppExportAgencyData = JSON.parse(
  * @type {{mood: MoodExport, campaign: string}[]}
  */
 const globalStats = zenAppExportGlobalData.results[0].data.map(
-  ({ row: [{ good, normal, bad }, { value: month }, { value: year }] }) => ({
+  ({
+    row: [{ good, normal, bad, number }, { value: month }, { value: year }]
+  }) => ({
     mood: {
-      great: good,
-      notThatGreat: normal,
-      notGreatAtAll: bad
+      great: Math.floor((number * good) / 100),
+      notThatGreat: Math.floor((number * normal) / 100),
+      notGreatAtAll: Math.floor((number * bad) / 100)
     },
     campaign: new Date(Date.UTC(year, month - 1)).toISOString().substr(0, 7)
   })
@@ -102,19 +104,25 @@ const globalStats = zenAppExportGlobalData.results[0].data.map(
 const agencyStats = zenAppExportAgencyData.results[0].data.map(
   ({
     row: [
-      { good, normal, bad },
+      { good, normal, bad, number },
       { name: agency },
       { value: month },
       { value: year }
     ]
   }) => ({
-    mood: { great: good, notThatGreat: normal, notGreatAtAll: bad },
+    mood: {
+      great: Math.floor((number * good) / 100),
+      notThatGreat: Math.floor((number * normal) / 100),
+      notGreatAtAll: Math.floor((number * bad) / 100)
+    },
     agency,
     campaign: new Date(Date.UTC(year, month - 1)).toISOString().substr(0, 7)
   })
 );
 
+console.log("globalStats", globalStats);
 sendData(globalStats);
+console.log("agencyStats", agencyStats);
 sendData(agencyStats);
 
 /**
