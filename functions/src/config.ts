@@ -172,6 +172,11 @@ export interface ImportVotesConfig {
   key: string;
 }
 
+export interface ImportStatsConfig {
+  enabled: Flag;
+  key: string;
+}
+
 export interface EmailsConfig {
   enabled: Flag;
   recipient_override?: string;
@@ -185,6 +190,7 @@ export interface FeaturesConfig {
   collect_stats: CollectStatsConfig;
   compute_statistics: ComputeStatisticsConfigs;
   import_votes: ImportVotesConfig;
+  import_stats: ImportStatsConfig;
   emails: EmailsConfig;
 }
 

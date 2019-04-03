@@ -38,7 +38,7 @@ const request = require("request-promise-native");
 
 const BATCH_SIZE = Number(process.env.HUMEUR_IMPORT_BATCH_SIZE) || 200;
 
-const AUTHORIZATION_KEY = process.env.HUMEUR_IMPORT_AUTHORIZATION_KEY;
+const AUTHORIZATION_KEY = process.env.HUMEUR_IMPORT_STATS_AUTHORIZATION_KEY;
 
 const [
   zenAppExportGlobalDataFilePath,
@@ -63,16 +63,19 @@ if (
  * @typedef {{ value: number }} MonthValue
  * @typedef {{ value: number }} YearValue
  * @typedef {{ name: string }} AgencyValue
- * @typedef {[MoodStats, MonthValue, YearValue, AgencyValue?]} Row
- * @typedef {Array<{ row: Row }>} Data
- * @typedef {{ results: [{ columns: Columns, data: Data }] }} ZenAppExport
- * @type {ZenAppExport}
+ * @typedef {[MoodStats, MonthValue, YearValue]} RowGlobal
+ * @typedef {Array<{ row: RowGlobal }>} DataGlobal
+ * @typedef {{ results: [{ columns: Columns, data: DataGlobal }] }} ZenAppExportGlobal
+ * @type {ZenAppExportGlobal}
  */
 const zenAppExportGlobalData = JSON.parse(
   fs.readFileSync(zenAppExportGlobalDataFilePath).toString()
 );
 /**
- * @type {ZenAppExport}
+ * @typedef {[MoodStats, AgencyValue, MonthValue, YearValue]} RowAgencies
+ * @typedef {Array<{ row: RowAgencies }>} DataAgencies
+ * @typedef {{ results: [{ columns: Columns, data: DataAgencies }] }} ZenAppExportAgencies
+ * @type {ZenAppExportAgencies}
  */
 const zenAppExportAgencyData = JSON.parse(
   fs.readFileSync(zenAppExportAgencyDataFilePath).toString()
@@ -100,9 +103,9 @@ const agencyStats = zenAppExportAgencyData.results[0].data.map(
   ({
     row: [
       { good, normal, bad },
+      { name: agency },
       { value: month },
-      { value: year },
-      { name: agency }
+      { value: year }
     ]
   }) => ({
     mood: { great: good, notThatGreat: normal, notGreatAtAll: bad },
