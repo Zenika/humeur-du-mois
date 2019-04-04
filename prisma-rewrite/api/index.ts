@@ -150,21 +150,21 @@ const subscribe = async () => {
     });
     try {
       await syncEmployees();
-      await prisma.updateEmployeeSyncJob({
-        where: { id: employeeSyncJob.id },
-        data: { completedAt: new Date() }
-      });
-      console.log(
-        "sync'ed employees",
-        employeeSyncJob.id,
-        employeeSyncJob.createdAt
-      );
     } catch (err) {
       await prisma.updateEmployeeSyncJob({
         where: { id: employeeSyncJob.id },
         data: { failedAt: new Date() }
       });
     }
+    await prisma.updateEmployeeSyncJob({
+      where: { id: employeeSyncJob.id },
+      data: { completedAt: new Date() }
+    });
+    console.log(
+      "sync'ed employees",
+      employeeSyncJob.id,
+      employeeSyncJob.createdAt
+    );
   }
 };
 
