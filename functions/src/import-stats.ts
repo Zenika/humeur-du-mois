@@ -24,6 +24,60 @@ const config = functions.config() as Config;
 const importStatsConfigs = config.features.import_stats;
 const db = firebase.firestore();
 
+const computeAgencyStats = (
+  validStats: Map<string, StatisticToInsert>
+): FirebaseFirestore.WriteBatch => {
+  const statsBatch = db.batch();
+  validStats.forEach((validStat, _) => {
+    statsBatch.update(
+      db
+        .collection("stats-campaign-agency")
+        .doc(`${validStat.campaign}_${validStat.agency}`),
+      validStat
+    );
+  });
+  return statsBatch;
+};
+
+const computeGlobalStats = (
+  validStats: Map<string, StatisticToInsert>
+): FirebaseFirestore.WriteBatch => {
+  const statsBatch = db.batch();
+  validStats.forEach((validStat, _) => {
+    statsBatch.update(
+      db.collection("stats-campaign").doc(`${validStat.campaign}`),
+      validStat
+    );
+  });
+  return statsBatch;
+};
+
+const assignValidStatsToDbObject = (
+  validStat: Statistic
+): StatisticToInsert => {
+  const validStatToInsert = { campaign: validStat.campaign };
+  if (validStat.agency) {
+    Object.assign(validStatToInsert, { agency: validStat.agency });
+  }
+  // Surely there's a better way to do this
+  if (validStat.mood.great) {
+    Object.assign(validStatToInsert, {
+      great: validStat.mood.great
+    });
+  }
+  if (validStat.mood.notThatGreat) {
+    Object.assign(validStatToInsert, {
+      notThatGreat: validStat.mood.notThatGreat
+    });
+  }
+  if (validStat.mood.notGreatAtAll) {
+    Object.assign(validStatToInsert, {
+      notThatGreat: validStat.mood.notGreatAtAll
+    });
+  }
+  return validStatToInsert;
+};
+
 const fromJSONtoStats = (
   supposedlyValidStats: any
 ): [Map<string, StatisticToInsert>, boolean] => {
@@ -106,57 +160,3 @@ export const importStats = functions.https.onRequest(
       });
   }
 );
-
-const computeAgencyStats = (
-  validStats: Map<string, StatisticToInsert>
-): FirebaseFirestore.WriteBatch => {
-  const statsBatch = db.batch();
-  validStats.forEach((validStat, _) => {
-    statsBatch.create(
-      db
-        .collection("stats-campaign-agency")
-        .doc(`${validStat.campaign}_${validStat.agency}`),
-      validStat
-    );
-  });
-  return statsBatch;
-};
-
-const computeGlobalStats = (
-  validStats: Map<string, StatisticToInsert>
-): FirebaseFirestore.WriteBatch => {
-  const statsBatch = db.batch();
-  validStats.forEach((validStat, _) => {
-    statsBatch.create(
-      db.collection("stats-campaign").doc(`${validStat.campaign}`),
-      validStat
-    );
-  });
-  return statsBatch;
-};
-
-const assignValidStatsToDbObject = (
-  validStat: Statistic
-): StatisticToInsert => {
-  const validStatToInsert = { campaign: validStat.campaign };
-  if (validStat.agency) {
-    Object.assign(validStatToInsert, { agency: validStat.agency });
-  }
-  // Surely there's a better way to do this
-  if (validStat.mood.great) {
-    Object.assign(validStatToInsert, {
-      great: validStat.mood.great
-    });
-  }
-  if (validStat.mood.notThatGreat) {
-    Object.assign(validStatToInsert, {
-      notThatGreat: validStat.mood.notThatGreat
-    });
-  }
-  if (validStat.mood.notGreatAtAll) {
-    Object.assign(validStatToInsert, {
-      notThatGreat: validStat.mood.notGreatAtAll
-    });
-  }
-  return validStatToInsert;
-};
