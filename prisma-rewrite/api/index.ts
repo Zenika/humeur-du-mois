@@ -68,7 +68,19 @@ const syncEmployees = async () => {
   employeesWithNoValidEmail.forEach(employee => {
     console.info("employee with no valid email: " + employee.fullName);
   });
+  /**
+   * FIXME: transactional insertion of all employees possible by adding
+   * a Company entity that has many agencies and many employees and then
+   * upserting this company. This is only possible though if prisma
+   * supports createOrConnect in nested create.
+   * See https://github.com/prisma/prisma/issues/2194
+   */
   for (const employee of employeesWithValidEmail) {
+    /**
+     * FIXME: pre-emptive upset of agency not needed anymore once prisma
+     * implements createOrConnect in nested create
+     * See https://github.com/prisma/prisma/issues/2194
+     */
     if (employee.location) {
       await prisma.upsertAgency({
         where: { name: employee.location },
@@ -76,6 +88,11 @@ const syncEmployees = async () => {
         update: {}
       });
     }
+    /**
+     * FIXME: pre-emptive upset of manager not needed anymore once prisma
+     * implements createOrConnect in nested create
+     * See https://github.com/prisma/prisma/issues/2194
+     */
     if (employee.manager) {
       await prisma.upsertEmployee({
         where: { email: employee.manager.email },
@@ -89,18 +106,22 @@ const syncEmployees = async () => {
         email: employee.email,
         fullName: employee.fullName || undefined,
         ...(employee.location && {
+          // would need createOrConnect here
           agency: { connect: { name: employee.location } }
         }),
         ...(employee.manager && {
+          // would need createOrConnect here
           manager: { connect: { email: employee.manager.email } }
         })
       },
       update: {
         fullName: employee.fullName || undefined,
         ...(employee.location && {
+          // would need createOrConnect here
           agency: { connect: { name: employee.location } }
         }),
         ...(employee.manager && {
+          // would need createOrConnect here
           manager: { connect: { email: employee.manager.email } }
         })
       }
