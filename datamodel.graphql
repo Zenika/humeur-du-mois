@@ -3,10 +3,10 @@ type Agency {
 }
 
 type Employee {
-  fullName: String!
-  email: String!
+  fullName: String
+  email: String! @unique
   manager: Employee
-  agency: Agency!
+  agency: Agency
 }
 
 type Survey {
