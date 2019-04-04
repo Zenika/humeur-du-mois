@@ -29,7 +29,7 @@ const computeAgencyStats = (
 ): FirebaseFirestore.WriteBatch => {
   const statsBatch = db.batch();
   validStats.forEach((validStat, _) => {
-    statsBatch.update(
+    statsBatch.set(
       db
         .collection("stats-campaign-agency")
         .doc(`${validStat.campaign}_${validStat.agency}`),
@@ -44,7 +44,7 @@ const computeGlobalStats = (
 ): FirebaseFirestore.WriteBatch => {
   const statsBatch = db.batch();
   validStats.forEach((validStat, _) => {
-    statsBatch.update(
+    statsBatch.set(
       db.collection("stats-campaign").doc(`${validStat.campaign}`),
       validStat
     );
@@ -146,8 +146,6 @@ export const importStats = functions.https.onRequest(
       res.sendStatus(500);
       return;
     }
-    console.info("isAgencyStats", isAgencyStats);
-    console.info("validStats", validStats);
     const statsBatch = isAgencyStats
       ? computeAgencyStats(validStats)
       : computeGlobalStats(validStats);

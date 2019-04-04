@@ -120,9 +120,7 @@ const agencyStats = zenAppExportAgencyData.results[0].data.map(
   })
 );
 
-console.log("globalStats", globalStats);
 sendData(globalStats);
-console.log("agencyStats", agencyStats);
 sendData(agencyStats);
 
 /**
