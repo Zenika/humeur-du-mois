@@ -402,9 +402,9 @@ workflows:
 
   prisma:
     jobs:
-      dev-prisma-deploy:
-        context: beam-splitter
-        filters:
-          branches:
-            only:
-              - prisma
+      - dev-prisma-deploy:
+          context: beam-splitter
+          filters:
+            branches:
+              only:
+                - prisma
