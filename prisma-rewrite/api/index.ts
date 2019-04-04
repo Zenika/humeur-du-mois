@@ -54,61 +54,65 @@ const prisma = new Prisma({
   secret: PRISMA_SECRET
 });
 
+const syncEmployees = async () => {
+  const proxybeezResponse = await fetch(PROXYBEEZ_URL, {
+    headers: {
+      Authorization: PROXYBEEZ_KEY
+    }
+  });
+  const {
+    employees
+  } = (await proxybeezResponse.json()) as AlibeezSuccessResponse;
+  const employeesWithValidEmail = employees.filter(hasValidEmail);
+  const employeesWithNoValidEmail = employees.filter(hasNoValidEmail);
+  employeesWithNoValidEmail.forEach(employee => {
+    console.info("employee with no valid email: " + employee.fullName);
+  });
+  for (const employee of employeesWithValidEmail) {
+    if (employee.location) {
+      await prisma.upsertAgency({
+        where: { name: employee.location },
+        create: { name: employee.location },
+        update: {}
+      });
+    }
+    if (employee.manager) {
+      await prisma.upsertEmployee({
+        where: { email: employee.manager.email },
+        create: { email: employee.manager.email },
+        update: {}
+      });
+    }
+    await prisma.upsertEmployee({
+      where: { email: employee.email },
+      create: {
+        email: employee.email,
+        fullName: employee.fullName || undefined,
+        ...(employee.location && {
+          agency: { connect: { name: employee.location } }
+        }),
+        ...(employee.manager && {
+          manager: { connect: { email: employee.manager.email } }
+        })
+      },
+      update: {
+        fullName: employee.fullName || undefined,
+        ...(employee.location && {
+          agency: { connect: { name: employee.location } }
+        }),
+        ...(employee.manager && {
+          manager: { connect: { email: employee.manager.email } }
+        })
+      }
+    });
+  }
+};
+
 const app = express();
 
 app.post("/sync-employees", async (req, res, next) => {
   try {
-    const proxybeezResponse = await fetch(PROXYBEEZ_URL, {
-      headers: {
-        Authorization: PROXYBEEZ_KEY
-      }
-    });
-    const {
-      employees
-    } = (await proxybeezResponse.json()) as AlibeezSuccessResponse;
-    const employeesWithValidEmail = employees.filter(hasValidEmail);
-    const employeesWithNoValidEmail = employees.filter(hasNoValidEmail);
-    employeesWithNoValidEmail.forEach(employee => {
-      console.info("employee with no valid email: " + employee.fullName);
-    });
-    for (const employee of employeesWithValidEmail) {
-      if (employee.location) {
-        await prisma.upsertAgency({
-          where: { name: employee.location },
-          create: { name: employee.location },
-          update: {}
-        });
-      }
-      if (employee.manager) {
-        await prisma.upsertEmployee({
-          where: { email: employee.manager.email },
-          create: { email: employee.manager.email },
-          update: {}
-        });
-      }
-      await prisma.upsertEmployee({
-        where: { email: employee.email },
-        create: {
-          email: employee.email,
-          fullName: employee.fullName || undefined,
-          ...(employee.location && {
-            agency: { connect: { name: employee.location } }
-          }),
-          ...(employee.manager && {
-            manager: { connect: { email: employee.manager.email } }
-          })
-        },
-        update: {
-          fullName: employee.fullName || undefined,
-          ...(employee.location && {
-            agency: { connect: { name: employee.location } }
-          }),
-          ...(employee.manager && {
-            manager: { connect: { email: employee.manager.email } }
-          })
-        }
-      });
-    }
+    await syncEmployees();
   } catch (err) {
     next(err);
   }
