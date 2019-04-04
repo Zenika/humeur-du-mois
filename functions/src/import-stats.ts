@@ -24,11 +24,11 @@ const config = functions.config() as Config;
 const importStatsConfigs = config.features.import_stats;
 const db = firebase.firestore();
 
-const computeAgencyStats = (
-  validStats: Map<string, StatisticToInsert>
+const buildAgencyStatsBatch = (
+  validStats: StatisticToInsert[]
 ): FirebaseFirestore.WriteBatch => {
   const statsBatch = db.batch();
-  validStats.forEach((validStat, _) => {
+  validStats.forEach(validStat => {
     statsBatch.set(
       db
         .collection("stats-campaign-agency")
@@ -39,8 +39,8 @@ const computeAgencyStats = (
   return statsBatch;
 };
 
-const computeGlobalStats = (
-  validStats: Map<string, StatisticToInsert>
+const buildGlobalStatsBatch = (
+  validStats: StatisticToInsert[]
 ): FirebaseFirestore.WriteBatch => {
   const statsBatch = db.batch();
   validStats.forEach((validStat, _) => {
@@ -52,38 +52,25 @@ const computeGlobalStats = (
   return statsBatch;
 };
 
-const assignValidStatsToDbObject = (
-  validStat: Statistic
-): StatisticToInsert => {
-  const validStatToInsert = { campaign: validStat.campaign };
-  if (validStat.agency) {
-    Object.assign(validStatToInsert, { agency: validStat.agency });
-  }
-  // Surely there's a better way to do this
-  if (validStat.mood.great) {
-    Object.assign(validStatToInsert, {
-      great: validStat.mood.great
-    });
-  }
-  if (validStat.mood.notThatGreat) {
-    Object.assign(validStatToInsert, {
-      notThatGreat: validStat.mood.notThatGreat
-    });
-  }
-  if (validStat.mood.notGreatAtAll) {
-    Object.assign(validStatToInsert, {
-      notThatGreat: validStat.mood.notGreatAtAll
-    });
-  }
-  return validStatToInsert;
+const convertValidStatsToDbObject = ({
+  mood,
+  agency,
+  campaign
+}: Statistic): StatisticToInsert => {
+  return {
+    ...mood,
+    ...(agency && { agency }),
+    campaign: campaign
+  };
 };
 
 const fromJSONtoStats = (
   supposedlyValidStats: any
-): [Map<string, StatisticToInsert>, boolean] => {
+): [StatisticToInsert[], boolean] => {
   const validStats = new Map<string, StatisticToInsert>();
   let isAgencyStats = false;
-  if (!supposedlyValidStats.stats) return [validStats, isAgencyStats];
+  if (!supposedlyValidStats.stats)
+    return [[...validStats.values()], isAgencyStats];
   supposedlyValidStats.stats
     .filter(
       (supposedlyValidStat: any) =>
@@ -96,12 +83,12 @@ const fromJSONtoStats = (
         isAgencyStats = true;
         validStats.set(
           `${validStat.campaign}_${validStat.agency}`,
-          assignValidStatsToDbObject(validStat)
+          convertValidStatsToDbObject(validStat)
         );
       } else {
         validStats.set(
           `${validStat.campaign}`,
-          assignValidStatsToDbObject(validStat)
+          convertValidStatsToDbObject(validStat)
         );
       }
     });
@@ -109,7 +96,7 @@ const fromJSONtoStats = (
     `ignored ${supposedlyValidStats.stats.length -
       validStats.size} votes because they did not match the expected schema`
   );
-  return [validStats, isAgencyStats];
+  return [[...validStats.values()], isAgencyStats];
 };
 
 export const importStats = functions.https.onRequest(
@@ -133,22 +120,17 @@ export const importStats = functions.https.onRequest(
     }
     const [validStats, isAgencyStats] = fromJSONtoStats(req.body);
 
-    if (validStats.size < 0) {
+    /* Security mesure, to make sure we don't miss any of thoose. But it should really be called with
+     * only agencies stats or only global stats
+     */
+    if (validStats.length <= 0) {
       console.error("statsData is empty, aborting");
       res.sendStatus(422);
       return;
     }
-    /* Security mesure, to make sure we don't miss any of thoose. But it should really be called with
-     * only agencies stats or only global stats
-     */
-    if (validStats.size < 0) {
-      console.error("No data found, nothing was inserted");
-      res.sendStatus(500);
-      return;
-    }
     const statsBatch = isAgencyStats
-      ? computeAgencyStats(validStats)
-      : computeGlobalStats(validStats);
+      ? buildAgencyStatsBatch(validStats)
+      : buildGlobalStatsBatch(validStats);
     statsBatch
       .commit()
       .then(() => res.sendStatus(200))

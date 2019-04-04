@@ -8,20 +8,25 @@
  *
  * Here is the HTTP request that we used to generate the JSON
  * file.
- *
+ * for global stats
  * curl -i -X POST \
  *  -H 'Content-Type:application/json' \
- *  -d '{"statements":[{"statement":"MATCH (mood:Mood)-->(month:Month)--(year:Year), mood--(:User)--(agency:Agency) RETURN mood, month, year, agency"}]}' \
+ *  -d '{"statements":[{"statement":"MATCH (mood:MoodHistory)-->(month:Month)--(year:Year) RETURN mood, month, year"}]}' \
+ *  http://localhost:7474/db/data/transaction/commit
+ * for agencies stats
+ * curl -i -X POST \
+ *  -H 'Content-Type:application/json' \
+ *  -d '{"statements":[{"statement":"MATCH (mood:AgencyMoodHistory)-->(month:Month)--(year:Year), (mood)-->(agency:Agency) RETURN mood, agency, month, year"}]}' \
  *  http://localhost:7474/db/data/transaction/commit
  *
  * The expected schema of the JSON file is documented as part
- * of the ZenAppExport type defined in JSdoc below.
+ * of the ZenAppExportAgencies/ZenAppExportGlobal type defined in JSdoc below.
  *
- * The script converts the votes from the input file to the exported
+ * The script converts the stats from the input file to the exported
  * format of the import function then calls the import function with
- * batches of votes until there are no more votes to send.
+ * batches of stats until there are no more stats to send.
  *
- * The script expects 2 parameters: the input file and the URI
+ * The script expects 3 parameters: the 2 input files and the URI
  * of the import function. The authorization key must be passed
  * through the environment variable HUMEUR_IMPORT_AUTHORIZATION_KEY.
  * The batch size can be customized using the environment variable
