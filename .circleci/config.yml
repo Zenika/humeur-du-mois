@@ -245,6 +245,16 @@ jobs:
     environment:
       GCLOUD_PROJECT: humeur-du-mois-2018-prod
 
+  dev-prisma-deploy:
+    docker:
+      - image: circleci/node:10
+    environment:
+      PRISMA_SERVICE: humeur-du-mois
+      PRISMA_STAGE: dev
+    steps:
+      - checkout
+      - run: PRISMA_ENDPOINT=$BEAM_SPLITTER_BASE_URL/$PRISMA_SERVICE/$PRISMA_STAGE npx prisma deploy
+
 workflows:
   version: 2
 
@@ -389,3 +399,12 @@ workflows:
             - prod-set-up-gcloud
             - prod-deploy-firebase-app
           filters: *filters-for-prod
+
+  prisma:
+    jobs:
+      dev-prisma-deploy:
+        context: beam-splitter
+        filters:
+          branches:
+            only:
+              - prisma

@@ -1,0 +1,26 @@
+type Agency {
+  name: String! @unique
+}
+
+type Employee {
+  fullName: String!
+  email: String!
+  manager: Employee
+  agency: Agency!
+}
+
+type Survey {
+  iso: String! @unique
+}
+
+enum Feeling {
+  GREAT
+  NOT_THAT_GREAT
+  NOT_GREAT_AT_ALL
+}
+
+type SurveyAnswer {
+  agency: Agency!
+  survey: Survey!
+  feeling: Feeling!
+}
