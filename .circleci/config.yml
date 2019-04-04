@@ -253,6 +253,7 @@ jobs:
       PRISMA_STAGE: dev
     steps:
       - checkout
+      - run: PRISMA_ENDPOINT=$BEAM_SPLITTER_BASE_URL/$PRISMA_SERVICE/$PRISMA_STAGE echo $PRISMA_ENDPOINT
       - run: PRISMA_ENDPOINT=$BEAM_SPLITTER_BASE_URL/$PRISMA_SERVICE/$PRISMA_STAGE npx prisma deploy
 
 workflows:
