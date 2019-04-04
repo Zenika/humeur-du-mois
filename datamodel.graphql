@@ -24,3 +24,12 @@ type SurveyAnswer {
   survey: Survey!
   feeling: Feeling!
 }
+
+type EmployeeSyncJob {
+  id: ID! @unique
+  createdAt: DateTime!
+  startedAt: DateTime
+  completedAt: DateTime
+  failedAt: DateTime
+  host: String!
+}

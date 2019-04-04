@@ -108,15 +108,63 @@ const syncEmployees = async () => {
   }
 };
 
+const subscribe = async () => {
+  const employeeSyncJobsIterator = await prisma.$subscribe
+    .employeeSyncJob({ mutation_in: ["CREATED"] })
+    .node();
+  const employeeSyncJobs = {
+    [Symbol.asyncIterator]() {
+      return employeeSyncJobsIterator;
+    }
+  };
+  for await (const employeeSyncJob of employeeSyncJobs) {
+    console.log(
+      "sync'ing employees",
+      employeeSyncJob.id,
+      employeeSyncJob.createdAt
+    );
+    await prisma.updateEmployeeSyncJob({
+      where: { id: employeeSyncJob.id },
+      data: { startedAt: new Date() }
+    });
+    try {
+      await syncEmployees();
+      await prisma.updateEmployeeSyncJob({
+        where: { id: employeeSyncJob.id },
+        data: { completedAt: new Date() }
+      });
+      console.log(
+        "sync'ed employees",
+        employeeSyncJob.id,
+        employeeSyncJob.createdAt
+      );
+    } catch (err) {
+      await prisma.updateEmployeeSyncJob({
+        where: { id: employeeSyncJob.id },
+        data: { failedAt: new Date() }
+      });
+    }
+  }
+};
+
+subscribe().catch(console.error);
+
 const app = express();
 
 app.post("/sync-employees", async (req, res, next) => {
   try {
-    await syncEmployees();
+    const employeeSyncRequest = await prisma.createEmployeeSyncJob({
+      host: req.hostname
+    });
+    console.log(
+      "saved sync request",
+      employeeSyncRequest.id,
+      employeeSyncRequest.createdAt
+    );
   } catch (err) {
     next(err);
   }
   res.sendStatus(200);
 });
 
-app.listen(4005);
+app.listen(4005, () => console.log("ready"));

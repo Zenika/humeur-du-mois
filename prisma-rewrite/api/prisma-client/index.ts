@@ -16,6 +16,7 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 export interface Exists {
   agency: (where?: AgencyWhereInput) => Promise<boolean>;
   employee: (where?: EmployeeWhereInput) => Promise<boolean>;
+  employeeSyncJob: (where?: EmployeeSyncJobWhereInput) => Promise<boolean>;
   survey: (where?: SurveyWhereInput) => Promise<boolean>;
   surveyAnswer: (where?: SurveyAnswerWhereInput) => Promise<boolean>;
 }
@@ -85,6 +86,31 @@ export interface Prisma {
       last?: Int;
     }
   ) => EmployeeConnectionPromise;
+  employeeSyncJob: (
+    where: EmployeeSyncJobWhereUniqueInput
+  ) => EmployeeSyncJobPromise;
+  employeeSyncJobs: (
+    args?: {
+      where?: EmployeeSyncJobWhereInput;
+      orderBy?: EmployeeSyncJobOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => FragmentableArray<EmployeeSyncJob>;
+  employeeSyncJobsConnection: (
+    args?: {
+      where?: EmployeeSyncJobWhereInput;
+      orderBy?: EmployeeSyncJobOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => EmployeeSyncJobConnectionPromise;
   survey: (where: SurveyWhereUniqueInput) => SurveyPromise;
   surveys: (
     args?: {
@@ -168,6 +194,34 @@ export interface Prisma {
   ) => EmployeePromise;
   deleteEmployee: (where: EmployeeWhereUniqueInput) => EmployeePromise;
   deleteManyEmployees: (where?: EmployeeWhereInput) => BatchPayloadPromise;
+  createEmployeeSyncJob: (
+    data: EmployeeSyncJobCreateInput
+  ) => EmployeeSyncJobPromise;
+  updateEmployeeSyncJob: (
+    args: {
+      data: EmployeeSyncJobUpdateInput;
+      where: EmployeeSyncJobWhereUniqueInput;
+    }
+  ) => EmployeeSyncJobPromise;
+  updateManyEmployeeSyncJobs: (
+    args: {
+      data: EmployeeSyncJobUpdateManyMutationInput;
+      where?: EmployeeSyncJobWhereInput;
+    }
+  ) => BatchPayloadPromise;
+  upsertEmployeeSyncJob: (
+    args: {
+      where: EmployeeSyncJobWhereUniqueInput;
+      create: EmployeeSyncJobCreateInput;
+      update: EmployeeSyncJobUpdateInput;
+    }
+  ) => EmployeeSyncJobPromise;
+  deleteEmployeeSyncJob: (
+    where: EmployeeSyncJobWhereUniqueInput
+  ) => EmployeeSyncJobPromise;
+  deleteManyEmployeeSyncJobs: (
+    where?: EmployeeSyncJobWhereInput
+  ) => BatchPayloadPromise;
   createSurvey: (data: SurveyCreateInput) => SurveyPromise;
   updateSurvey: (
     args: { data: SurveyUpdateInput; where: SurveyWhereUniqueInput }
@@ -209,6 +263,9 @@ export interface Subscription {
   employee: (
     where?: EmployeeSubscriptionWhereInput
   ) => EmployeeSubscriptionPayloadSubscription;
+  employeeSyncJob: (
+    where?: EmployeeSyncJobSubscriptionWhereInput
+  ) => EmployeeSyncJobSubscriptionPayloadSubscription;
   survey: (
     where?: SurveySubscriptionWhereInput
   ) => SurveySubscriptionPayloadSubscription;
@@ -224,6 +281,8 @@ export interface ClientConstructor<T> {
 /**
  * Types
  */
+
+export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
 export type EmployeeOrderByInput =
   | "fullName_ASC"
@@ -269,90 +328,23 @@ export type SurveyAnswerOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export type MutationType = "CREATED" | "UPDATED" | "DELETED";
+export type EmployeeSyncJobOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "startedAt_ASC"
+  | "startedAt_DESC"
+  | "completedAt_ASC"
+  | "completedAt_DESC"
+  | "failedAt_ASC"
+  | "failedAt_DESC"
+  | "host_ASC"
+  | "host_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
-export interface AgencyCreateInput {
-  name: String;
-}
-
-export type AgencyWhereUniqueInput = AtLeastOne<{
-  name: String;
-}>;
-
-export interface SurveyAnswerWhereInput {
-  agency?: AgencyWhereInput;
-  survey?: SurveyWhereInput;
-  feeling?: Feeling;
-  feeling_not?: Feeling;
-  feeling_in?: Feeling[] | Feeling;
-  feeling_not_in?: Feeling[] | Feeling;
-  AND?: SurveyAnswerWhereInput[] | SurveyAnswerWhereInput;
-  OR?: SurveyAnswerWhereInput[] | SurveyAnswerWhereInput;
-  NOT?: SurveyAnswerWhereInput[] | SurveyAnswerWhereInput;
-}
-
-export interface EmployeeCreateOneInput {
-  create?: EmployeeCreateInput;
-  connect?: EmployeeWhereUniqueInput;
-}
-
-export interface EmployeeUpsertNestedInput {
-  update: EmployeeUpdateDataInput;
-  create: EmployeeCreateInput;
-}
-
-export interface SurveySubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: SurveyWhereInput;
-  AND?: SurveySubscriptionWhereInput[] | SurveySubscriptionWhereInput;
-  OR?: SurveySubscriptionWhereInput[] | SurveySubscriptionWhereInput;
-  NOT?: SurveySubscriptionWhereInput[] | SurveySubscriptionWhereInput;
-}
-
-export interface AgencyWhereInput {
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  AND?: AgencyWhereInput[] | AgencyWhereInput;
-  OR?: AgencyWhereInput[] | AgencyWhereInput;
-  NOT?: AgencyWhereInput[] | AgencyWhereInput;
-}
-
-export interface EmployeeSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: EmployeeWhereInput;
-  AND?: EmployeeSubscriptionWhereInput[] | EmployeeSubscriptionWhereInput;
-  OR?: EmployeeSubscriptionWhereInput[] | EmployeeSubscriptionWhereInput;
-  NOT?: EmployeeSubscriptionWhereInput[] | EmployeeSubscriptionWhereInput;
-}
-
-export interface AgencyUpsertNestedInput {
-  update: AgencyUpdateDataInput;
-  create: AgencyCreateInput;
-}
-
-export interface SurveyAnswerUpdateManyMutationInput {
-  feeling?: Feeling;
-}
-
-export interface AgencyUpdateDataInput {
+export interface AgencyUpdateManyMutationInput {
   name?: String;
 }
 
@@ -360,13 +352,24 @@ export type SurveyWhereUniqueInput = AtLeastOne<{
   iso: String;
 }>;
 
-export interface AgencyUpdateOneInput {
-  create?: AgencyCreateInput;
-  update?: AgencyUpdateDataInput;
-  upsert?: AgencyUpsertNestedInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: AgencyWhereUniqueInput;
+export type AgencyWhereUniqueInput = AtLeastOne<{
+  name: String;
+}>;
+
+export interface AgencyUpsertNestedInput {
+  update: AgencyUpdateDataInput;
+  create: AgencyCreateInput;
+}
+
+export interface AgencySubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: AgencyWhereInput;
+  AND?: AgencySubscriptionWhereInput[] | AgencySubscriptionWhereInput;
+  OR?: AgencySubscriptionWhereInput[] | AgencySubscriptionWhereInput;
+  NOT?: AgencySubscriptionWhereInput[] | AgencySubscriptionWhereInput;
 }
 
 export interface SurveyWhereInput {
@@ -389,64 +392,25 @@ export interface SurveyWhereInput {
   NOT?: SurveyWhereInput[] | SurveyWhereInput;
 }
 
-export interface EmployeeUpdateDataInput {
-  fullName?: String;
-  email?: String;
-  manager?: EmployeeUpdateOneInput;
-  agency?: AgencyUpdateOneInput;
-}
-
-export interface SurveyUpdateInput {
-  iso?: String;
-}
-
-export interface SurveyAnswerSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: SurveyAnswerWhereInput;
-  AND?:
-    | SurveyAnswerSubscriptionWhereInput[]
-    | SurveyAnswerSubscriptionWhereInput;
-  OR?:
-    | SurveyAnswerSubscriptionWhereInput[]
-    | SurveyAnswerSubscriptionWhereInput;
-  NOT?:
-    | SurveyAnswerSubscriptionWhereInput[]
-    | SurveyAnswerSubscriptionWhereInput;
-}
-
-export interface EmployeeUpdateManyMutationInput {
-  fullName?: String;
-  email?: String;
-}
-
-export interface AgencySubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: AgencyWhereInput;
-  AND?: AgencySubscriptionWhereInput[] | AgencySubscriptionWhereInput;
-  OR?: AgencySubscriptionWhereInput[] | AgencySubscriptionWhereInput;
-  NOT?: AgencySubscriptionWhereInput[] | AgencySubscriptionWhereInput;
-}
-
-export interface EmployeeCreateInput {
-  fullName?: String;
+export type EmployeeWhereUniqueInput = AtLeastOne<{
   email: String;
-  manager?: EmployeeCreateOneInput;
-  agency?: AgencyCreateOneInput;
-}
+}>;
 
-export interface EmployeeUpdateOneInput {
-  create?: EmployeeCreateInput;
-  update?: EmployeeUpdateDataInput;
-  upsert?: EmployeeUpsertNestedInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: EmployeeWhereUniqueInput;
+export interface EmployeeSyncJobSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: EmployeeSyncJobWhereInput;
+  AND?:
+    | EmployeeSyncJobSubscriptionWhereInput[]
+    | EmployeeSyncJobSubscriptionWhereInput;
+  OR?:
+    | EmployeeSyncJobSubscriptionWhereInput[]
+    | EmployeeSyncJobSubscriptionWhereInput;
+  NOT?:
+    | EmployeeSyncJobSubscriptionWhereInput[]
+    | EmployeeSyncJobSubscriptionWhereInput;
 }
 
 export interface EmployeeWhereInput {
@@ -485,15 +449,123 @@ export interface EmployeeWhereInput {
   NOT?: EmployeeWhereInput[] | EmployeeWhereInput;
 }
 
+export interface AgencyUpdateDataInput {
+  name?: String;
+}
+
 export interface SurveyAnswerCreateInput {
   agency: AgencyCreateOneInput;
   survey: SurveyCreateOneInput;
   feeling: Feeling;
 }
 
-export interface AgencyCreateOneInput {
+export interface AgencyUpdateOneInput {
   create?: AgencyCreateInput;
+  update?: AgencyUpdateDataInput;
+  upsert?: AgencyUpsertNestedInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
   connect?: AgencyWhereUniqueInput;
+}
+
+export interface SurveyUpdateInput {
+  iso?: String;
+}
+
+export interface EmployeeUpdateDataInput {
+  fullName?: String;
+  email?: String;
+  manager?: EmployeeUpdateOneInput;
+  agency?: AgencyUpdateOneInput;
+}
+
+export interface SurveyCreateInput {
+  iso: String;
+}
+
+export interface SurveyAnswerWhereInput {
+  agency?: AgencyWhereInput;
+  survey?: SurveyWhereInput;
+  feeling?: Feeling;
+  feeling_not?: Feeling;
+  feeling_in?: Feeling[] | Feeling;
+  feeling_not_in?: Feeling[] | Feeling;
+  AND?: SurveyAnswerWhereInput[] | SurveyAnswerWhereInput;
+  OR?: SurveyAnswerWhereInput[] | SurveyAnswerWhereInput;
+  NOT?: SurveyAnswerWhereInput[] | SurveyAnswerWhereInput;
+}
+
+export interface EmployeeSyncJobUpdateInput {
+  startedAt?: DateTimeInput;
+  completedAt?: DateTimeInput;
+  failedAt?: DateTimeInput;
+  host?: String;
+}
+
+export interface SurveySubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: SurveyWhereInput;
+  AND?: SurveySubscriptionWhereInput[] | SurveySubscriptionWhereInput;
+  OR?: SurveySubscriptionWhereInput[] | SurveySubscriptionWhereInput;
+  NOT?: SurveySubscriptionWhereInput[] | SurveySubscriptionWhereInput;
+}
+
+export interface SurveyAnswerSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: SurveyAnswerWhereInput;
+  AND?:
+    | SurveyAnswerSubscriptionWhereInput[]
+    | SurveyAnswerSubscriptionWhereInput;
+  OR?:
+    | SurveyAnswerSubscriptionWhereInput[]
+    | SurveyAnswerSubscriptionWhereInput;
+  NOT?:
+    | SurveyAnswerSubscriptionWhereInput[]
+    | SurveyAnswerSubscriptionWhereInput;
+}
+
+export interface AgencyWhereInput {
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  AND?: AgencyWhereInput[] | AgencyWhereInput;
+  OR?: AgencyWhereInput[] | AgencyWhereInput;
+  NOT?: AgencyWhereInput[] | AgencyWhereInput;
+}
+
+export interface EmployeeUpdateManyMutationInput {
+  fullName?: String;
+  email?: String;
+}
+
+export interface EmployeeUpdateOneInput {
+  create?: EmployeeCreateInput;
+  update?: EmployeeUpdateDataInput;
+  upsert?: EmployeeUpsertNestedInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: EmployeeWhereUniqueInput;
+}
+
+export interface SurveyAnswerUpdateManyMutationInput {
+  feeling?: Feeling;
 }
 
 export interface EmployeeUpdateInput {
@@ -503,12 +575,124 @@ export interface EmployeeUpdateInput {
   agency?: AgencyUpdateOneInput;
 }
 
-export interface AgencyUpdateManyMutationInput {
-  name?: String;
+export interface EmployeeSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: EmployeeWhereInput;
+  AND?: EmployeeSubscriptionWhereInput[] | EmployeeSubscriptionWhereInput;
+  OR?: EmployeeSubscriptionWhereInput[] | EmployeeSubscriptionWhereInput;
+  NOT?: EmployeeSubscriptionWhereInput[] | EmployeeSubscriptionWhereInput;
+}
+
+export interface AgencyCreateOneInput {
+  create?: AgencyCreateInput;
+  connect?: AgencyWhereUniqueInput;
+}
+
+export type EmployeeSyncJobWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
+
+export interface EmployeeSyncJobWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  startedAt?: DateTimeInput;
+  startedAt_not?: DateTimeInput;
+  startedAt_in?: DateTimeInput[] | DateTimeInput;
+  startedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  startedAt_lt?: DateTimeInput;
+  startedAt_lte?: DateTimeInput;
+  startedAt_gt?: DateTimeInput;
+  startedAt_gte?: DateTimeInput;
+  completedAt?: DateTimeInput;
+  completedAt_not?: DateTimeInput;
+  completedAt_in?: DateTimeInput[] | DateTimeInput;
+  completedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  completedAt_lt?: DateTimeInput;
+  completedAt_lte?: DateTimeInput;
+  completedAt_gt?: DateTimeInput;
+  completedAt_gte?: DateTimeInput;
+  failedAt?: DateTimeInput;
+  failedAt_not?: DateTimeInput;
+  failedAt_in?: DateTimeInput[] | DateTimeInput;
+  failedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  failedAt_lt?: DateTimeInput;
+  failedAt_lte?: DateTimeInput;
+  failedAt_gt?: DateTimeInput;
+  failedAt_gte?: DateTimeInput;
+  host?: String;
+  host_not?: String;
+  host_in?: String[] | String;
+  host_not_in?: String[] | String;
+  host_lt?: String;
+  host_lte?: String;
+  host_gt?: String;
+  host_gte?: String;
+  host_contains?: String;
+  host_not_contains?: String;
+  host_starts_with?: String;
+  host_not_starts_with?: String;
+  host_ends_with?: String;
+  host_not_ends_with?: String;
+  AND?: EmployeeSyncJobWhereInput[] | EmployeeSyncJobWhereInput;
+  OR?: EmployeeSyncJobWhereInput[] | EmployeeSyncJobWhereInput;
+  NOT?: EmployeeSyncJobWhereInput[] | EmployeeSyncJobWhereInput;
 }
 
 export interface AgencyUpdateInput {
   name?: String;
+}
+
+export interface AgencyCreateInput {
+  name: String;
+}
+
+export interface EmployeeCreateInput {
+  fullName?: String;
+  email: String;
+  manager?: EmployeeCreateOneInput;
+  agency?: AgencyCreateOneInput;
+}
+
+export interface EmployeeCreateOneInput {
+  create?: EmployeeCreateInput;
+  connect?: EmployeeWhereUniqueInput;
+}
+
+export interface EmployeeSyncJobCreateInput {
+  startedAt?: DateTimeInput;
+  completedAt?: DateTimeInput;
+  failedAt?: DateTimeInput;
+  host: String;
+}
+
+export interface EmployeeSyncJobUpdateManyMutationInput {
+  startedAt?: DateTimeInput;
+  completedAt?: DateTimeInput;
+  failedAt?: DateTimeInput;
+  host?: String;
 }
 
 export interface SurveyUpdateManyMutationInput {
@@ -520,16 +704,71 @@ export interface SurveyCreateOneInput {
   connect?: SurveyWhereUniqueInput;
 }
 
-export type EmployeeWhereUniqueInput = AtLeastOne<{
-  email: String;
-}>;
-
-export interface SurveyCreateInput {
-  iso: String;
+export interface EmployeeUpsertNestedInput {
+  update: EmployeeUpdateDataInput;
+  create: EmployeeCreateInput;
 }
 
 export interface NodeNode {
   id: ID_Output;
+}
+
+export interface EmployeeConnection {
+  pageInfo: PageInfo;
+  edges: EmployeeEdge[];
+}
+
+export interface EmployeeConnectionPromise
+  extends Promise<EmployeeConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<EmployeeEdge>>() => T;
+  aggregate: <T = AggregateEmployeePromise>() => T;
+}
+
+export interface EmployeeConnectionSubscription
+  extends Promise<AsyncIterator<EmployeeConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<EmployeeEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateEmployeeSubscription>() => T;
+}
+
+export interface SurveyAnswerPreviousValues {
+  feeling: Feeling;
+}
+
+export interface SurveyAnswerPreviousValuesPromise
+  extends Promise<SurveyAnswerPreviousValues>,
+    Fragmentable {
+  feeling: () => Promise<Feeling>;
+}
+
+export interface SurveyAnswerPreviousValuesSubscription
+  extends Promise<AsyncIterator<SurveyAnswerPreviousValues>>,
+    Fragmentable {
+  feeling: () => Promise<AsyncIterator<Feeling>>;
+}
+
+export interface Employee {
+  fullName?: String;
+  email: String;
+}
+
+export interface EmployeePromise extends Promise<Employee>, Fragmentable {
+  fullName: () => Promise<String>;
+  email: () => Promise<String>;
+  manager: <T = EmployeePromise>() => T;
+  agency: <T = AgencyPromise>() => T;
+}
+
+export interface EmployeeSubscription
+  extends Promise<AsyncIterator<Employee>>,
+    Fragmentable {
+  fullName: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  manager: <T = EmployeeSubscription>() => T;
+  agency: <T = AgencySubscription>() => T;
 }
 
 export interface BatchPayload {
@@ -546,6 +785,99 @@ export interface BatchPayloadSubscription
   extends Promise<AsyncIterator<BatchPayload>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface AggregateAgency {
+  count: Int;
+}
+
+export interface AggregateAgencyPromise
+  extends Promise<AggregateAgency>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateAgencySubscription
+  extends Promise<AsyncIterator<AggregateAgency>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface SurveyAnswerEdge {
+  node: SurveyAnswer;
+  cursor: String;
+}
+
+export interface SurveyAnswerEdgePromise
+  extends Promise<SurveyAnswerEdge>,
+    Fragmentable {
+  node: <T = SurveyAnswerPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface SurveyAnswerEdgeSubscription
+  extends Promise<AsyncIterator<SurveyAnswerEdge>>,
+    Fragmentable {
+  node: <T = SurveyAnswerSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AgencyEdge {
+  node: Agency;
+  cursor: String;
+}
+
+export interface AgencyEdgePromise extends Promise<AgencyEdge>, Fragmentable {
+  node: <T = AgencyPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface AgencyEdgeSubscription
+  extends Promise<AsyncIterator<AgencyEdge>>,
+    Fragmentable {
+  node: <T = AgencySubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface SurveyAnswer {
+  feeling: Feeling;
+}
+
+export interface SurveyAnswerPromise
+  extends Promise<SurveyAnswer>,
+    Fragmentable {
+  agency: <T = AgencyPromise>() => T;
+  survey: <T = SurveyPromise>() => T;
+  feeling: () => Promise<Feeling>;
+}
+
+export interface SurveyAnswerSubscription
+  extends Promise<AsyncIterator<SurveyAnswer>>,
+    Fragmentable {
+  agency: <T = AgencySubscription>() => T;
+  survey: <T = SurveySubscription>() => T;
+  feeling: () => Promise<AsyncIterator<Feeling>>;
+}
+
+export interface SurveyAnswerConnection {
+  pageInfo: PageInfo;
+  edges: SurveyAnswerEdge[];
+}
+
+export interface SurveyAnswerConnectionPromise
+  extends Promise<SurveyAnswerConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<SurveyAnswerEdge>>() => T;
+  aggregate: <T = AggregateSurveyAnswerPromise>() => T;
+}
+
+export interface SurveyAnswerConnectionSubscription
+  extends Promise<AsyncIterator<SurveyAnswerConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<SurveyAnswerEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateSurveyAnswerSubscription>() => T;
 }
 
 export interface SurveySubscriptionPayload {
@@ -573,176 +905,74 @@ export interface SurveySubscriptionPayloadSubscription
   previousValues: <T = SurveyPreviousValuesSubscription>() => T;
 }
 
-export interface Survey {
-  iso: String;
-}
-
-export interface SurveyPromise extends Promise<Survey>, Fragmentable {
-  iso: () => Promise<String>;
-}
-
-export interface SurveySubscription
-  extends Promise<AsyncIterator<Survey>>,
-    Fragmentable {
-  iso: () => Promise<AsyncIterator<String>>;
-}
-
-export interface SurveyAnswerPreviousValues {
-  feeling: Feeling;
-}
-
-export interface SurveyAnswerPreviousValuesPromise
-  extends Promise<SurveyAnswerPreviousValues>,
-    Fragmentable {
-  feeling: () => Promise<Feeling>;
-}
-
-export interface SurveyAnswerPreviousValuesSubscription
-  extends Promise<AsyncIterator<SurveyAnswerPreviousValues>>,
-    Fragmentable {
-  feeling: () => Promise<AsyncIterator<Feeling>>;
-}
-
-export interface AggregateEmployee {
+export interface AggregateSurvey {
   count: Int;
 }
 
-export interface AggregateEmployeePromise
-  extends Promise<AggregateEmployee>,
+export interface AggregateSurveyPromise
+  extends Promise<AggregateSurvey>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateEmployeeSubscription
-  extends Promise<AsyncIterator<AggregateEmployee>>,
+export interface AggregateSurveySubscription
+  extends Promise<AsyncIterator<AggregateSurvey>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface AgencyEdge {
-  node: Agency;
+export interface SurveyEdge {
+  node: Survey;
   cursor: String;
 }
 
-export interface AgencyEdgePromise extends Promise<AgencyEdge>, Fragmentable {
-  node: <T = AgencyPromise>() => T;
+export interface SurveyEdgePromise extends Promise<SurveyEdge>, Fragmentable {
+  node: <T = SurveyPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface AgencyEdgeSubscription
-  extends Promise<AsyncIterator<AgencyEdge>>,
+export interface SurveyEdgeSubscription
+  extends Promise<AsyncIterator<SurveyEdge>>,
     Fragmentable {
-  node: <T = AgencySubscription>() => T;
+  node: <T = SurveySubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface EmployeeEdge {
-  node: Employee;
-  cursor: String;
-}
-
-export interface EmployeeEdgePromise
-  extends Promise<EmployeeEdge>,
-    Fragmentable {
-  node: <T = EmployeePromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface EmployeeEdgeSubscription
-  extends Promise<AsyncIterator<EmployeeEdge>>,
-    Fragmentable {
-  node: <T = EmployeeSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface SurveyPreviousValues {
-  iso: String;
-}
-
-export interface SurveyPreviousValuesPromise
-  extends Promise<SurveyPreviousValues>,
-    Fragmentable {
-  iso: () => Promise<String>;
-}
-
-export interface SurveyPreviousValuesSubscription
-  extends Promise<AsyncIterator<SurveyPreviousValues>>,
-    Fragmentable {
-  iso: () => Promise<AsyncIterator<String>>;
-}
-
-export interface EmployeeConnection {
+export interface SurveyConnection {
   pageInfo: PageInfo;
-  edges: EmployeeEdge[];
+  edges: SurveyEdge[];
 }
 
-export interface EmployeeConnectionPromise
-  extends Promise<EmployeeConnection>,
+export interface SurveyConnectionPromise
+  extends Promise<SurveyConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<EmployeeEdge>>() => T;
-  aggregate: <T = AggregateEmployeePromise>() => T;
+  edges: <T = FragmentableArray<SurveyEdge>>() => T;
+  aggregate: <T = AggregateSurveyPromise>() => T;
 }
 
-export interface EmployeeConnectionSubscription
-  extends Promise<AsyncIterator<EmployeeConnection>>,
+export interface SurveyConnectionSubscription
+  extends Promise<AsyncIterator<SurveyConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<EmployeeEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateEmployeeSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<SurveyEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateSurveySubscription>() => T;
 }
 
-export interface SurveyAnswerEdge {
-  node: SurveyAnswer;
-  cursor: String;
+export interface AggregateEmployeeSyncJob {
+  count: Int;
 }
 
-export interface SurveyAnswerEdgePromise
-  extends Promise<SurveyAnswerEdge>,
+export interface AggregateEmployeeSyncJobPromise
+  extends Promise<AggregateEmployeeSyncJob>,
     Fragmentable {
-  node: <T = SurveyAnswerPromise>() => T;
-  cursor: () => Promise<String>;
+  count: () => Promise<Int>;
 }
 
-export interface SurveyAnswerEdgeSubscription
-  extends Promise<AsyncIterator<SurveyAnswerEdge>>,
+export interface AggregateEmployeeSyncJobSubscription
+  extends Promise<AsyncIterator<AggregateEmployeeSyncJob>>,
     Fragmentable {
-  node: <T = SurveyAnswerSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface Agency {
-  name: String;
-}
-
-export interface AgencyPromise extends Promise<Agency>, Fragmentable {
-  name: () => Promise<String>;
-}
-
-export interface AgencySubscription
-  extends Promise<AsyncIterator<Agency>>,
-    Fragmentable {
-  name: () => Promise<AsyncIterator<String>>;
-}
-
-export interface SurveyAnswer {
-  feeling: Feeling;
-}
-
-export interface SurveyAnswerPromise
-  extends Promise<SurveyAnswer>,
-    Fragmentable {
-  agency: <T = AgencyPromise>() => T;
-  survey: <T = SurveyPromise>() => T;
-  feeling: () => Promise<Feeling>;
-}
-
-export interface SurveyAnswerSubscription
-  extends Promise<AsyncIterator<SurveyAnswer>>,
-    Fragmentable {
-  agency: <T = AgencySubscription>() => T;
-  survey: <T = SurveySubscription>() => T;
-  feeling: () => Promise<AsyncIterator<Feeling>>;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface AgencySubscriptionPayload {
@@ -770,20 +1000,25 @@ export interface AgencySubscriptionPayloadSubscription
   previousValues: <T = AgencyPreviousValuesSubscription>() => T;
 }
 
-export interface AggregateSurvey {
-  count: Int;
+export interface EmployeeSyncJobConnection {
+  pageInfo: PageInfo;
+  edges: EmployeeSyncJobEdge[];
 }
 
-export interface AggregateSurveyPromise
-  extends Promise<AggregateSurvey>,
+export interface EmployeeSyncJobConnectionPromise
+  extends Promise<EmployeeSyncJobConnection>,
     Fragmentable {
-  count: () => Promise<Int>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<EmployeeSyncJobEdge>>() => T;
+  aggregate: <T = AggregateEmployeeSyncJobPromise>() => T;
 }
 
-export interface AggregateSurveySubscription
-  extends Promise<AsyncIterator<AggregateSurvey>>,
+export interface EmployeeSyncJobConnectionSubscription
+  extends Promise<AsyncIterator<EmployeeSyncJobConnection>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<EmployeeSyncJobEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateEmployeeSyncJobSubscription>() => T;
 }
 
 export interface AgencyPreviousValues {
@@ -802,81 +1037,74 @@ export interface AgencyPreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
 }
 
-export interface SurveyConnection {
-  pageInfo: PageInfo;
-  edges: SurveyEdge[];
+export interface EmployeeSyncJob {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  startedAt?: DateTimeOutput;
+  completedAt?: DateTimeOutput;
+  failedAt?: DateTimeOutput;
+  host: String;
 }
 
-export interface SurveyConnectionPromise
-  extends Promise<SurveyConnection>,
+export interface EmployeeSyncJobPromise
+  extends Promise<EmployeeSyncJob>,
     Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<SurveyEdge>>() => T;
-  aggregate: <T = AggregateSurveyPromise>() => T;
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  startedAt: () => Promise<DateTimeOutput>;
+  completedAt: () => Promise<DateTimeOutput>;
+  failedAt: () => Promise<DateTimeOutput>;
+  host: () => Promise<String>;
 }
 
-export interface SurveyConnectionSubscription
-  extends Promise<AsyncIterator<SurveyConnection>>,
+export interface EmployeeSyncJobSubscription
+  extends Promise<AsyncIterator<EmployeeSyncJob>>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<SurveyEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateSurveySubscription>() => T;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  startedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  completedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  failedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  host: () => Promise<AsyncIterator<String>>;
 }
 
-export interface AggregateAgency {
+export interface PageInfo {
+  hasNextPage: Boolean;
+  hasPreviousPage: Boolean;
+  startCursor?: String;
+  endCursor?: String;
+}
+
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>;
+  hasPreviousPage: () => Promise<Boolean>;
+  startCursor: () => Promise<String>;
+  endCursor: () => Promise<String>;
+}
+
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
+    Fragmentable {
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
+  startCursor: () => Promise<AsyncIterator<String>>;
+  endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateEmployee {
   count: Int;
 }
 
-export interface AggregateAgencyPromise
-  extends Promise<AggregateAgency>,
+export interface AggregateEmployeePromise
+  extends Promise<AggregateEmployee>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateAgencySubscription
-  extends Promise<AsyncIterator<AggregateAgency>>,
+export interface AggregateEmployeeSubscription
+  extends Promise<AsyncIterator<AggregateEmployee>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface Employee {
-  fullName?: String;
-  email: String;
-}
-
-export interface EmployeePromise extends Promise<Employee>, Fragmentable {
-  fullName: () => Promise<String>;
-  email: () => Promise<String>;
-  manager: <T = EmployeePromise>() => T;
-  agency: <T = AgencyPromise>() => T;
-}
-
-export interface EmployeeSubscription
-  extends Promise<AsyncIterator<Employee>>,
-    Fragmentable {
-  fullName: () => Promise<AsyncIterator<String>>;
-  email: () => Promise<AsyncIterator<String>>;
-  manager: <T = EmployeeSubscription>() => T;
-  agency: <T = AgencySubscription>() => T;
-}
-
-export interface EmployeePreviousValues {
-  fullName?: String;
-  email: String;
-}
-
-export interface EmployeePreviousValuesPromise
-  extends Promise<EmployeePreviousValues>,
-    Fragmentable {
-  fullName: () => Promise<String>;
-  email: () => Promise<String>;
-}
-
-export interface EmployeePreviousValuesSubscription
-  extends Promise<AsyncIterator<EmployeePreviousValues>>,
-    Fragmentable {
-  fullName: () => Promise<AsyncIterator<String>>;
-  email: () => Promise<AsyncIterator<String>>;
 }
 
 export interface EmployeeSubscriptionPayload {
@@ -904,43 +1132,90 @@ export interface EmployeeSubscriptionPayloadSubscription
   previousValues: <T = EmployeePreviousValuesSubscription>() => T;
 }
 
-export interface PageInfo {
-  hasNextPage: Boolean;
-  hasPreviousPage: Boolean;
-  startCursor?: String;
-  endCursor?: String;
+export interface SurveyPreviousValues {
+  iso: String;
 }
 
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>;
-  hasPreviousPage: () => Promise<Boolean>;
-  startCursor: () => Promise<String>;
-  endCursor: () => Promise<String>;
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
+export interface SurveyPreviousValuesPromise
+  extends Promise<SurveyPreviousValues>,
     Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
-  startCursor: () => Promise<AsyncIterator<String>>;
-  endCursor: () => Promise<AsyncIterator<String>>;
+  iso: () => Promise<String>;
 }
 
-export interface AggregateSurveyAnswer {
-  count: Int;
-}
-
-export interface AggregateSurveyAnswerPromise
-  extends Promise<AggregateSurveyAnswer>,
+export interface SurveyPreviousValuesSubscription
+  extends Promise<AsyncIterator<SurveyPreviousValues>>,
     Fragmentable {
-  count: () => Promise<Int>;
+  iso: () => Promise<AsyncIterator<String>>;
 }
 
-export interface AggregateSurveyAnswerSubscription
-  extends Promise<AsyncIterator<AggregateSurveyAnswer>>,
+export interface Survey {
+  iso: String;
+}
+
+export interface SurveyPromise extends Promise<Survey>, Fragmentable {
+  iso: () => Promise<String>;
+}
+
+export interface SurveySubscription
+  extends Promise<AsyncIterator<Survey>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  iso: () => Promise<AsyncIterator<String>>;
+}
+
+export interface EmployeeSyncJobPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  startedAt?: DateTimeOutput;
+  completedAt?: DateTimeOutput;
+  failedAt?: DateTimeOutput;
+  host: String;
+}
+
+export interface EmployeeSyncJobPreviousValuesPromise
+  extends Promise<EmployeeSyncJobPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  startedAt: () => Promise<DateTimeOutput>;
+  completedAt: () => Promise<DateTimeOutput>;
+  failedAt: () => Promise<DateTimeOutput>;
+  host: () => Promise<String>;
+}
+
+export interface EmployeeSyncJobPreviousValuesSubscription
+  extends Promise<AsyncIterator<EmployeeSyncJobPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  startedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  completedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  failedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  host: () => Promise<AsyncIterator<String>>;
+}
+
+export interface EmployeeSyncJobSubscriptionPayload {
+  mutation: MutationType;
+  node: EmployeeSyncJob;
+  updatedFields: String[];
+  previousValues: EmployeeSyncJobPreviousValues;
+}
+
+export interface EmployeeSyncJobSubscriptionPayloadPromise
+  extends Promise<EmployeeSyncJobSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = EmployeeSyncJobPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = EmployeeSyncJobPreviousValuesPromise>() => T;
+}
+
+export interface EmployeeSyncJobSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<EmployeeSyncJobSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = EmployeeSyncJobSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = EmployeeSyncJobPreviousValuesSubscription>() => T;
 }
 
 export interface AgencyConnection {
@@ -964,21 +1239,91 @@ export interface AgencyConnectionSubscription
   aggregate: <T = AggregateAgencySubscription>() => T;
 }
 
-export interface SurveyEdge {
-  node: Survey;
+export interface EmployeePreviousValues {
+  fullName?: String;
+  email: String;
+}
+
+export interface EmployeePreviousValuesPromise
+  extends Promise<EmployeePreviousValues>,
+    Fragmentable {
+  fullName: () => Promise<String>;
+  email: () => Promise<String>;
+}
+
+export interface EmployeePreviousValuesSubscription
+  extends Promise<AsyncIterator<EmployeePreviousValues>>,
+    Fragmentable {
+  fullName: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+}
+
+export interface EmployeeSyncJobEdge {
+  node: EmployeeSyncJob;
   cursor: String;
 }
 
-export interface SurveyEdgePromise extends Promise<SurveyEdge>, Fragmentable {
-  node: <T = SurveyPromise>() => T;
+export interface EmployeeSyncJobEdgePromise
+  extends Promise<EmployeeSyncJobEdge>,
+    Fragmentable {
+  node: <T = EmployeeSyncJobPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface SurveyEdgeSubscription
-  extends Promise<AsyncIterator<SurveyEdge>>,
+export interface EmployeeSyncJobEdgeSubscription
+  extends Promise<AsyncIterator<EmployeeSyncJobEdge>>,
     Fragmentable {
-  node: <T = SurveySubscription>() => T;
+  node: <T = EmployeeSyncJobSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateSurveyAnswer {
+  count: Int;
+}
+
+export interface AggregateSurveyAnswerPromise
+  extends Promise<AggregateSurveyAnswer>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateSurveyAnswerSubscription
+  extends Promise<AsyncIterator<AggregateSurveyAnswer>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface EmployeeEdge {
+  node: Employee;
+  cursor: String;
+}
+
+export interface EmployeeEdgePromise
+  extends Promise<EmployeeEdge>,
+    Fragmentable {
+  node: <T = EmployeePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface EmployeeEdgeSubscription
+  extends Promise<AsyncIterator<EmployeeEdge>>,
+    Fragmentable {
+  node: <T = EmployeeSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface Agency {
+  name: String;
+}
+
+export interface AgencyPromise extends Promise<Agency>, Fragmentable {
+  name: () => Promise<String>;
+}
+
+export interface AgencySubscription
+  extends Promise<AsyncIterator<Agency>>,
+    Fragmentable {
+  name: () => Promise<AsyncIterator<String>>;
 }
 
 export interface SurveyAnswerSubscriptionPayload {
@@ -1006,38 +1351,25 @@ export interface SurveyAnswerSubscriptionPayloadSubscription
   previousValues: <T = SurveyAnswerPreviousValuesSubscription>() => T;
 }
 
-export interface SurveyAnswerConnection {
-  pageInfo: PageInfo;
-  edges: SurveyAnswerEdge[];
-}
-
-export interface SurveyAnswerConnectionPromise
-  extends Promise<SurveyAnswerConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<SurveyAnswerEdge>>() => T;
-  aggregate: <T = AggregateSurveyAnswerPromise>() => T;
-}
-
-export interface SurveyAnswerConnectionSubscription
-  extends Promise<AsyncIterator<SurveyAnswerConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<SurveyAnswerEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateSurveyAnswerSubscription>() => T;
-}
-
-export type Long = string;
-
 /*
 The `Boolean` scalar type represents `true` or `false`.
 */
 export type Boolean = boolean;
 
 /*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
-export type Int = number;
+export type String = string;
+
+/*
+DateTime scalar input type, allowing Date
+*/
+export type DateTimeInput = Date | string;
+
+/*
+DateTime scalar output type, which is always a string
+*/
+export type DateTimeOutput = string;
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
@@ -1045,10 +1377,12 @@ The `ID` scalar type represents a unique identifier, often used to refetch an ob
 export type ID_Input = string | number;
 export type ID_Output = string;
 
+export type Long = string;
+
 /*
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
-export type String = string;
+export type Int = number;
 
 /**
  * Model Metadata
@@ -1073,6 +1407,10 @@ export const models: Model[] = [
   },
   {
     name: "SurveyAnswer",
+    embedded: false
+  },
+  {
+    name: "EmployeeSyncJob",
     embedded: false
   }
 ];

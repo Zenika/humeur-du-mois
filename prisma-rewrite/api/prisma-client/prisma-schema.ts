@@ -117,6 +117,10 @@ type AggregateEmployee {
   count: Int!
 }
 
+type AggregateEmployeeSyncJob {
+  count: Int!
+}
+
 type AggregateSurvey {
   count: Int!
 }
@@ -128,6 +132,8 @@ type AggregateSurveyAnswer {
 type BatchPayload {
   count: Long!
 }
+
+scalar DateTime
 
 type Employee {
   fullName: String
@@ -193,6 +199,161 @@ input EmployeeSubscriptionWhereInput {
   AND: [EmployeeSubscriptionWhereInput!]
   OR: [EmployeeSubscriptionWhereInput!]
   NOT: [EmployeeSubscriptionWhereInput!]
+}
+
+type EmployeeSyncJob {
+  id: ID!
+  createdAt: DateTime!
+  startedAt: DateTime
+  completedAt: DateTime
+  failedAt: DateTime
+  host: String!
+}
+
+type EmployeeSyncJobConnection {
+  pageInfo: PageInfo!
+  edges: [EmployeeSyncJobEdge]!
+  aggregate: AggregateEmployeeSyncJob!
+}
+
+input EmployeeSyncJobCreateInput {
+  startedAt: DateTime
+  completedAt: DateTime
+  failedAt: DateTime
+  host: String!
+}
+
+type EmployeeSyncJobEdge {
+  node: EmployeeSyncJob!
+  cursor: String!
+}
+
+enum EmployeeSyncJobOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  startedAt_ASC
+  startedAt_DESC
+  completedAt_ASC
+  completedAt_DESC
+  failedAt_ASC
+  failedAt_DESC
+  host_ASC
+  host_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type EmployeeSyncJobPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  startedAt: DateTime
+  completedAt: DateTime
+  failedAt: DateTime
+  host: String!
+}
+
+type EmployeeSyncJobSubscriptionPayload {
+  mutation: MutationType!
+  node: EmployeeSyncJob
+  updatedFields: [String!]
+  previousValues: EmployeeSyncJobPreviousValues
+}
+
+input EmployeeSyncJobSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: EmployeeSyncJobWhereInput
+  AND: [EmployeeSyncJobSubscriptionWhereInput!]
+  OR: [EmployeeSyncJobSubscriptionWhereInput!]
+  NOT: [EmployeeSyncJobSubscriptionWhereInput!]
+}
+
+input EmployeeSyncJobUpdateInput {
+  startedAt: DateTime
+  completedAt: DateTime
+  failedAt: DateTime
+  host: String
+}
+
+input EmployeeSyncJobUpdateManyMutationInput {
+  startedAt: DateTime
+  completedAt: DateTime
+  failedAt: DateTime
+  host: String
+}
+
+input EmployeeSyncJobWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  startedAt: DateTime
+  startedAt_not: DateTime
+  startedAt_in: [DateTime!]
+  startedAt_not_in: [DateTime!]
+  startedAt_lt: DateTime
+  startedAt_lte: DateTime
+  startedAt_gt: DateTime
+  startedAt_gte: DateTime
+  completedAt: DateTime
+  completedAt_not: DateTime
+  completedAt_in: [DateTime!]
+  completedAt_not_in: [DateTime!]
+  completedAt_lt: DateTime
+  completedAt_lte: DateTime
+  completedAt_gt: DateTime
+  completedAt_gte: DateTime
+  failedAt: DateTime
+  failedAt_not: DateTime
+  failedAt_in: [DateTime!]
+  failedAt_not_in: [DateTime!]
+  failedAt_lt: DateTime
+  failedAt_lte: DateTime
+  failedAt_gt: DateTime
+  failedAt_gte: DateTime
+  host: String
+  host_not: String
+  host_in: [String!]
+  host_not_in: [String!]
+  host_lt: String
+  host_lte: String
+  host_gt: String
+  host_gte: String
+  host_contains: String
+  host_not_contains: String
+  host_starts_with: String
+  host_not_starts_with: String
+  host_ends_with: String
+  host_not_ends_with: String
+  AND: [EmployeeSyncJobWhereInput!]
+  OR: [EmployeeSyncJobWhereInput!]
+  NOT: [EmployeeSyncJobWhereInput!]
+}
+
+input EmployeeSyncJobWhereUniqueInput {
+  id: ID
 }
 
 input EmployeeUpdateDataInput {
@@ -289,6 +450,12 @@ type Mutation {
   upsertEmployee(where: EmployeeWhereUniqueInput!, create: EmployeeCreateInput!, update: EmployeeUpdateInput!): Employee!
   deleteEmployee(where: EmployeeWhereUniqueInput!): Employee
   deleteManyEmployees(where: EmployeeWhereInput): BatchPayload!
+  createEmployeeSyncJob(data: EmployeeSyncJobCreateInput!): EmployeeSyncJob!
+  updateEmployeeSyncJob(data: EmployeeSyncJobUpdateInput!, where: EmployeeSyncJobWhereUniqueInput!): EmployeeSyncJob
+  updateManyEmployeeSyncJobs(data: EmployeeSyncJobUpdateManyMutationInput!, where: EmployeeSyncJobWhereInput): BatchPayload!
+  upsertEmployeeSyncJob(where: EmployeeSyncJobWhereUniqueInput!, create: EmployeeSyncJobCreateInput!, update: EmployeeSyncJobUpdateInput!): EmployeeSyncJob!
+  deleteEmployeeSyncJob(where: EmployeeSyncJobWhereUniqueInput!): EmployeeSyncJob
+  deleteManyEmployeeSyncJobs(where: EmployeeSyncJobWhereInput): BatchPayload!
   createSurvey(data: SurveyCreateInput!): Survey!
   updateSurvey(data: SurveyUpdateInput!, where: SurveyWhereUniqueInput!): Survey
   updateManySurveys(data: SurveyUpdateManyMutationInput!, where: SurveyWhereInput): BatchPayload!
@@ -324,6 +491,9 @@ type Query {
   employee(where: EmployeeWhereUniqueInput!): Employee
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee]!
   employeesConnection(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeConnection!
+  employeeSyncJob(where: EmployeeSyncJobWhereUniqueInput!): EmployeeSyncJob
+  employeeSyncJobs(where: EmployeeSyncJobWhereInput, orderBy: EmployeeSyncJobOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [EmployeeSyncJob]!
+  employeeSyncJobsConnection(where: EmployeeSyncJobWhereInput, orderBy: EmployeeSyncJobOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeSyncJobConnection!
   survey(where: SurveyWhereUniqueInput!): Survey
   surveys(where: SurveyWhereInput, orderBy: SurveyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Survey]!
   surveysConnection(where: SurveyWhereInput, orderBy: SurveyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SurveyConnection!
@@ -335,6 +505,7 @@ type Query {
 type Subscription {
   agency(where: AgencySubscriptionWhereInput): AgencySubscriptionPayload
   employee(where: EmployeeSubscriptionWhereInput): EmployeeSubscriptionPayload
+  employeeSyncJob(where: EmployeeSyncJobSubscriptionWhereInput): EmployeeSyncJobSubscriptionPayload
   survey(where: SurveySubscriptionWhereInput): SurveySubscriptionPayload
   surveyAnswer(where: SurveyAnswerSubscriptionWhereInput): SurveyAnswerSubscriptionPayload
 }

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch index.ts --exec ts-node -r dotenv/config index.ts"
+    "dev": "nodemon --watch index.ts --exec node --inspect --require ts-node/register --require dotenv/config index.ts"
   },
   "keywords": [],
   "author": "",
