@@ -69,8 +69,9 @@ const fromJSONtoStats = (
 ): [StatisticToInsert[], boolean] => {
   const validStats = new Map<string, StatisticToInsert>();
   let isAgencyStats = false;
-  if (!supposedlyValidStats.stats)
+  if (!supposedlyValidStats.stats) {
     return [[...validStats.values()], isAgencyStats];
+  }
   supposedlyValidStats.stats
     .filter(
       (supposedlyValidStat: any) =>
