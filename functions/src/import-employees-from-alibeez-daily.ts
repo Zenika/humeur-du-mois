@@ -11,5 +11,5 @@ export const importEmployeesFromAlibeezDaily = functions.firestore
       console.info("feature is disabled; aborting");
       return;
     }
-    await importEmployeesFromAlibeez(config.alibeez);
+    await importEmployeesFromAlibeez(config);
   });

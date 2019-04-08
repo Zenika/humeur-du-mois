@@ -1,6 +1,6 @@
 import * as firebase from "firebase-admin";
 import fetch from "node-fetch";
-import { AlibeezConfig } from "./config";
+import { Config } from "./config";
 
 interface AlibeezSuccessResponse {
   employees: AlibeezEmployee[];
@@ -57,9 +57,6 @@ const obfuscateKey = (key: string) => {
 };
 
 const saveEmployees = async (employees: Employee[]) => {
-  // FIXME: this only works with 500 employees or less
-  // because Firestore batches are limited to this number of items.
-  // FIXME: this keeps employees that have left in the collection
   const batch = firebase.firestore().batch();
   employees.forEach(employee =>
     batch.set(
@@ -77,18 +74,18 @@ const hasValidEmail = (employee: AlibeezEmployee) =>
   employee.email.endsWith("@zenika.com");
 const hasNoValidEmail = (employee: AlibeezEmployee) => !hasValidEmail(employee);
 
-export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
+export const importEmployeesFromAlibeez = async (config: Config) => {
   const requestRef = await firebase
     .firestore()
     .collection("alibeez-requests")
     .add({
       at: new Date().toISOString(),
-      url: config.url,
-      key: obfuscateKey(config.key)
+      url: config.alibeez.url,
+      key: obfuscateKey(config.alibeez.key)
     });
-  const response = await fetch(config.url, {
+  const response = await fetch(config.alibeez.url, {
     headers: {
-      Authorization: config.key
+      Authorization: config.alibeez.key
     }
   });
   const responseCollection = firebase
@@ -116,5 +113,17 @@ export const importEmployeesFromAlibeez = async (config: AlibeezConfig) => {
     managerEmail: employee.manager ? employee.manager.email : null,
     agency: AGENCY_MAP[employee.location || ""] || employee.location
   }));
-  await saveEmployees(employeesToSave);
+  const leftToSend = [...employeesToSave];
+  while (leftToSend.length > 0) {
+    const nextBatch = leftToSend.splice(
+      0,
+      config.features.daily_alibeez_import.batch_size
+    );
+    console.info(
+      `Trying to import ${nextBatch.length} employees, ${
+        leftToSend.length
+      } left`
+    );
+    await saveEmployees(nextBatch);
+  }
 };
