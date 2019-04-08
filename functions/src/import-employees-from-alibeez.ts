@@ -1,6 +1,6 @@
 import * as firebase from "firebase-admin";
 import fetch from "node-fetch";
-import { Config } from "./config";
+import { Config, asNumber } from "./config";
 
 interface AlibeezSuccessResponse {
   employees: AlibeezEmployee[];
@@ -117,7 +117,7 @@ export const importEmployeesFromAlibeez = async (config: Config) => {
   while (leftToSend.length > 0) {
     const nextBatch = leftToSend.splice(
       0,
-      parseInt(config.features.daily_alibeez_import.batch_size, 10)
+      asNumber(config.features.daily_alibeez_import.batch_size)
     );
     console.info(
       `Trying to import ${nextBatch.length} employees, ${
