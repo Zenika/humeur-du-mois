@@ -38,8 +38,8 @@ type DaysBefore = DayOfMonth;
 
 export type Feature = { enabled: Flag };
 
-export const asNumber = (dayOfMonth: DayOfMonth | DaysBefore): number => {
-  return Number(dayOfMonth);
+export const asNumber = (stringParam: string): number => {
+  return Number(stringParam);
 };
 
 export const asBoolean = (flag: Flag): boolean => {
@@ -156,6 +156,7 @@ export interface SendVoteToManagerConfig {
 
 export interface DailyAlibeezImportConfig {
   enabled: Flag;
+  batch_size: string;
 }
 
 export interface CollectStatsConfig {
