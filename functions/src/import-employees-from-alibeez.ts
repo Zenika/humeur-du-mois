@@ -117,7 +117,7 @@ export const importEmployeesFromAlibeez = async (config: Config) => {
   while (leftToSend.length > 0) {
     const nextBatch = leftToSend.splice(
       0,
-      config.features.daily_alibeez_import.batch_size
+      parseInt(config.features.daily_alibeez_import.batch_size, 10)
     );
     console.info(
       `Trying to import ${nextBatch.length} employees, ${

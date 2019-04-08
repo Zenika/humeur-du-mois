@@ -156,7 +156,7 @@ export interface SendVoteToManagerConfig {
 
 export interface DailyAlibeezImportConfig {
   enabled: Flag;
-  batch_size: number;
+  batch_size: string;
 }
 
 export interface CollectStatsConfig {
