@@ -178,6 +178,11 @@ export interface ImportStatsConfig {
   key: string;
 }
 
+export interface BackupConfig {
+  enabled: Flag;
+  key: string;
+}
+
 export interface EmailsConfig {
   enabled: Flag;
   recipient_override?: string;
@@ -193,6 +198,7 @@ export interface FeaturesConfig {
   import_votes: ImportVotesConfig;
   import_stats: ImportStatsConfig;
   emails: EmailsConfig;
+  backup: BackupConfig;
 }
 
 export interface AlibeezConfig {

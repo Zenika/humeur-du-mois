@@ -24,6 +24,8 @@ export { getCampaign } from "./get-campaign";
 
 export { castVote } from "./cast-vote";
 
+export { backup } from "./backup-votes-and-stats";
+
 export { updateStats } from "./update-stats";
 
 export { importVotes } from "./import-votes";
