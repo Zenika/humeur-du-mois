@@ -1,0 +1,3786 @@
+{
+  "results": [
+    {
+      "columns": ["mood", "agency", "month", "year"],
+      "data": [
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 60, "number": 5, "good": 40, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 60, "number": 5, "good": 40, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 33, "number": 36, "good": 55, "bad": 11 },
+            { "name": "Paris" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 33, "number": 36, "good": 55, "bad": 11 },
+            { "name": "Paris" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 50, "number": 6, "good": 16, "bad": 33 },
+            { "name": "Rennes" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 50, "number": 6, "good": 16, "bad": 33 },
+            { "name": "Rennes" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 25, "number": 12, "good": 75, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 25, "number": 12, "good": 75, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 1 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 20, "number": 10, "good": 80, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 3 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 3 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 25, "number": 4, "good": 75, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 3 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 3 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 4, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 3 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 30, "number": 40, "good": 65, "bad": 5 },
+            { "name": "Paris" },
+            { "value": 3 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 66, "number": 6, "good": 16, "bad": 16 },
+            { "name": "Rennes" },
+            { "value": 3 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 4 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 27, "number": 40, "good": 62, "bad": 10 },
+            { "name": "Paris" },
+            { "value": 4 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 6, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 4 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 60, "number": 5, "good": 20, "bad": 20 },
+            { "name": "Rennes" },
+            { "value": 4 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 14, "good": 100, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 4 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 14, "number": 7, "good": 85, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 4 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 28, "number": 7, "good": 42, "bad": 28 },
+            { "name": "Rennes" },
+            { "value": 5 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 14, "good": 92, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 5 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 5 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 5 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 14, "number": 7, "good": 85, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 5 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 35, "number": 54, "good": 61, "bad": 3 },
+            { "name": "Paris" },
+            { "value": 5 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 7, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 5 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 6 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 6 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 14, "number": 7, "good": 85, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 6 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 29, "number": 51, "good": 64, "bad": 5 },
+            { "name": "Paris" },
+            { "value": 6 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 6, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 6 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 7, "good": 100, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 6 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 25, "number": 12, "good": 75, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 6 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 28, "number": 7, "good": 71, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 8 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 5, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 8 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 20, "number": 10, "good": 80, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 8 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 8 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 20, "number": 5, "good": 80, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 8 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 8 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 13, "number": 43, "good": 81, "bad": 4 },
+            { "name": "Paris" },
+            { "value": 8 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 16, "number": 12, "good": 75, "bad": 8 },
+            { "name": "Lyon" },
+            { "value": 9 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 5, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 9 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 9 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 9 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 18, "number": 54, "good": 79, "bad": 1 },
+            { "name": "Paris" },
+            { "value": 9 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 8, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 9 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 50, "number": 6, "good": 50, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 9 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 27, "number": 11, "good": 72, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 27, "number": 11, "good": 72, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 15, "number": 13, "good": 69, "bad": 15 },
+            { "name": "Lyon" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 15, "number": 13, "good": 69, "bad": 15 },
+            { "name": "Lyon" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 11, "number": 9, "good": 88, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 11, "number": 9, "good": 88, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 13, "number": 51, "good": 84, "bad": 1 },
+            { "name": "Paris" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 13, "number": 51, "good": 84, "bad": 1 },
+            { "name": "Paris" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 7, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 7, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 1 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 9, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 10 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 20, "number": 50, "good": 78, "bad": 2 },
+            { "name": "Paris" },
+            { "value": 10 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 4, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 10 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 37, "number": 8, "good": 50, "bad": 12 },
+            { "name": "Rennes" },
+            { "value": 10 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 23, "number": 13, "good": 76, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 10 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 10 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 10 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 3 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 8, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 3 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 10, "number": 49, "good": 89, "bad": 0 },
+            { "name": "Paris" },
+            { "value": 3 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 9, "good": 100, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 3 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 13, "good": 92, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 3 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 3 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 9, "number": 11, "good": 90, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 3 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 20, "number": 10, "good": 70, "bad": 10 },
+            { "name": "Rennes" },
+            { "value": 4 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 13, "good": 92, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 4 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 4 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 11, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 4 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 3, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 4 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 7, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 4 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 9, "number": 52, "good": 86, "bad": 3 },
+            { "name": "Paris" },
+            { "value": 4 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 22, "number": 9, "good": 77, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 2 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 2 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 2 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 2 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 25, "number": 35, "good": 71, "bad": 2 },
+            { "name": "Paris" },
+            { "value": 2 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 3, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 2 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 25, "number": 4, "good": 0, "bad": 75 },
+            { "name": "Rennes" },
+            { "value": 2 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 14, "good": 92, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 14, "good": 92, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 7, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 7, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 6, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 6, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 25, "number": 36, "good": 75, "bad": 0 },
+            { "name": "Paris" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 25, "number": 36, "good": 75, "bad": 0 },
+            { "name": "Paris" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 14, "number": 7, "good": 85, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 14, "number": 7, "good": 85, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 12 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 7 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 5, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 7 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 21, "number": 41, "good": 75, "bad": 2 },
+            { "name": "Paris" },
+            { "value": 7 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 25, "number": 8, "good": 75, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 7 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 15, "number": 13, "good": 76, "bad": 7 },
+            { "name": "Lyon" },
+            { "value": 7 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 7 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 14, "number": 7, "good": 85, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 7 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 6, "number": 15, "good": 93, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 5 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 9, "number": 11, "good": 90, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 5 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 5 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 3, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 5 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 20, "number": 60, "good": 78, "bad": 1 },
+            { "name": "Paris" },
+            { "value": 5 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 13, "good": 92, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 5 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 29, "number": 17, "good": 70, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 5 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 35, "number": 14, "good": 50, "bad": 14 },
+            { "name": "Rennes" },
+            { "value": 9 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 14, "good": 92, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 9 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 20, "number": 5, "good": 80, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 9 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 50, "number": 2, "good": 50, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 9 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 8, "number": 12, "good": 91, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 9 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 22, "number": 54, "good": 74, "bad": 3 },
+            { "name": "Paris" },
+            { "value": 9 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 6, "number": 15, "good": 93, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 9 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 50, "bad": 50 },
+            { "name": "Singapour" },
+            { "value": 10 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 6, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 10 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 13, "good": 92, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 10 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 8, "number": 58, "good": 89, "bad": 1 },
+            { "name": "Paris" },
+            { "value": 10 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 12, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 10 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 52, "number": 19, "good": 10, "bad": 36 },
+            { "name": "Rennes" },
+            { "value": 10 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 16, "good": 100, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 10 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 7, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 11 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 16, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 11 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 16, "number": 65, "good": 80, "bad": 3 },
+            { "name": "Paris" },
+            { "value": 11 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 42, "number": 14, "good": 42, "bad": 14 },
+            { "name": "Rennes" },
+            { "value": 11 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 12, "number": 16, "good": 81, "bad": 6 },
+            { "name": "Lyon" },
+            { "value": 11 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 11 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 8, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 11 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 14, "good": 85, "bad": 7 },
+            { "name": "Rennes" },
+            { "value": 6 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 11, "number": 17, "good": 82, "bad": 5 },
+            { "name": "Lyon" },
+            { "value": 6 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 6 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 4, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 6 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 11, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 6 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 18, "number": 54, "good": 77, "bad": 3 },
+            { "name": "Paris" },
+            { "value": 6 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 12, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 6 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 10, "number": 10, "good": 90, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 10, "number": 10, "good": 90, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 12, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 12, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 8, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 8, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 6, "number": 46, "good": 91, "bad": 2 },
+            { "name": "Paris" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 6, "number": 46, "good": 91, "bad": 2 },
+            { "name": "Paris" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 62, "number": 8, "good": 37, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 62, "number": 8, "good": 37, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 13, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 13, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 12 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 2 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 7, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 2 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 18, "number": 54, "good": 81, "bad": 0 },
+            { "name": "Paris" },
+            { "value": 2 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 6, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 2 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 20, "number": 10, "good": 80, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 2 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 8, "number": 12, "good": 91, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 2 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 15, "number": 64, "good": 84, "bad": 0 },
+            { "name": "Paris" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 15, "number": 64, "good": 84, "bad": 0 },
+            { "name": "Paris" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 5, "number": 18, "good": 94, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 5, "number": 18, "good": 94, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 42, "number": 14, "good": 57, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 42, "number": 14, "good": 57, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 22, "number": 18, "good": 77, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 22, "number": 18, "good": 77, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 9, "number": 11, "good": 90, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 9, "number": 11, "good": 90, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 14, "number": 7, "good": 85, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 14, "number": 7, "good": 85, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 1 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 8, "good": 87, "bad": 12 },
+            { "name": "Rennes" },
+            { "value": 11 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 13, "number": 15, "good": 86, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 11 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 11 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 12, "number": 8, "good": 87, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 11 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 11 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 23, "number": 52, "good": 76, "bad": 0 },
+            { "name": "Paris" },
+            { "value": 11 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 5, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 11 },
+            { "value": 2015 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 12, "number": 16, "good": 87, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 2 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 9, "number": 11, "good": 90, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 2 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 11, "number": 17, "good": 88, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 2 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 50, "bad": 50 },
+            { "name": "Singapour" },
+            { "value": 2 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 14, "number": 7, "good": 85, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 2 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 13, "good": 92, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 2 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 12, "number": 65, "good": 86, "bad": 1 },
+            { "name": "Paris" },
+            { "value": 2 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 10, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 7 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 9, "good": 100, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 7 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 42,
+              "normal": 18.75,
+              "number": 16,
+              "good": 81.25,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 5 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 6, "number": 15, "good": 86, "bad": 6 },
+            { "name": "Lyon" },
+            { "value": 7 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 7 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 8, "good": 100, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 7 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 3, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 7 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 15, "number": 53, "good": 83, "bad": 1 },
+            { "name": "Paris" },
+            { "value": 7 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 3, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 8 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 8 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 18, "number": 11, "good": 81, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 8 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 20, "number": 54, "good": 74, "bad": 5 },
+            { "name": "Paris" },
+            { "value": 8 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 17, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 8 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 21, "number": 14, "good": 78, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 8 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 17, "good": 94, "bad": 5 },
+            { "name": "Lyon" },
+            { "value": 8 },
+            { "value": 2016 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 2, "good": 50, "bad": 50 },
+            { "name": "Singapour" },
+            { "value": 3 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 7, "good": 100, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 3 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 5, "number": 18, "good": 94, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 3 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 9, "number": 77, "good": 87, "bad": 3 },
+            { "name": "Paris" },
+            { "value": 3 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 16, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 3 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 14, "good": 92, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 3 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 21, "good": 95, "bad": 4 },
+            { "name": "Lyon" },
+            { "value": 3 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 7, "number": 70, "good": 92, "bad": 0 },
+            { "name": "Paris" },
+            { "value": 4 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 22, "good": 100, "bad": 0 },
+            { "name": "Lille" },
+            { "value": 4 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 25, "number": 12, "good": 75, "bad": 0 },
+            { "name": "Rennes" },
+            { "value": 4 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 17, "good": 100, "bad": 0 },
+            { "name": "Lyon" },
+            { "value": 4 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 14, "number": 14, "good": 85, "bad": 0 },
+            { "name": "Nantes" },
+            { "value": 4 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 0, "number": 1, "good": 100, "bad": 0 },
+            { "name": "Singapour" },
+            { "value": 4 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            { "normal": 12, "number": 8, "good": 87, "bad": 0 },
+            { "name": "Bordeaux" },
+            { "value": 4 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 26,
+              "normal": 0.0,
+              "number": 15,
+              "good": 93.33333333333333,
+              "bad": 6.666666666666667
+            },
+            { "name": "Rennes" },
+            { "value": 6 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 25,
+              "normal": 15.789473684210526,
+              "number": 19,
+              "good": 84.21052631578948,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 6 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 14,
+              "normal": 11.11111111111111,
+              "number": 9,
+              "good": 88.88888888888889,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 6 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 34,
+              "normal": 4.761904761904762,
+              "number": 21,
+              "good": 95.23809523809524,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 6 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 44,
+              "normal": 0.0,
+              "number": 18,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 6 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 4,
+              "normal": 100.0,
+              "number": 3,
+              "good": 0.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 6 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 156,
+              "normal": 15.189873417721518,
+              "number": 79,
+              "good": 84.81012658227849,
+              "bad": 0.0
+            },
+            { "name": "Paris" },
+            { "value": 6 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 25,
+              "normal": 7.6923076923076925,
+              "number": 13,
+              "good": 76.92307692307692,
+              "bad": 15.384615384615385
+            },
+            { "name": "Rennes" },
+            { "value": 7 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 24,
+              "normal": 20.0,
+              "number": 15,
+              "good": 80.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 7 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 15,
+              "normal": 9.090909090909092,
+              "number": 11,
+              "good": 90.9090909090909,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 7 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 42,
+              "normal": 10.0,
+              "number": 20,
+              "good": 90.0,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 7 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 35,
+              "normal": 0.0,
+              "number": 18,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 7 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 5,
+              "normal": 25.0,
+              "number": 4,
+              "good": 50.0,
+              "bad": 25.0
+            },
+            { "name": "Singapour" },
+            { "value": 7 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 155,
+              "normal": 10.447761194029852,
+              "number": 67,
+              "good": 89.55223880597015,
+              "bad": 0.0
+            },
+            { "name": "Paris" },
+            { "value": 7 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 42,
+              "normal": 8.333333333333334,
+              "number": 12,
+              "good": 91.66666666666667,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 8 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 35,
+              "normal": 11.764705882352942,
+              "number": 17,
+              "good": 88.23529411764706,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 8 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 5,
+              "normal": 33.333333333333336,
+              "number": 3,
+              "good": 66.66666666666667,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 8 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 157,
+              "normal": 23.076923076923077,
+              "number": 65,
+              "good": 76.92307692307692,
+              "bad": 0.0
+            },
+            { "name": "Paris" },
+            { "value": 8 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 28,
+              "normal": 0.0,
+              "number": 12,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 9 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 27,
+              "normal": 0.0,
+              "number": 16,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 9 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 15,
+              "normal": 0.0,
+              "number": 12,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 9 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 41,
+              "normal": 7.142857142857143,
+              "number": 14,
+              "good": 92.85714285714286,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 9 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 36,
+              "normal": 5.0,
+              "number": 20,
+              "good": 95.0,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 9 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 5,
+              "normal": 25.0,
+              "number": 4,
+              "good": 75.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 9 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 165,
+              "normal": 20.895522388059703,
+              "number": 67,
+              "good": 77.61194029850746,
+              "bad": 1.492537313432836
+            },
+            { "name": "Paris" },
+            { "value": 9 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 29,
+              "normal": 16.666666666666668,
+              "number": 18,
+              "good": 83.33333333333333,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 11 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 28,
+              "normal": 5.555555555555555,
+              "number": 18,
+              "good": 94.44444444444444,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 11 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 15,
+              "normal": 12.5,
+              "number": 8,
+              "good": 87.5,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 11 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 36,
+              "normal": 8.695652173913043,
+              "number": 23,
+              "good": 91.30434782608695,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 11 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 42,
+              "normal": 0.0,
+              "number": 14,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 11 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 5,
+              "normal": 0.0,
+              "number": 5,
+              "good": 80.0,
+              "bad": 20.0
+            },
+            { "name": "Singapour" },
+            { "value": 11 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 174,
+              "normal": 7.894736842105263,
+              "number": 76,
+              "good": 88.15789473684211,
+              "bad": 3.9473684210526314
+            },
+            { "name": "Paris" },
+            { "value": 11 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 28,
+              "normal": 0.0,
+              "number": 13,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 28,
+              "normal": 0.0,
+              "number": 13,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 30,
+              "normal": 7.6923076923076925,
+              "number": 13,
+              "good": 92.3076923076923,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 30,
+              "normal": 7.6923076923076925,
+              "number": 13,
+              "good": 92.3076923076923,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 15,
+              "normal": 16.666666666666668,
+              "number": 6,
+              "good": 83.33333333333333,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 15,
+              "normal": 16.666666666666668,
+              "number": 6,
+              "good": 83.33333333333333,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 2,
+              "normal": 0.0,
+              "number": 1,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Montréal" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 2,
+              "normal": 0.0,
+              "number": 1,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Montréal" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 36,
+              "normal": 0.0,
+              "number": 15,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 36,
+              "normal": 0.0,
+              "number": 15,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 40,
+              "normal": 11.11111111111111,
+              "number": 9,
+              "good": 88.88888888888889,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 40,
+              "normal": 11.11111111111111,
+              "number": 9,
+              "good": 88.88888888888889,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 5,
+              "normal": 0.0,
+              "number": 3,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 5,
+              "normal": 0.0,
+              "number": 3,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 170,
+              "normal": 13.793103448275861,
+              "number": 58,
+              "good": 86.20689655172414,
+              "bad": 0.0
+            },
+            { "name": "Paris" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 170,
+              "normal": 13.793103448275861,
+              "number": 58,
+              "good": 86.20689655172414,
+              "bad": 0.0
+            },
+            { "name": "Paris" },
+            { "value": 12 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 28,
+              "normal": 15.0,
+              "number": 20,
+              "good": 85.0,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 28,
+              "normal": 15.0,
+              "number": 20,
+              "good": 85.0,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 34,
+              "normal": 0.0,
+              "number": 23,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 34,
+              "normal": 0.0,
+              "number": 23,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 17,
+              "normal": 16.666666666666668,
+              "number": 12,
+              "good": 83.33333333333333,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 17,
+              "normal": 16.666666666666668,
+              "number": 12,
+              "good": 83.33333333333333,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 36,
+              "normal": 0.0,
+              "number": 20,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 36,
+              "normal": 0.0,
+              "number": 20,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 39,
+              "normal": 5.555555555555555,
+              "number": 18,
+              "good": 94.44444444444444,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 39,
+              "normal": 5.555555555555555,
+              "number": 18,
+              "good": 94.44444444444444,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 5,
+              "normal": 0.0,
+              "number": 3,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 5,
+              "normal": 0.0,
+              "number": 3,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 170,
+              "normal": 8.333333333333334,
+              "number": 72,
+              "good": 90.27777777777777,
+              "bad": 1.3888888888888888
+            },
+            { "name": "Paris" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 170,
+              "normal": 8.333333333333334,
+              "number": 72,
+              "good": 90.27777777777777,
+              "bad": 1.3888888888888888
+            },
+            { "name": "Paris" },
+            { "value": 1 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 32,
+              "normal": 5.2631578947368425,
+              "number": 19,
+              "good": 89.47368421052632,
+              "bad": 5.2631578947368425
+            },
+            { "name": "Lille" },
+            { "value": 5 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 4,
+              "normal": 0.0,
+              "number": 1,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 5 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 159,
+              "normal": 10.95890410958904,
+              "number": 73,
+              "good": 86.3013698630137,
+              "bad": 2.73972602739726
+            },
+            { "name": "Paris" },
+            { "value": 5 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 25,
+              "normal": 27.272727272727273,
+              "number": 11,
+              "good": 72.72727272727273,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 5 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 33,
+              "normal": 9.523809523809524,
+              "number": 21,
+              "good": 90.47619047619048,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 4 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 37,
+              "normal": 0.0,
+              "number": 25,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 4 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 17,
+              "normal": 9.090909090909092,
+              "number": 11,
+              "good": 90.9090909090909,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 4 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 179,
+              "normal": 13.333333333333334,
+              "number": 75,
+              "good": 85.33333333333333,
+              "bad": 1.3333333333333333
+            },
+            { "name": "Paris" },
+            { "value": 4 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 32,
+              "normal": 18.181818181818183,
+              "number": 11,
+              "good": 81.81818181818181,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 3 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 37,
+              "normal": 0.0,
+              "number": 12,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 3 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 17,
+              "normal": 20.0,
+              "number": 5,
+              "good": 80.0,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 3 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 44,
+              "normal": 0.0,
+              "number": 5,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 3 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 37,
+              "normal": 12.5,
+              "number": 8,
+              "good": 87.5,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 3 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 169,
+              "normal": 11.764705882352942,
+              "number": 34,
+              "good": 88.23529411764706,
+              "bad": 0.0
+            },
+            { "name": "Paris" },
+            { "value": 3 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 32,
+              "normal": 42.857142857142854,
+              "number": 14,
+              "good": 57.142857142857146,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 6 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 38,
+              "normal": 0.0,
+              "number": 9,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 6 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 17,
+              "normal": 0.0,
+              "number": 4,
+              "good": 75.0,
+              "bad": 25.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 6 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 43,
+              "normal": 33.333333333333336,
+              "number": 6,
+              "good": 66.66666666666667,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 6 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 35,
+              "normal": 0.0,
+              "number": 9,
+              "good": 88.88888888888889,
+              "bad": 11.11111111111111
+            },
+            { "name": "Lille" },
+            { "value": 6 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 7,
+              "normal": 0.0,
+              "number": 1,
+              "good": 0.0,
+              "bad": 100.0
+            },
+            { "name": "Singapour" },
+            { "value": 6 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 179,
+              "normal": 6.25,
+              "number": 32,
+              "good": 90.625,
+              "bad": 3.125
+            },
+            { "name": "Paris" },
+            { "value": 6 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 35,
+              "normal": 0.0,
+              "number": 18,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 4 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 13,
+              "normal": 10.0,
+              "number": 10,
+              "good": 90.0,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 5 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 25,
+              "normal": 0.0,
+              "number": 16,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 8 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 24,
+              "normal": 15.384615384615385,
+              "number": 13,
+              "good": 84.61538461538461,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 8 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 15,
+              "normal": 10.0,
+              "number": 10,
+              "good": 90.0,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 8 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 32,
+              "normal": 26.31578947368421,
+              "number": 19,
+              "good": 73.6842105263158,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 8 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 40,
+              "normal": 0.0,
+              "number": 17,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 8 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 17,
+              "normal": 0.0,
+              "number": 11,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 8 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 35,
+              "normal": 6.25,
+              "number": 16,
+              "good": 93.75,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 8 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 45,
+              "normal": 0.0,
+              "number": 16,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 8 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 178,
+              "normal": 10.169491525423728,
+              "number": 59,
+              "good": 86.44067796610169,
+              "bad": 3.389830508474576
+            },
+            { "name": "Paris" },
+            { "value": 8 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 32,
+              "normal": 10.526315789473685,
+              "number": 19,
+              "good": 89.47368421052632,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 7 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 40,
+              "normal": 4.3478260869565215,
+              "number": 23,
+              "good": 95.65217391304348,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 7 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 17,
+              "normal": 10.0,
+              "number": 10,
+              "good": 90.0,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 7 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 7,
+              "normal": 0.0,
+              "number": 1,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Montréal" },
+            { "value": 7 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 45,
+              "normal": 6.666666666666667,
+              "number": 15,
+              "good": 93.33333333333333,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 7 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 36,
+              "normal": 0.0,
+              "number": 12,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 7 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 30,
+              "normal": 33.333333333333336,
+              "number": 9,
+              "good": 66.66666666666667,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 2 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 34,
+              "normal": 0.0,
+              "number": 9,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 2 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 17,
+              "normal": 0.0,
+              "number": 7,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 2 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 41,
+              "normal": 0.0,
+              "number": 2,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 2 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 37,
+              "normal": 0.0,
+              "number": 5,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 2 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 6,
+              "normal": 0.0,
+              "number": 1,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 2 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 168,
+              "normal": 12.0,
+              "number": 25,
+              "good": 84.0,
+              "bad": 4.0
+            },
+            { "name": "Paris" },
+            { "value": 2 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 7,
+              "normal": 100.0,
+              "number": 1,
+              "good": 0.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 4 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 8,
+              "normal": 50.0,
+              "number": 2,
+              "good": 50.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 7 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 181,
+              "normal": 16.438356164383563,
+              "number": 73,
+              "good": 80.82191780821918,
+              "bad": 2.73972602739726
+            },
+            { "name": "Paris" },
+            { "value": 7 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 25,
+              "normal": 12.5,
+              "number": 8,
+              "good": 87.5,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 5 },
+            { "value": 2017 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 35,
+              "normal": 7.6923076923076925,
+              "number": 26,
+              "good": 88.46153846153847,
+              "bad": 3.8461538461538463
+            },
+            { "name": "Rennes" },
+            { "value": 9 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 44,
+              "normal": 17.24137931034483,
+              "number": 29,
+              "good": 82.75862068965517,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 9 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 20,
+              "normal": 7.6923076923076925,
+              "number": 13,
+              "good": 92.3076923076923,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 9 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 2,
+              "normal": 0.0,
+              "number": 1,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Grenoble" },
+            { "value": 9 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 10,
+              "normal": 0.0,
+              "number": 1,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Montréal" },
+            { "value": 9 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 46,
+              "normal": 5.882352941176471,
+              "number": 17,
+              "good": 94.11764705882354,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 9 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 42,
+              "normal": 16.666666666666668,
+              "number": 18,
+              "good": 77.77777777777777,
+              "bad": 5.555555555555555
+            },
+            { "name": "Lille" },
+            { "value": 9 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 11,
+              "normal": 0.0,
+              "number": 1,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 9 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 202,
+              "normal": 18.6046511627907,
+              "number": 86,
+              "good": 75.5813953488372,
+              "bad": 5.813953488372093
+            },
+            { "name": "Paris" },
+            { "value": 9 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 43,
+              "normal": 5.882352941176471,
+              "number": 17,
+              "good": 94.11764705882354,
+              "bad": 0.0
+            },
+            { "name": "Lyon" },
+            { "value": 4 },
+            { "value": 2018 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 38,
+              "normal": 4.545454545454546,
+              "number": 22,
+              "good": 95.45454545454545,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 38,
+              "normal": 4.545454545454546,
+              "number": 22,
+              "good": 95.45454545454545,
+              "bad": 0.0
+            },
+            { "name": "Rennes" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 46,
+              "normal": 0.0,
+              "number": 23,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 46,
+              "normal": 0.0,
+              "number": 23,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Nantes" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 22,
+              "normal": 13.333333333333334,
+              "number": 15,
+              "good": 86.66666666666667,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 22,
+              "normal": 13.333333333333334,
+              "number": 15,
+              "good": 86.66666666666667,
+              "bad": 0.0
+            },
+            { "name": "Bordeaux" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 4,
+              "normal": 50.0,
+              "number": 2,
+              "good": 50.0,
+              "bad": 0.0
+            },
+            { "name": "Grenoble" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 4,
+              "normal": 50.0,
+              "number": 2,
+              "good": 50.0,
+              "bad": 0.0
+            },
+            { "name": "Grenoble" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 15,
+              "normal": 0.0,
+              "number": 1,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Montréal" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 15,
+              "normal": 0.0,
+              "number": 1,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Montréal" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 50,
+              "normal": 9.523809523809524,
+              "number": 21,
+              "good": 85.71428571428571,
+              "bad": 4.761904761904762
+            },
+            { "name": "Lyon" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 50,
+              "normal": 9.523809523809524,
+              "number": 21,
+              "good": 85.71428571428571,
+              "bad": 4.761904761904762
+            },
+            { "name": "Lyon" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 43,
+              "normal": 4.761904761904762,
+              "number": 21,
+              "good": 95.23809523809524,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 43,
+              "normal": 4.761904761904762,
+              "number": 21,
+              "good": 95.23809523809524,
+              "bad": 0.0
+            },
+            { "name": "Lille" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 17,
+              "normal": 0.0,
+              "number": 7,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 17,
+              "normal": 0.0,
+              "number": 7,
+              "good": 100.0,
+              "bad": 0.0
+            },
+            { "name": "Singapour" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 213,
+              "normal": 18.9873417721519,
+              "number": 79,
+              "good": 79.74683544303798,
+              "bad": 1.2658227848101267
+            },
+            { "name": "Paris" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        },
+        {
+          "row": [
+            {
+              "employees_count": 213,
+              "normal": 18.9873417721519,
+              "number": 79,
+              "good": 79.74683544303798,
+              "bad": 1.2658227848101267
+            },
+            { "name": "Paris" },
+            { "value": 1 },
+            { "value": 2019 }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
