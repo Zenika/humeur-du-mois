@@ -39,14 +39,16 @@ export const changeAgencyName = functions.https.onRequest(
 
     console.info(`Replacing agencies ${source} with ${target}`);
 
-    votes.docs.map(voteSnapshot => {
+    votes.docs.forEach(voteSnapshot => {
       const vote = voteSnapshot.data() as Vote;
-      if (vote.agency === source) {
-        vote.agency = target;
-        db.collection("vote")
-          .doc(voteSnapshot.id)
-          .set(vote);
-      }
+      vote.agency = target;
+      const batch = db.batch();
+      batch.set(db.collection("vote").doc(voteSnapshot.id), vote);
+      batch.commit().catch(err => {
+        console.error(err);
+        res.sendStatus(500);
+        return;
+      });
     });
     res.sendStatus(200);
   }
