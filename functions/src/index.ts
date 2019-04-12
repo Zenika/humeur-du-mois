@@ -35,3 +35,5 @@ export { importStats } from "./import-stats";
 export { updateStatsOnVote } from "./update-stats";
 
 export { computeStatistics } from "./compute-statistics";
+
+export { deleteVotesBefore } from "./delete-votes-before";
