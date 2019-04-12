@@ -34,16 +34,6 @@ export interface Employee {
   agency: string | null;
 }
 
-/**
- * This ensures that the agency name
- * that will be used for the stats
- * match the ones that are contained
- * in the votes imported from ZenApp
- */
-const AGENCY_MAP: { [key: string]: string } = {
-  Montreal: "Montréal"
-};
-
 const obfuscateKey = (key: string) => {
   if (key) {
     if (key.length > 8) {
@@ -111,7 +101,7 @@ export const importEmployeesFromAlibeez = async (config: Config) => {
     email: employee.email,
     fullName: employee.fullName,
     managerEmail: employee.manager ? employee.manager.email : null,
-    agency: AGENCY_MAP[employee.location || ""] || employee.location
+    agency: employee.location
   }));
   const leftToSend = [...employeesToSave];
   while (leftToSend.length > 0) {

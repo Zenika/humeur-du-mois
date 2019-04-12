@@ -200,6 +200,12 @@ export interface FeaturesConfig {
   emails: EmailsConfig;
   backup: BackupConfig;
   delete_votes_before: DeleteVotesBeforeConfig;
+  change_agency_name: ChangeAgencyNameConfig;
+}
+
+export interface ChangeAgencyNameConfig {
+  enabled: Flag;
+  key: string;
 }
 
 export interface DeleteVotesBeforeConfig {
