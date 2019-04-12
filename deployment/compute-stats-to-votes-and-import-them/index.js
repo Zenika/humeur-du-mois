@@ -10,7 +10,7 @@
  * file.
  * curl -i -X POST \
  *  -H 'Content-Type:application/json' \
- *  -d '{"statements":[{"statement":"MATCH (mood:AgencyMoodHistory)-->(month:Month)--(year:Year), (mood)-->(agency:Agency) RETURN mood, agency, month, year"}]}' \
+ *  -d '{"statements":[{"statement":"MATCH (mood:AgencyMoodHistory)-->(month:Month)--(year:Year), (mood)-->(agency:Agency) RETURN DISTINCT mood, agency, month, year"}]}' \
  *  http://localhost:7474/db/data/transaction/commit
  *
  * The expected schema of the JSON file is documented as part

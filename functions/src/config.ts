@@ -199,6 +199,13 @@ export interface FeaturesConfig {
   import_stats: ImportStatsConfig;
   emails: EmailsConfig;
   backup: BackupConfig;
+  delete_votes_before: DeleteVotesBeforeConfig;
+}
+
+export interface DeleteVotesBeforeConfig {
+  enabled: Flag;
+  key: string;
+  batch_size: string;
 }
 
 export interface AlibeezConfig {
