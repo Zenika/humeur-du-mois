@@ -381,7 +381,6 @@ workflows:
             - lint-functions
             - prod-validate-functions-config
             - build-functions
-            - prod-check-config
           filters: *filters-for-prod
       - prod-deploy-app-engine-cron:
           requires:
