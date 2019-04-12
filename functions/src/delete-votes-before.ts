@@ -11,17 +11,8 @@ const config = functions.config() as Config;
 const deleteVotesBeforeConfigs = config.features.delete_votes_before;
 const db = firebase.firestore();
 
-const deleteCollection = (
-  db: FirebaseFirestore.Firestore,
-  query: FirebaseFirestore.Query
-) => {
-  return new Promise((resolve, reject) => {
-    deleteQueryBatch(db, query, resolve, reject);
-  });
-};
-
 const deleteQueryBatch = (
-  db: FirebaseFirestore.Firestore,
+  store: FirebaseFirestore.Firestore,
   query: FirebaseFirestore.Query,
   resolve: (value?: {} | PromiseLike<{}> | undefined) => void,
   reject: (reason?: any) => void
@@ -30,12 +21,12 @@ const deleteQueryBatch = (
     .get()
     .then(snapshot => {
       // When there are no documents left, we are done
-      if (snapshot.size == 0) {
+      if (snapshot.size === 0) {
         return 0;
       }
 
       // Delete documents in a batch
-      var batch = db.batch();
+      const batch = store.batch();
       snapshot.docs.forEach(doc => {
         batch.delete(doc.ref);
       });
@@ -53,10 +44,19 @@ const deleteQueryBatch = (
       // Recurse on the next process tick, to avoid
       // exploding the stack.
       process.nextTick(() => {
-        deleteQueryBatch(db, query, resolve, reject);
+        deleteQueryBatch(store, query, resolve, reject);
       });
     })
     .catch(reject);
+};
+
+const deleteCollection = (
+  store: FirebaseFirestore.Firestore,
+  query: FirebaseFirestore.Query
+) => {
+  return new Promise((resolve, reject) => {
+    deleteQueryBatch(store, query, resolve, reject);
+  });
 };
 
 export const deleteVotesBefore = functions.https.onRequest((req, res) => {
@@ -79,5 +79,10 @@ export const deleteVotesBefore = functions.https.onRequest((req, res) => {
     .collection("vote")
     .where("campaign", "<", campaignToUseAsLimit)
     .limit(asNumber(deleteVotesBeforeConfigs.batch_size));
-  deleteCollection(db, query).then(() => res.sendStatus(200));
+  deleteCollection(db, query)
+    .then(() => res.sendStatus(200))
+    .catch(err => {
+      console.error(err);
+      res.sendStatus(500);
+    });
 });
