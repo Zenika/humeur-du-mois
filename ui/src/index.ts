@@ -29,8 +29,6 @@ window.addEventListener("load", async function() {
   const homeButton = this.document.getElementById("homeButton")!;
   const commentTextarea = this.document.getElementById("comment")!;
 
-
-
   const pages = [
     loggingInPage,
     homePage,
@@ -185,7 +183,7 @@ window.addEventListener("load", async function() {
       show(managerNotice);
     }
 
-    const saveResponse = async (response: string, comment:string) => {
+    const saveResponse = async (response: string, comment: string) => {
       changePageTo(recordingPage);
       try {
         await castVote({
