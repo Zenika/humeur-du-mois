@@ -149,6 +149,10 @@ tr:hover td {
   color: #b71c1c;
 }
 
+#comment{
+  width: 100%
+}
+
 .button__emoji {
   margin: 0px 16px;
 }
