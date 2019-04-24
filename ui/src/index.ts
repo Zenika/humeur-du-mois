@@ -27,6 +27,9 @@ window.addEventListener("load", async function() {
     document.getElementById("agencySelector")!
   );
   const homeButton = this.document.getElementById("homeButton")!;
+  const commentTextarea = this.document.getElementById("comment")!;
+
+
 
   const pages = [
     loggingInPage,
@@ -182,11 +185,12 @@ window.addEventListener("load", async function() {
       show(managerNotice);
     }
 
-    const saveResponse = async (response: string) => {
+    const saveResponse = async (response: string, comment:string) => {
       changePageTo(recordingPage);
       try {
         await castVote({
-          vote: response
+          vote: response,
+          comment: comment
         });
       } catch (err) {
         if (err.status === "ALREADY_EXISTS") {
@@ -198,9 +202,11 @@ window.addEventListener("load", async function() {
       }
       changePageTo(thankYouPage);
     };
-    submitGreat.onclick = () => saveResponse("great");
-    submitNotThatGreat.onclick = () => saveResponse("notThatGreat");
-    submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll");
+
+    const comment = (<HTMLTextAreaElement>commentTextarea).value;
+    submitGreat.onclick = () => saveResponse("great", comment);
+    submitNotThatGreat.onclick = () => saveResponse("notThatGreat", comment);
+    submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll", comment);
 
     statsButton.onclick = () => {
       displayStatsPage();
