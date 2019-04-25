@@ -13,10 +13,12 @@ const validVotes = ["great", "notThatGreat", "notGreatAtAll"];
 
 interface RequestPayload {
   vote: string;
+  comment: string;
 }
 
 export interface Vote extends Employee {
   value: string;
+  comment: string;
   campaign: string;
   recordedAt: firestore.Timestamp;
   voteFromUi?: boolean; //States if votes comes from Ui. If not, sendEmailToManager will abort
@@ -25,7 +27,7 @@ export interface Vote extends Employee {
 
 export const castVote = functions.https.onCall(
   async (payload: RequestPayload, context) => {
-    if (!validVotes.includes(payload.vote)) {
+    if (!validVotes.includes(payload.vote) || !payload.comment) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         `'${payload.vote}' is not a valid value for 'vote'`
@@ -66,6 +68,7 @@ export const castVote = functions.https.onCall(
 
     const vote: Vote = {
       campaign: campaign.id,
+      comment :payload.comment,
       recordedAt: firestore.Timestamp.fromDate(voteDate),
       value: payload.vote,
       voteFromUi: true,

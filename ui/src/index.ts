@@ -210,12 +210,13 @@ window.addEventListener("load", async function() {
       displayStatsPage();
     };
     homeButton.onclick = () => {
-      if (campaign) {
-        displayHomePage();
-      } else {
-        changePageTo(noCampaignPage);
-        return;
-      }
+      displayHomePage();
+      // if (campaign) {
+      //   displayHomePage();
+      // } else {
+      //   changePageTo(noCampaignPage);
+      //   return;
+      // }
     };
 
     agencySelector.onchange = async () => {
