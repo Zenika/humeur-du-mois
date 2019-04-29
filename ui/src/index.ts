@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import { authenticateAuth0, authenticateFirebase } from "./auth";
-import { getCampaign, castVote } from "./api";
+import { getCampaign, castVote, Payload } from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./styles/style.css";
 import "./styles/navbar.css";
@@ -27,7 +27,11 @@ window.addEventListener("load", async function() {
     document.getElementById("agencySelector")!
   );
   const homeButton = this.document.getElementById("homeButton")!;
-  const commentTextarea = this.document.getElementById("comment")!;
+  const commentTextarea: HTMLTextAreaElement = <HTMLTextAreaElement>(
+    document.getElementById("comment")!
+  );
+  const voteButton = document.getElementById("buttonVote")!;
+  const errorDisplay = document.getElementById("errorDisplay")!;
 
   const pages = [
     loggingInPage,
@@ -183,13 +187,16 @@ window.addEventListener("load", async function() {
       show(managerNotice);
     }
 
-    const saveResponse = async (response: string, comment: string) => {
+    const saveResponse = async (response: string, comment?: string) => {
       changePageTo(recordingPage);
+      const payload: Payload = {
+        vote: response
+      };
+      if (comment) {
+        payload.comment = comment;
+      }
       try {
-        await castVote({
-          vote: response,
-          comment: comment
-        });
+        await castVote(payload);
       } catch (err) {
         if (err.status === "ALREADY_EXISTS") {
           changePageTo(alreadyVotedPage);
@@ -200,23 +207,43 @@ window.addEventListener("load", async function() {
       }
       changePageTo(thankYouPage);
     };
+    let mood: string;
+    const buttonMap = [submitGreat, submitNotThatGreat, submitNotGreatAtAll];
+    submitGreat.onclick = () => {
+      buttonMap.map(button => button.classList.remove("focusButton"));
+      submitGreat.classList.add("focusButton");
+      mood = "great";
+    };
+    submitNotThatGreat.onclick = () => {
+      buttonMap.map(button => button.classList.remove("focusButton"));
+      submitNotThatGreat.classList.add("focusButton");
+      mood = "notThatGreat";
+    };
+    submitNotGreatAtAll.onclick = () => {
+      buttonMap.map(button => button.classList.remove("focusButton"));
+      submitNotGreatAtAll.classList.add("focusButton");
+      mood = "notGreatAtAll";
+    };
 
-    const comment = (<HTMLTextAreaElement>commentTextarea).value;
-    submitGreat.onclick = () => saveResponse("great", comment);
-    submitNotThatGreat.onclick = () => saveResponse("notThatGreat", comment);
-    submitNotGreatAtAll.onclick = () => saveResponse("notGreatAtAll", comment);
+    voteButton.onclick = () => {
+      const comment = commentTextarea.value || undefined;
+      if (!mood) {
+        errorDisplay.hidden = false;
+        return;
+      }
+      saveResponse(mood, comment);
+    };
 
     statsButton.onclick = () => {
       displayStatsPage();
     };
     homeButton.onclick = () => {
-      displayHomePage();
-      // if (campaign) {
-      //   displayHomePage();
-      // } else {
-      //   changePageTo(noCampaignPage);
-      //   return;
-      // }
+      if (campaign) {
+        displayHomePage();
+      } else {
+        changePageTo(noCampaignPage);
+        return;
+      }
     };
 
     agencySelector.onchange = async () => {
