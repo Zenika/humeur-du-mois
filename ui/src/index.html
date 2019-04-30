@@ -114,9 +114,25 @@
             <span class="button__emoji">😤</span> Not great at all
           </button>
         </div>
-        <span id="managerNotice" class="hidden">
-          The result will be sent to <span id="managerName"></span>
-        </span>
+        <div>
+          <h2>A little comment?</h2>
+          <textarea class="textarea" id="comment"></textarea>
+        </div>
+        <div style="margin-top:8px;">
+          <span id="managerNotice" class="hidden">
+            The result will be sent to <span id="managerName"></span>
+          </span>
+        </div>
+        <div>
+          <span id="errorDisplay" class="errorDislay" hidden>
+            Please, click on one mood
+          </span>
+        </div>
+        <div class="button-vote-wrapper">
+          <button id="buttonVote" type="button" class="button--small">
+            Vote
+          </button>
+        </div>
       </div>
       <div id="displayStats" class="page hidden">
         <h1 class="page__title">

@@ -1,5 +1,10 @@
 import firebase from "firebase/app";
 
+export type Payload = {
+  vote: string;
+  comment?: string;
+};
+
 const authorizationHeader = async (): Promise<string> => {
   const currentUser = firebase.auth().currentUser;
   if (!currentUser) {
@@ -37,5 +42,5 @@ export const exchangeToken = (payload: {
 export const getCampaign = () =>
   call("getCampaign", {}) as Promise<{ campaign: string }>;
 
-export const castVote = (payload: { vote: string }) =>
+export const castVote = (payload: Payload) =>
   call("castVote", payload) as Promise<void>;

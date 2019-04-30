@@ -13,10 +13,12 @@ const validVotes = ["great", "notThatGreat", "notGreatAtAll"];
 
 interface RequestPayload {
   vote: string;
+  comment: string;
 }
 
 export interface Vote extends Employee {
   value: string;
+  comment?: string;
   campaign: string;
   recordedAt: firestore.Timestamp;
   voteFromUi?: boolean; //States if votes comes from Ui. If not, sendEmailToManager will abort
@@ -71,7 +73,9 @@ export const castVote = functions.https.onCall(
       voteFromUi: true,
       ...employee
     };
-
+    if (payload.comment) {
+      vote.comment = payload.comment;
+    }
     if (requireUniqueVote) {
       try {
         await db
