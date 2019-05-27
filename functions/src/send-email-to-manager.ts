@@ -4,6 +4,7 @@ import * as mailgun from "mailgun-js";
 import { Config, isEnabled, asBoolean } from "./config";
 import { Vote } from "./cast-vote";
 import { enqueue } from "./process-email-queue";
+import constructEmailHtml from "./construct-email-html";
 
 const config = functions.config() as Config;
 const redirectToVoter = asBoolean(
@@ -47,23 +48,7 @@ export const sendEmailToManager = functions.firestore
       to: recipient,
       "h:Reply-To": vote.email,
       subject: `${vote.fullName} has shared how they feel`,
-      html: `
-        <p>Hi ${vote.managerEmail},</p>
-        <p>
-          ${vote.fullName} has shared how they feel:
-          "${voteMap[vote.value]}".
-        </p>
-        ${
-          vote.comment
-            ? `
-        <p>
-          And left this comment:
-          "${vote.comment}".
-        </p>`
-            : ``
-        }
-        <p>See you soon!</p>
-      `
+      html: constructEmailHtml(vote)
     };
 
     await enqueue(message);
