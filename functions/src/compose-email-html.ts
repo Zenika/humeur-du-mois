@@ -5,7 +5,7 @@ const voteMap: { [key: string]: string } = {
   notGreatAtAll: "Not great at all"
 };
 
-const constructEmailHtml = (vote: Vote) => {
+const composeEmailHtml = (vote: Vote) => {
   return `
       <p>Hi ${vote.managerEmail},</p>
       <p>
@@ -24,4 +24,4 @@ const constructEmailHtml = (vote: Vote) => {
       <p>See you soon!</p>`;
 };
 
-export default constructEmailHtml;
+export default composeEmailHtml;
