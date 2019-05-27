@@ -53,10 +53,12 @@ export const sendEmailToManager = functions.firestore
           ${vote.fullName} has shared how they feel:
           "${voteMap[vote.value]}".
         </p>
+        ${vote.comment ? `
         <p>
           And left this comment:
           "${vote.comment}".
-        </p>
+        </p>`
+        :``}
         <p>See you soon!</p>
       `
     };
