@@ -14,18 +14,19 @@ test("compose email html WITH a comment", t => {
     recordedAt: firestore.Timestamp.now()
   };
   const expected = `
-    <p>Hi hugo.wood@zenika.com,</p>
-    <p>
-      clement van peuter has shared how they feel:
-      "Great".
-    </p>
-    <p>and left a comment:
-    Zenika c'est trop bien
-    </p>
-    <p>See you soon!</p>`;
+  <p>Hi hugo.wood@zenika.com,</p>
+  <p>
+    clement van peuter has shared how they feel:
+    "Great".
+  </p>
+  <p>
+    and left a comment:
+    "Zenika c'est trop bien"
+  </p>
+  <p>See you soon!</p>`;
 
-  const emailHtml = composeEmailHtml(vote);
-  t.is(expected, emailHtml);
+  const actual = composeEmailHtml(vote);
+  t.is(actual, expected);
 });
 
 test("compose email html WITHOUT a comment", t => {
@@ -39,13 +40,13 @@ test("compose email html WITHOUT a comment", t => {
     recordedAt: firestore.Timestamp.now()
   };
   const expected = `
-    <p>Hi hugo.wood@zenika.com,</p>
-    <p>
-      clement van peuter has shared how they feel:
-      "Great".
-    </p>
-    <p>See you soon!</p>`;
+  <p>Hi hugo.wood@zenika.com,</p>
+  <p>
+    clement van peuter has shared how they feel:
+    "Great".
+  </p>
+  <p>See you soon!</p>`;
 
-  const emailHtml = composeEmailHtml(vote);
-  t.is(expected, emailHtml);
+  const actual = composeEmailHtml(vote);
+  t.is(actual, expected);
 });

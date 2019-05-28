@@ -6,25 +6,21 @@ const voteMap: { [key: string]: string } = {
 };
 
 const composeEmailHtml = (vote: Vote) => {
+  let comment = "";
   if (vote.comment) {
-    return `
-    <p>Hi ${vote.managerEmail},</p>
-    <p>
-      ${vote.fullName} has shared how they feel:
-      "${voteMap[vote.value]}".
-    </p>
-    <p>and left a comment:
-    ${vote.comment}
-    </p>
-    <p>See you soon!</p>`;
+    comment = `
+  <p>
+    and left a comment:
+    "${vote.comment}"
+  </p>`;
   }
   return `
-    <p>Hi ${vote.managerEmail},</p>
-    <p>
-      ${vote.fullName} has shared how they feel:
-      "${voteMap[vote.value]}".
-    </p>
-    <p>See you soon!</p>`;
+  <p>Hi ${vote.managerEmail},</p>
+  <p>
+    ${vote.fullName} has shared how they feel:
+    "${voteMap[vote.value]}".
+  </p>${comment}
+  <p>See you soon!</p>`;
 };
 
 export default composeEmailHtml;
