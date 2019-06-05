@@ -114,19 +114,13 @@
             <span class="button__emoji">😤</span> Not great at all
           </button>
         </div>
-        <div>
-          <h2>A little comment?</h2>
-          <textarea class="textarea" id="comment"></textarea>
+        <h2>A little comment?</h2>
+        <textarea class="textarea" id="comment" rows="4"></textarea>
+        <div id="managerNotice" class="managerNotice hidden">
+          The result will be sent to <span id="managerName"></span>
         </div>
-        <div style="margin-top:8px;">
-          <span id="managerNotice" class="hidden">
-            The result will be sent to <span id="managerName"></span>
-          </span>
-        </div>
-        <div>
-          <span id="errorDisplay" class="errorDislay" hidden>
-            Please, click on one mood
-          </span>
+        <div id="errorDisplay" class="errorDisplay" hidden>
+          Please, click on one mood
         </div>
         <div class="button-vote-wrapper">
           <button id="buttonVote" type="button" class="button--small">
@@ -141,7 +135,7 @@
             <select id="agencySelector"> </select>
           </div>
         </h1>
-        <h2>Stats for agency: <span id="agencyName"></span></h2>
+        <h2 id="statsTitle">Stats for agency: <span id="agencyName"></span></h2>
         <div id="statsTab"></div>
       </div>
       <div id="recordingPage" class="page hidden">

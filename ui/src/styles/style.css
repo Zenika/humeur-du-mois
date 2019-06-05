@@ -64,7 +64,10 @@ button {
 }
 
 .page h2 + * {
-  margin-top: 20px;
+  margin: 20px 0;
+}
+.page h2 + *:last-child {
+  margin-bottom: 0;
 }
 
 p {
@@ -145,8 +148,9 @@ tr:hover td {
 
 .button--small {
   width: 50%;
-  background-color:#80cbc4;
-  margin-top: 8px;
+  background-color: #4c4c4c;
+  border: 0;
+  color: #ffffff;
   padding: 16px 0;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -155,9 +159,10 @@ tr:hover td {
   cursor: pointer;
 }
 
-.button-vote-wrapper{
+.button-vote-wrapper {
   display: flex;
   justify-content: center;
+  margin-top: 20px;
 }
 
 .button--great {
@@ -170,7 +175,7 @@ tr:hover td {
   color: #b71c1c;
 }
 
-.textarea{
+.textarea {
   width: 100%;
   background: transparent;
   border-radius: 4px;
@@ -187,6 +192,10 @@ tr:hover td {
 
 .errorDisplay {
   color: red;
+}
+
+.managerNotice {
+  margin-bottom: 20px;
 }
 
 .loader {
