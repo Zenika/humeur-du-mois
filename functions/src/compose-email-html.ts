@@ -1,8 +1,8 @@
 import { Vote } from "./cast-vote";
 const voteMap: { [key: string]: string } = {
-  great: "Great",
-  notThatGreat: "Not that great",
-  notGreatAtAll: "Not great at all"
+  great: "Great 😁",
+  notThatGreat: "So-so 😐",
+  notGreatAtAll: "Bad 😤"
 };
 
 const composeEmailHtml = (vote: Vote) => {
