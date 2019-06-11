@@ -18,7 +18,7 @@ const composeEmailHtml = (vote: Vote) => {
   <p>Hi ${vote.managerEmail},</p>
   <p>
     ${vote.fullName} has shared how they feel:
-    "${voteMap[vote.value]}".
+    <p style="font-size:50px; color:red;">"${voteMap[vote.value]}".</p>
   </p>${comment}
   <p>See you soon!</p>`;
 };
