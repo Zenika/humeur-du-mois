@@ -23,6 +23,7 @@ window.addEventListener("load", async function() {
   const statsButton = document.getElementById("displayStatsButton")!;
   const agencyName = document.getElementById("agencyName")!;
   const statsTab = document.getElementById("statsTab")!;
+  const statsTitle = document.getElementById("statsTitle")!;
   const agencySelector: HTMLSelectElement = <HTMLSelectElement>(
     document.getElementById("agencySelector")!
   );
@@ -53,20 +54,23 @@ window.addEventListener("load", async function() {
   let voteData: VoteData;
   let selectedAgency = "";
 
-  const htmlLoader = `<h1>Hold on, we're retrieving the data you requested ...</h1>
-  <div class="loader">
-    <svg class="circular" viewBox="25 25 50 50">
-      <circle
-        class="path"
-        cx="50"
-        cy="50"
-        r="20"
-        fill="none"
-        strokeWidth="2"
-        strokeMiterlimit="10"
-      />
-    </svg>
-  </div>`;
+  const htmlLoader = `
+  <h2>
+    <div class="loader">
+      <svg class="circular" viewBox="25 25 50 50">
+        <circle
+          class="path"
+          cx="50"
+          cy="50"
+          r="20"
+          fill="none"
+          strokeWidth="2"
+          strokeMiterlimit="10"
+        />
+      </svg>
+    </div>
+    Hold on, we're retrieving the data you requested ...
+  </h2>`;
 
   const show = (element: HTMLElement) => {
     element.classList.remove(hideClass);
@@ -84,8 +88,10 @@ window.addEventListener("load", async function() {
 
   const displayStatsPage = async (agency?: string) => {
     changePageTo(statsPage);
+    statsTitle.style.display = "none";
     statsTab.innerHTML = htmlLoader;
     voteData = await retrieveStatsData(agency);
+    statsTitle.style.display = "";
     displayStatsData(voteData, agency);
   };
 
