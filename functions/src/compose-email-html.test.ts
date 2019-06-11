@@ -17,7 +17,7 @@ test("compose email html WITH a comment", t => {
   <p>Hi hugo.wood@zenika.com,</p>
   <p>
     clement van peuter has shared how they feel:
-    <p style="font-size:50px; color:red;">"Great 😁".</p>
+    <p style="font-size:50px; color:#1b5e20;">"Great 😁".</p>
   </p>
   <p>
     and left a comment:
@@ -43,7 +43,7 @@ test("compose email html WITHOUT a comment", t => {
   <p>Hi hugo.wood@zenika.com,</p>
   <p>
     clement van peuter has shared how they feel:
-    <p style="font-size:50px; color:red;">"Great 😁".</p>
+    <p style="font-size:50px; color:#1b5e20;">"Great 😁".</p>
   </p>
   <p>See you soon!</p>`;
 

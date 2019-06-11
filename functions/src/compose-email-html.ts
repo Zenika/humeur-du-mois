@@ -1,8 +1,8 @@
 import { Vote } from "./cast-vote";
-const voteMap: { [key: string]: string } = {
-  great: "Great 😁",
-  notThatGreat: "So-so 😐",
-  notGreatAtAll: "Bad 😤"
+const voteMap: { [key: string]: { color: string; label: string } } = {
+  great: { label: "Great 😁", color: "#1b5e20" },
+  notThatGreat: { label: "So-so 😐", color: "#263238" },
+  notGreatAtAll: { label: "Bad 😤", color: "#b71c1c" }
 };
 
 const composeEmailHtml = (vote: Vote) => {
@@ -18,7 +18,9 @@ const composeEmailHtml = (vote: Vote) => {
   <p>Hi ${vote.managerEmail},</p>
   <p>
     ${vote.fullName} has shared how they feel:
-    <p style="font-size:50px; color:red;">"${voteMap[vote.value]}".</p>
+    <p style="font-size:50px; color:${voteMap[vote.value].color};">"${
+    voteMap[vote.value].label
+  }".</p>
   </p>${comment}
   <p>See you soon!</p>`;
 };
