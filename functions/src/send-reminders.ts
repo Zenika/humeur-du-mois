@@ -148,7 +148,7 @@ export const sendCampaignEndsReminder = functions.firestore
         <p>Hi,</p>
         <p>
           If you haven't already, tell us how it's been for you this past month!
-          Go to ${linkToApp}.
+          Go to <a href="${linkToApp}">${linkToApp}</a>.
         </p>
         <p>See you soon!</p>
         `
