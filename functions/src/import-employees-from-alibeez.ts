@@ -88,7 +88,12 @@ export const importEmployeesFromAlibeez = async (config: Config) => {
     status: response.status
   });
   if (!response.ok) {
-    return;
+    const errorPayload = JSON.stringify(await response.json());
+    throw new Error(
+      `Alibeez responded with a '${response.status} ${
+        response.statusText
+      }' error: ${errorPayload}`
+    );
   }
   const { employees } = (await response.json()) as AlibeezSuccessResponse;
   const employeesWithValidEmail = employees.filter(hasValidEmail);
