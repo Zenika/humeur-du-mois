@@ -88,7 +88,10 @@ export const importEmployeesFromAlibeez = async (config: Config) => {
     status: response.status
   });
   if (!response.ok) {
-    const errorPayload = JSON.stringify(await response.json());
+    const errorPayload =
+      response.headers.get("Content-Type") === "application/json"
+        ? JSON.stringify(await response.json())
+        : await response.text();
     throw new Error(
       `Alibeez responded with a '${response.status} ${
         response.statusText
