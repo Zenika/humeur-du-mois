@@ -94,8 +94,9 @@ const fromJSONtoStats = (
       }
     });
   console.info(
-    `ignored ${supposedlyValidStats.stats.length -
-      validStats.size} votes because they did not match the expected schema`
+    `ignored ${
+      supposedlyValidStats.stats.length - validStats.size
+    } votes because they did not match the expected schema`
   );
   return [[...validStats.values()], isAgencyStats];
 };

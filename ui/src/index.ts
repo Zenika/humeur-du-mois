@@ -7,7 +7,7 @@ import "./styles/navbar.css";
 import { renderTemplate, VoteData, StatsData } from "./services/renderTemplate";
 import { computeDataFromDataBase } from "./services/computeDataFromDataBase";
 
-window.addEventListener("load", async function() {
+window.addEventListener("load", async function () {
   const submitGreat = document.getElementById("submitGreat")!;
   const submitNotThatGreat = document.getElementById("submitNotThatGreat")!;
   const submitNotGreatAtAll = document.getElementById("submitNotGreatAtAll")!;
@@ -174,10 +174,7 @@ window.addEventListener("load", async function() {
     const response = await getCampaign();
     const campaign = response.campaign;
 
-    const employeeSnapshot = await db
-      .collection("employees")
-      .doc(userId)
-      .get();
+    const employeeSnapshot = await db.collection("employees").doc(userId).get();
     if (!employeeSnapshot) {
       errorOut(new Error("cannot find latest employee data import"));
       return;
