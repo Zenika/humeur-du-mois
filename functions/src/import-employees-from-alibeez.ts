@@ -50,10 +50,7 @@ const saveEmployees = async (employees: Employee[]) => {
   const batch = firebase.firestore().batch();
   employees.forEach(employee =>
     batch.set(
-      firebase
-        .firestore()
-        .collection("employees")
-        .doc(employee.email),
+      firebase.firestore().collection("employees").doc(employee.email),
       employee
     )
   );
@@ -114,9 +111,7 @@ export const importEmployeesFromAlibeez = async (config: Config) => {
       asNumber(config.features.daily_alibeez_import.batch_size)
     );
     console.info(
-      `Trying to import ${nextBatch.length} employees, ${
-        leftToSend.length
-      } left`
+      `Trying to import ${nextBatch.length} employees, ${leftToSend.length} left`
     );
     await saveEmployees(nextBatch);
   }

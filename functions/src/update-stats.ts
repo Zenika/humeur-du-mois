@@ -37,10 +37,7 @@ export const updateStats = async (
 export const getStatsRefsToUpdate = (vote: Vote) => {
   return [
     {
-      ref: firebase
-        .firestore()
-        .collection(`stats-campaign`)
-        .doc(vote.campaign),
+      ref: firebase.firestore().collection(`stats-campaign`).doc(vote.campaign),
       additionnalFields: {
         campaign: vote.campaign
       }

@@ -37,18 +37,15 @@ export const computeStatistics = functions.https.onRequest(
         (refsForAllVote, refForAVote) => [...refsForAllVote, ...refForAVote],
         []
       )
-      .reduce(
-        (countersByRef, row) => {
-          const counters = countersByRef[row.ref.path] || {};
-          countersByRef[row.ref.path] = {
-            ...row.additionnalFields,
-            ...counters,
-            [row.voteValue]: (counters[row.voteValue] || 0) + 1
-          };
-          return countersByRef;
-        },
-        {} as { [key: string]: any }
-      );
+      .reduce((countersByRef, row) => {
+        const counters = countersByRef[row.ref.path] || {};
+        countersByRef[row.ref.path] = {
+          ...row.additionnalFields,
+          ...counters,
+          [row.voteValue]: (counters[row.voteValue] || 0) + 1
+        };
+        return countersByRef;
+      }, {} as { [key: string]: any });
 
     // we should really batch this because this could
     // represent hundreds of documents
