@@ -4,15 +4,13 @@ import { Config } from "./config";
 
 const config = functions.config() as Config;
 
-firebase.initializeApp(
-  {
-    credential: firebase.credential.cert({
-      clientEmail: config.service_account.client_email,
-      privateKey: config.service_account.private_key,
-      projectId: config.service_account.project_id
-    })
-  }
-)
+firebase.initializeApp({
+  credential: firebase.credential.cert({
+    clientEmail: config.service_account.client_email,
+    privateKey: config.service_account.private_key,
+    projectId: config.service_account.project_id
+  })
+});
 firebase.firestore().settings({ timestampsInSnapshots: true });
 
 export { exchangeToken } from "./exchange-token";
