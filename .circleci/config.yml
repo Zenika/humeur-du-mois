@@ -134,7 +134,7 @@ jobs:
 
   check-formatting:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:12 # prettier does not support 8 anymore
     steps:
       - checkout
       - attach_workspace:
