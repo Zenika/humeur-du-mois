@@ -1,6 +1,16 @@
 import * as firebase from "firebase-admin";
+import * as functions from "firebase-functions";
+import { Config } from "./config";
 
-firebase.initializeApp();
+const config = functions.config() as Config;
+
+firebase.initializeApp({
+  credential: firebase.credential.cert({
+    clientEmail: config.service_account.client_email,
+    privateKey: config.service_account.private_key,
+    projectId: config.service_account.project_id
+  })
+});
 firebase.firestore().settings({ timestampsInSnapshots: true });
 
 export { exchangeToken } from "./exchange-token";
