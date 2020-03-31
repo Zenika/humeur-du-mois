@@ -50,7 +50,10 @@ const saveEmployees = async (employees: Employee[]) => {
   const batch = firebase.firestore().batch();
   employees.forEach(employee =>
     batch.set(
-      firebase.firestore().collection("employees").doc(employee.email),
+      firebase
+        .firestore()
+        .collection("employees")
+        .doc(employee.email.toLowerCase()),
       employee
     )
   );

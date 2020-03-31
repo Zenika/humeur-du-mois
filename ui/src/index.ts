@@ -174,7 +174,10 @@ window.addEventListener("load", async function () {
     const response = await getCampaign();
     const campaign = response.campaign;
 
-    const employeeSnapshot = await db.collection("employees").doc(userId).get();
+    const employeeSnapshot = await db
+      .collection("employees")
+      .doc(userId.toLowerCase())
+      .get();
     if (!employeeSnapshot) {
       errorOut(new Error("cannot find latest employee data import"));
       return;
