@@ -295,9 +295,11 @@ workflows:
             tags:
               only: /^v.*/
       - validate-functions-config:
+          context: firebase-deploy-zenika
           requires: &validate-functions-config-requires
             - install-tooling-dependencies
       - deploy-firebase-app:
+          context: firebase-deploy-zenika
           requires:
             - install-tooling-dependencies
             - build-ui
@@ -370,6 +372,7 @@ workflows:
           requires: *validate-functions-config-requires
           filters: *filters-for-prod
       - prod-check-config:
+          context: firebase-deploy-zenika
           requires:
             - test-tooling
           filters: *filters-for-prod
