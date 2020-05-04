@@ -173,7 +173,10 @@ window.addEventListener("load", async function () {
 
     const campaignResponse = getCampaign();
     const hasAlreadyVotedResponse = hasAlreadyVoted();
-    const [campaignPromiseResponse, votedAlreadyPromiseResponse] = await Promise.all([campaignResponse, hasAlreadyVotedResponse])
+    const [
+      campaignPromiseResponse,
+      votedAlreadyPromiseResponse
+    ] = await Promise.all([campaignResponse, hasAlreadyVotedResponse]);
     const campaign = campaignPromiseResponse.campaign;
     const votedAlready = votedAlreadyPromiseResponse;
 
@@ -287,8 +290,8 @@ window.addEventListener("load", async function () {
       changePageTo(noCampaignPage);
       return;
     }
-    if(votedAlready) {
-      changePageTo(alreadyVotedPage)
+    if (votedAlready) {
+      changePageTo(alreadyVotedPage);
       return;
     }
 
