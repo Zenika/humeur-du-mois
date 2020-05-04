@@ -24,6 +24,10 @@
       {
         "source": "/api/castVote",
         "function": "castVote"
+      },
+      {
+        "source": "/api/hasAlreadyVoted",
+        "function": "hasAlreadyVoted"
       }
     ]
   }

@@ -47,3 +47,5 @@ export { computeStatistics } from "./compute-statistics";
 export { deleteVotesBefore } from "./delete-votes-before";
 
 export { changeAgencyName } from "./change-agency-name";
+
+export { hasAlreadyVoted } from "./has-alread-voted";

@@ -44,3 +44,6 @@ export const getCampaign = () =>
 
 export const castVote = (payload: Payload) =>
   call("castVote", payload) as Promise<void>;
+
+export const hasAlreadyVoted = () =>
+  call("hasAlreadyVoted", {}) as Promise<{ result: boolean }>;
