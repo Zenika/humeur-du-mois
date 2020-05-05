@@ -39,8 +39,11 @@ export const exchangeToken = (payload: {
   accessToken: string;
 }) => call("exchangeToken", payload) as Promise<{ token: string }>;
 
-export const getCampaign = () =>
-  call("getCampaign", {}) as Promise<{ campaign: string }>;
+export const getCurrentCampaignState = () =>
+  call("getCurrentCampaignState", {}) as Promise<{
+    campaign: string | null;
+    alreadyVoted: boolean;
+  }>;
 
 export const castVote = (payload: Payload) =>
   call("castVote", payload) as Promise<void>;

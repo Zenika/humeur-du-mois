@@ -18,8 +18,8 @@
         "function": "exchangeToken"
       },
       {
-        "source": "/api/getCampaign",
-        "function": "getCampaign"
+        "source": "/api/getCurrentCampaignState",
+        "function": "getCurrentCampaignState"
       },
       {
         "source": "/api/castVote",
