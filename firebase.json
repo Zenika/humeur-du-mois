@@ -18,16 +18,12 @@
         "function": "exchangeToken"
       },
       {
-        "source": "/api/getCampaign",
-        "function": "getCampaign"
+        "source": "/api/getInitialState",
+        "function": "getInitialState"
       },
       {
         "source": "/api/castVote",
         "function": "castVote"
-      },
-      {
-        "source": "/api/hasAlreadyVoted",
-        "function": "hasAlreadyVoted"
       }
     ]
   }

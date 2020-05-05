@@ -28,7 +28,7 @@ export {
 
 export { processEmailQueue } from "./process-email-queue";
 
-export { getCampaign } from "./get-campaign";
+export { getInitialState } from "./get-initial-state";
 
 export { castVote } from "./cast-vote";
 

@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import { authenticateAuth0, authenticateFirebase } from "./auth";
-import { getCampaign, castVote, Payload, hasAlreadyVoted } from "./api";
+import { getInitialState, castVote, Payload } from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./styles/style.css";
 import "./styles/navbar.css";
@@ -171,14 +171,7 @@ window.addEventListener("load", async function () {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
 
-    const campaignResponse = getCampaign();
-    const hasAlreadyVotedResponse = hasAlreadyVoted();
-    const [
-      campaignPromiseResponse,
-      votedAlreadyPromiseResponse
-    ] = await Promise.all([campaignResponse, hasAlreadyVotedResponse]);
-    const campaign = campaignPromiseResponse.campaign;
-    const votedAlready = votedAlreadyPromiseResponse;
+    const { campaign, alreadyVoted} = await getInitialState();
 
     const employeeSnapshot = await db
       .collection("employees")
@@ -290,7 +283,7 @@ window.addEventListener("load", async function () {
       changePageTo(noCampaignPage);
       return;
     }
-    if (votedAlready) {
+    if (alreadyVoted) {
       changePageTo(alreadyVotedPage);
       return;
     }
