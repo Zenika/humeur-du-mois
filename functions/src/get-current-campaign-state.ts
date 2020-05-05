@@ -41,8 +41,8 @@ export const getCurrentCampaignState = functions.https.onCall(
       .get();
 
     return {
-      campaign: campaign.open ? campaign.id : null,
-      alreadyVoted: (requireUniqueVote && !vote.empty) || vote.empty
+      campaign: campaign.id,
+      alreadyVoted: !vote.empty
     };
   }
 );
