@@ -28,7 +28,7 @@ export {
 
 export { processEmailQueue } from "./process-email-queue";
 
-export { getInitialState } from "./get-initial-state";
+export { getCurrentCampaignState } from "./get-current-campaign-state";
 
 export { castVote } from "./cast-vote";
 
@@ -47,5 +47,3 @@ export { computeStatistics } from "./compute-statistics";
 export { deleteVotesBefore } from "./delete-votes-before";
 
 export { changeAgencyName } from "./change-agency-name";
-
-export { hasAlreadyVoted } from "./has-alread-voted";

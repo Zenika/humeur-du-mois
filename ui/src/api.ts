@@ -39,8 +39,8 @@ export const exchangeToken = (payload: {
   accessToken: string;
 }) => call("exchangeToken", payload) as Promise<{ token: string }>;
 
-export const getInitialState = () =>
-  call("getInitialState", {}) as Promise<{
+export const getCurrentCampaignState = () =>
+  call("getCurrentCampaignState", {}) as Promise<{
     campaign: string | null;
     alreadyVoted: boolean;
   }>;

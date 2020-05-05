@@ -12,7 +12,7 @@ const requireUniqueVote = asBoolean(
   config.features.voting_campaigns.require_unique_vote
 );
 
-export const getInitialState = functions.https.onCall(
+export const getCurrentCampaignState = functions.https.onCall(
   async (
     _,
     context
@@ -26,6 +26,12 @@ export const getInitialState = functions.https.onCall(
       startOn: asNumber(config.features.voting_campaigns.start_on),
       endOn: asNumber(config.features.voting_campaigns.end_on)
     });
+    if (!campaign.open || !requireUniqueVote) {
+      return {
+        campaign: campaign.open ? campaign.id : null,
+        alreadyVoted: false
+      };
+    }
     const voterEmail: string = context.auth!.token.email;
 
     const vote = await db

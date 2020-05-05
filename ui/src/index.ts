@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import { authenticateAuth0, authenticateFirebase } from "./auth";
-import { getInitialState, castVote, Payload } from "./api";
+import { getCurrentCampaignState, castVote, Payload } from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./styles/style.css";
 import "./styles/navbar.css";
@@ -171,7 +171,60 @@ window.addEventListener("load", async function () {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
 
-    const { campaign, alreadyVoted } = await getInitialState();
+    const { campaign, alreadyVoted } = await getCurrentCampaignState();
+
+    statsButton.onclick = () => {
+      displayStatsPage();
+    };
+
+    homeButton.onclick = () => {
+      if (!campaign) {
+        changePageTo(noCampaignPage);
+        return;
+      }
+      if (alreadyVoted) {
+        changePageTo(alreadyVotedPage);
+        return;
+      }
+      displayHomePage();
+    };
+
+    agencySelector.onchange = async () => {
+      const newSelectedAgency =
+        agencySelector.options[agencySelector.selectedIndex].value;
+      if (selectedAgency === "" && newSelectedAgency !== "") {
+        voteData = await retrieveStatsData(newSelectedAgency);
+      } else if (selectedAgency !== "" && newSelectedAgency === "") {
+        voteData = await retrieveStatsData();
+      }
+      agencyName.innerText = newSelectedAgency;
+
+      selectedAgency = newSelectedAgency;
+      displayStatsData(
+        voteData,
+        selectedAgency === "" ? undefined : selectedAgency
+      );
+    };
+    const statsCampaignAgency: firebase.firestore.QuerySnapshot = await firebase
+      .firestore()
+      .collection(`stats-campaign-agency`)
+      .get();
+    fillAgenciesList(
+      new Set(
+        statsCampaignAgency.docs.map(
+          snapshot => (snapshot.data() as StatsData).agency
+        )
+      )
+    );
+
+    if (!campaign) {
+      changePageTo(noCampaignPage);
+      return;
+    }
+    if (alreadyVoted) {
+      changePageTo(alreadyVotedPage);
+      return;
+    }
 
     const employeeSnapshot = await db
       .collection("employees")
@@ -238,55 +291,6 @@ window.addEventListener("load", async function () {
       }
       saveResponse(mood, comment);
     };
-
-    statsButton.onclick = () => {
-      displayStatsPage();
-    };
-    homeButton.onclick = () => {
-      if (campaign) {
-        displayHomePage();
-      } else {
-        changePageTo(noCampaignPage);
-        return;
-      }
-    };
-
-    agencySelector.onchange = async () => {
-      const newSelectedAgency =
-        agencySelector.options[agencySelector.selectedIndex].value;
-      if (selectedAgency === "" && newSelectedAgency !== "") {
-        voteData = await retrieveStatsData(newSelectedAgency);
-      } else if (selectedAgency !== "" && newSelectedAgency === "") {
-        voteData = await retrieveStatsData();
-      }
-      agencyName.innerText = newSelectedAgency;
-
-      selectedAgency = newSelectedAgency;
-      displayStatsData(
-        voteData,
-        selectedAgency === "" ? undefined : selectedAgency
-      );
-    };
-    const statsCampaignAgency: firebase.firestore.QuerySnapshot = await firebase
-      .firestore()
-      .collection(`stats-campaign-agency`)
-      .get();
-    fillAgenciesList(
-      new Set(
-        statsCampaignAgency.docs.map(
-          snapshot => (snapshot.data() as StatsData).agency
-        )
-      )
-    );
-
-    if (!campaign) {
-      changePageTo(noCampaignPage);
-      return;
-    }
-    if (alreadyVoted) {
-      changePageTo(alreadyVotedPage);
-      return;
-    }
 
     changePageTo(homePage);
   }
