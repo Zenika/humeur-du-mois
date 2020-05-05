@@ -171,7 +171,7 @@ window.addEventListener("load", async function () {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
 
-    const { campaign, alreadyVoted} = await getInitialState();
+    const { campaign, alreadyVoted } = await getInitialState();
 
     const employeeSnapshot = await db
       .collection("employees")

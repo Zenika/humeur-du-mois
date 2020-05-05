@@ -1,6 +1,9 @@
 import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
-import { computeCurrentCampaign, CampaignInfo } from "./compute-current-campaign";
+import {
+  computeCurrentCampaign,
+  CampaignInfo
+} from "./compute-current-campaign";
 import { firestore } from "firebase-admin";
 
 const db = firestore();
@@ -34,6 +37,6 @@ export const getInitialState = functions.https.onCall(
     return {
       campaign: campaign.open ? campaign.id : null,
       alreadyVoted: (requireUniqueVote && !vote.empty) || vote.empty
-    }
+    };
   }
 );

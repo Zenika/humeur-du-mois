@@ -40,8 +40,10 @@ export const exchangeToken = (payload: {
 }) => call("exchangeToken", payload) as Promise<{ token: string }>;
 
 export const getInitialState = () =>
-  call("getInitialState", {}) as Promise<{ campaign: string | null, alreadyVoted: boolean }>;
+  call("getInitialState", {}) as Promise<{
+    campaign: string | null;
+    alreadyVoted: boolean;
+  }>;
 
 export const castVote = (payload: Payload) =>
   call("castVote", payload) as Promise<void>;
-
