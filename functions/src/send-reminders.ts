@@ -67,14 +67,16 @@ export const sendCampaignStartsReminder = functions.firestore
       month: "long"
     });
 
-    const employeesWhoHaventVotedYet = retrieveEmployeesWhoHaventVotedYet(
+    const employeesWhoHaventVotedYet = await retrieveEmployeesWhoHaventVotedYet(
       db,
       campaign.id
     );
+    const bccString = computeBccString(employeesWhoHaventVotedYet);
 
     const message = {
-      from: config.features.reminders.voting_campaign_starts.sender,
-      to: config.features.reminders.voting_campaign_starts.recipient,
+      from: config.features.reminders.voting_campaign_ends.sender,
+      to: config.features.reminders.voting_campaign_ends.recipient,
+      bcc: bccString,
       subject: `Humeur du mois is open for ${monthLongName}!`,
       html: `
         <p>Hi,</p>
@@ -199,5 +201,6 @@ const retrieveEmployeesWhoHaventVotedYet = async (
   return employeesWhoHavetVotedYet;
 };
 
-const computeBccString = (employeesWhoHaventVotedYet: firestore.DocumentData[]) =>
-  employeesWhoHaventVotedYet.map(employee => employee.email).join(", ");
+const computeBccString = (
+  employeesWhoHaventVotedYet: firestore.DocumentData[]
+) => employeesWhoHaventVotedYet.map(employee => employee.email).join(", ");
