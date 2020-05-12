@@ -67,6 +67,11 @@ export const sendCampaignStartsReminder = functions.firestore
       month: "long"
     });
 
+    const employeesWhoHaventVotedYet = retrieveEmployeesWhoHaventVotedYet(
+      db,
+      campaign.id
+    );
+
     const message = {
       from: config.features.reminders.voting_campaign_starts.sender,
       to: config.features.reminders.voting_campaign_starts.recipient,
@@ -140,9 +145,16 @@ export const sendCampaignEndsReminder = functions.firestore
       month: "long"
     });
 
+    const employeesWhoHaventVotedYet = await retrieveEmployeesWhoHaventVotedYet(
+      db,
+      campaign.id
+    );
+    const bccString = computeBccString(employeesWhoHaventVotedYet);
+
     const message = {
       from: config.features.reminders.voting_campaign_ends.sender,
       to: config.features.reminders.voting_campaign_ends.recipient,
+      bcc: bccString,
       subject: `Humeur du mois is about to close for ${monthLongName}!`,
       html: `
         <p>Hi,</p>
@@ -160,3 +172,32 @@ export const sendCampaignEndsReminder = functions.firestore
 
     await enqueue(message);
   });
+
+const retrieveEmployeesWhoHaventVotedYet = async (
+  db: firestore.Firestore,
+  campaignId: string
+) => {
+  const votesRegisteredOnCurrentCampaign = (
+    await db.collection("vote").where("campaign", "==", campaignId).get()
+  ).docs.map(voteSnapshot => voteSnapshot.data());
+  const emailsOfEmployeesWhoAlreadyVoted = votesRegisteredOnCurrentCampaign.map(
+    vote => vote.email
+  );
+
+  const employeesSnapShots = await Promise.all(
+    (
+      await db.collection("employees").listDocuments()
+    ).map(employeeDocumentRef => employeeDocumentRef.get())
+  );
+  const employeesWhoHavetVotedYet = employeesSnapShots
+    .map(employeeSnapShot => employeeSnapShot.data())
+    .filter(
+      employee =>
+        employee && emailsOfEmployeesWhoAlreadyVoted.includes(employee.email)
+    ) as firestore.DocumentData[]; // I can't get rid of the undefined even tho I check that employee isn't undefined so I have to do this
+  console.info("employeesWhoHaventVotedYet", employeesWhoHavetVotedYet);
+  return employeesWhoHavetVotedYet;
+};
+
+const computeBccString = (employeesWhoHaventVotedYet: firestore.DocumentData[]) =>
+  employeesWhoHaventVotedYet.map(employee => employee.email).join(", ");
