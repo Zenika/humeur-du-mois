@@ -23,6 +23,38 @@ const mailgunClient = mailgun({
   host: config.mailgun.host
 });
 
+const computeBccString = async (
+  database: firestore.Firestore,
+  campaignId: string
+) => {
+  const emailsOfEmployeesWhoAlreadyVoted = new Set(
+    (await database.collection("vote").where("campaign", "==", campaignId).get()).docs
+      .map(voteSnapshot => voteSnapshot.data())
+      .map(vote => vote.email)
+  );
+  console.info(
+    `Found ${emailsOfEmployeesWhoAlreadyVoted.size} employees who already voted`
+  );
+
+  const employees = (
+    await Promise.all(
+      (
+        await database.collection("employees").listDocuments()
+      ).map(employeeDocumentRef => employeeDocumentRef.get())
+    )
+  ).map(employeeSnapShot => employeeSnapShot.data());
+  console.info(`Found ${employees.length} employees`);
+
+  const employeesWhoHavetVotedYet = employees.filter(
+    employee => employee && emailsOfEmployeesWhoAlreadyVoted.has(employee.email)
+  ) as firestore.DocumentData[]; // I can't get rid of the undefined even tho I check that employee isn't undefined so I have to do this
+  console.info(
+    `Found ${employeesWhoHavetVotedYet.length} employees who haven't voted yet`
+  );
+
+  return employeesWhoHavetVotedYet.map(employee => employee.email).join(", ");
+};
+
 export const sendCampaignStartsReminder = functions.firestore
   .document("daily-tick/{tickId}")
   .onCreate(async tickSnapshot => {
@@ -67,16 +99,10 @@ export const sendCampaignStartsReminder = functions.firestore
       month: "long"
     });
 
-    const employeesWhoHaventVotedYet = await retrieveEmployeesWhoHaventVotedYet(
-      db,
-      campaign.id
-    );
-    const bccString = computeBccString(employeesWhoHaventVotedYet);
-
     const message = {
       from: config.features.reminders.voting_campaign_ends.sender,
       to: config.features.reminders.voting_campaign_ends.recipient,
-      bcc: bccString,
+      bcc: await computeBccString(db, campaign.id),
       subject: `Humeur du mois is open for ${monthLongName}!`,
       html: `
         <p>Hi,</p>
@@ -147,16 +173,10 @@ export const sendCampaignEndsReminder = functions.firestore
       month: "long"
     });
 
-    const employeesWhoHaventVotedYet = await retrieveEmployeesWhoHaventVotedYet(
-      db,
-      campaign.id
-    );
-    const bccString = computeBccString(employeesWhoHaventVotedYet);
-
     const message = {
       from: config.features.reminders.voting_campaign_ends.sender,
       to: config.features.reminders.voting_campaign_ends.recipient,
-      bcc: bccString,
+      bcc: await computeBccString(db, campaign.id),
       subject: `Humeur du mois is about to close for ${monthLongName}!`,
       html: `
         <p>Hi,</p>
@@ -174,33 +194,3 @@ export const sendCampaignEndsReminder = functions.firestore
 
     await enqueue(message);
   });
-
-const retrieveEmployeesWhoHaventVotedYet = async (
-  db: firestore.Firestore,
-  campaignId: string
-) => {
-  const votesRegisteredOnCurrentCampaign = (
-    await db.collection("vote").where("campaign", "==", campaignId).get()
-  ).docs.map(voteSnapshot => voteSnapshot.data());
-  const emailsOfEmployeesWhoAlreadyVoted = votesRegisteredOnCurrentCampaign.map(
-    vote => vote.email
-  );
-
-  const employeesSnapShots = await Promise.all(
-    (
-      await db.collection("employees").listDocuments()
-    ).map(employeeDocumentRef => employeeDocumentRef.get())
-  );
-  const employeesWhoHavetVotedYet = employeesSnapShots
-    .map(employeeSnapShot => employeeSnapShot.data())
-    .filter(
-      employee =>
-        employee && emailsOfEmployeesWhoAlreadyVoted.includes(employee.email)
-    ) as firestore.DocumentData[]; // I can't get rid of the undefined even tho I check that employee isn't undefined so I have to do this
-  console.info("employeesWhoHaventVotedYet", employeesWhoHavetVotedYet);
-  return employeesWhoHavetVotedYet;
-};
-
-const computeBccString = (
-  employeesWhoHaventVotedYet: firestore.DocumentData[]
-) => employeesWhoHaventVotedYet.map(employee => employee.email).join(", ");
