@@ -28,7 +28,12 @@ const computeBccString = async (
   campaignId: string
 ) => {
   const emailsOfEmployeesWhoAlreadyVoted = new Set(
-    (await database.collection("vote").where("campaign", "==", campaignId).get()).docs
+    (
+      await database
+        .collection("vote")
+        .where("campaign", "==", campaignId)
+        .get()
+    ).docs
       .map(voteSnapshot => voteSnapshot.data())
       .map(vote => vote.email)
   );
@@ -46,7 +51,8 @@ const computeBccString = async (
   console.info(`Found ${employees.length} employees`);
 
   const employeesWhoHavetVotedYet = employees.filter(
-    employee => employee && emailsOfEmployeesWhoAlreadyVoted.has(employee.email)
+    employee =>
+      employee && !emailsOfEmployeesWhoAlreadyVoted.has(employee.email)
   ) as firestore.DocumentData[]; // type isn't inferred correctly
   console.info(
     `Found ${employeesWhoHavetVotedYet.length} employees who haven't voted yet`
