@@ -47,7 +47,7 @@ const computeBccString = async (
 
   const employeesWhoHavetVotedYet = employees.filter(
     employee => employee && emailsOfEmployeesWhoAlreadyVoted.has(employee.email)
-  ) as firestore.DocumentData[]; // I can't get rid of the undefined even tho I check that employee isn't undefined so I have to do this
+  ) as firestore.DocumentData[]; // type isn't inferred correctly
   console.info(
     `Found ${employeesWhoHavetVotedYet.length} employees who haven't voted yet`
   );
