@@ -108,7 +108,6 @@ export const sendCampaignStartsReminder = functions.firestore
     const message = {
       from: config.features.reminders.voting_campaign_starts.sender,
       to: config.features.reminders.voting_campaign_starts.recipient,
-      bcc: await computeBccString(db, campaign.id),
       subject: `Humeur du mois is open for ${monthLongName}!`,
       html: `
         <p>Hi,</p>
