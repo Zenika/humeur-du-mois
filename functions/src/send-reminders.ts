@@ -47,18 +47,18 @@ const computeBccString = async (
         await database.collection("employees").listDocuments()
       ).map(employeeDocumentRef => employeeDocumentRef.get())
     )
-  ).map(employeeSnapShot => employeeSnapShot.data());
+  ).map(employeeSnapshot => employeeSnapshot.data());
   console.info(`Found ${employees.length} employees`);
 
-  const employeesWhoHavetVotedYet = employees.filter(
+  const employeesWhoHaveNotVotedYet = employees.filter(
     employee =>
       employee && !emailsOfEmployeesWhoAlreadyVoted.has(employee.email)
   ) as firestore.DocumentData[]; // type isn't inferred correctly
   console.info(
-    `Found ${employeesWhoHavetVotedYet.length} employees who haven't voted yet`
+    `Found ${employeesWhoHaveNotVotedYet.length} employees who haven't voted yet`
   );
 
-  return employeesWhoHavetVotedYet.map(employee => employee.email).join(", ");
+  return employeesWhoHaveNotVotedYet.map(employee => employee.email).join(", ");
 };
 
 export const sendCampaignStartsReminder = functions.firestore
@@ -106,8 +106,8 @@ export const sendCampaignStartsReminder = functions.firestore
     });
 
     const message = {
-      from: config.features.reminders.voting_campaign_ends.sender,
-      to: config.features.reminders.voting_campaign_ends.recipient,
+      from: config.features.reminders.voting_campaign_starts.sender,
+      to: config.features.reminders.voting_campaign_starts.recipient,
       bcc: await computeBccString(db, campaign.id),
       subject: `Humeur du mois is open for ${monthLongName}!`,
       html: `
