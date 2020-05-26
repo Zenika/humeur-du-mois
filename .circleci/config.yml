@@ -141,12 +141,6 @@ jobs:
           at: .
       - run: npm run prettier:check
 
-  beta-validate-functions-config:
-    environment:
-      FIREBASE_PROJECT: beta
-    docker: *validate-functions-config-docker
-    steps: *validate-functions-config-steps
-
   prod-validate-functions-config:
     environment:
       FIREBASE_PROJECT: prod
@@ -163,12 +157,6 @@ jobs:
       - attach_workspace:
           at: ./
       - run: node_modules/.bin/firebase deploy --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN --non-interactive
-
-  beta-deploy-firebase-app:
-    environment:
-      FIREBASE_PROJECT: beta
-    docker: *deploy-firebase-app-docker
-    steps: *deploy-firebase-app-steps
 
   prod-deploy-firebase-app:
     environment:
@@ -205,15 +193,6 @@ jobs:
           paths:
             - gcloud-service-key.json
 
-  beta-set-up-gcloud:
-    docker: *google-cloud-sdk
-    steps:
-      - run: echo $BETA_GCLOUD_SERVICE_ACCOUNT_KEY > gcloud-service-key.json
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - gcloud-service-key.json
-
   prod-set-up-gcloud:
     docker: *google-cloud-sdk
     steps:
@@ -234,11 +213,6 @@ jobs:
       - run: gcloud auth activate-service-account --key-file=gcloud-service-key.json
       - run: gcloud config set project $GCLOUD_PROJECT
       - run: gcloud app deploy cron/app.yaml cron/cron.yaml --promote
-
-  beta-deploy-app-engine-cron:
-    <<: *deploy-app-engine-cron
-    environment:
-      GCLOUD_PROJECT: humeur-du-mois-2018-beta
 
   prod-deploy-app-engine-cron:
     <<: *deploy-app-engine-cron
@@ -322,6 +296,7 @@ workflows:
               only:
                 - master
       - deploy-app-engine-cron:
+          context: firebase-deploy-zenika
           requires:
             - install-app-engine-cron-dependencies
             - set-up-gcloud
@@ -330,31 +305,6 @@ workflows:
             branches:
               only:
                 - master
-
-      - beta-set-up-gcloud:
-          filters: &filters-for-beta
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.+-beta.*/
-      - beta-validate-functions-config:
-          requires: *validate-functions-config-requires
-          filters: *filters-for-beta
-      - beta-deploy-firebase-app:
-          requires:
-            - install-tooling-dependencies
-            - build-ui
-            - build-ui-for-production
-            - lint-functions
-            - build-functions
-            - beta-validate-functions-config
-          filters: *filters-for-beta
-      - beta-deploy-app-engine-cron:
-          requires:
-            - install-app-engine-cron-dependencies
-            - beta-set-up-gcloud
-            - beta-deploy-firebase-app
-          filters: *filters-for-beta
 
       - prod-set-up-gcloud:
           filters: &filters-for-prod
@@ -369,6 +319,7 @@ workflows:
             tags:
               only: /.*/
       - prod-validate-functions-config:
+          context: firebase-deploy-zenika
           requires: *validate-functions-config-requires
           filters: *filters-for-prod
       - prod-check-config:
@@ -377,6 +328,7 @@ workflows:
             - test-tooling
           filters: *filters-for-prod
       - prod-deploy-firebase-app:
+          context: firebase-deploy-zenika
           requires:
             - install-tooling-dependencies
             - build-ui
