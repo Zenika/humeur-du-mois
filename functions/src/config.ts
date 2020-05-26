@@ -116,7 +116,7 @@ export interface VotingCampaignEndsReminderConfig {
   /**
    * Mailing list to which to send the reminder emails.
    */
-  recipient: string;
+  recipient?: string;
   /**
    * When to send the reminder, in number of days before the end of the
    * campaign.

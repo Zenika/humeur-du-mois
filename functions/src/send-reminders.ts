@@ -180,7 +180,7 @@ export const sendCampaignEndsReminder = functions.firestore
 
     const message = {
       from: config.features.reminders.voting_campaign_ends.sender,
-      to: config.features.reminders.voting_campaign_ends.recipient,
+      to: config.features.reminders.voting_campaign_ends.recipient || [],
       bcc: await computeBccString(db, campaign.id),
       subject: `Humeur du mois is about to close for ${monthLongName}!`,
       html: `
