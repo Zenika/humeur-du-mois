@@ -6,11 +6,9 @@ export interface Tick {
   emittedAt: firestore.Timestamp;
 }
 
-const cron = "0 0 * * *";
-
 const saveTickScheduledFunction = (topic: string) =>
   functions.pubsub
-    .schedule(cron)
+    .schedule("0 0 * * *")
     .timeZone("Europe/Paris")
     .onRun(() => {
       firestore()
