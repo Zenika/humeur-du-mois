@@ -6,16 +6,18 @@ export interface Tick {
   emittedAt: firestore.Timestamp;
 }
 
-const pubSubToFirestoreFunction = (topic: string) =>
-  functions.pubsub.topic(topic).onPublish(event =>
+const cron = '0 0 * * *'
+
+const saveTickScheduledFunction = (topic: string) =>
+  functions.pubsub.schedule(cron)
+    .timeZone('Europe/Paris')
+    .onRun(() => {
     firestore()
       .collection(topic)
       .add({
         receivedAt: firestore.Timestamp.now(),
-        emittedAt: firestore.Timestamp.fromDate(
-          new Date(Buffer.from(event.data, "base64").toString())
-        )
+        emittedAt: firestore.Timestamp.now()
       } as Tick)
-  );
+  });
 
-export const saveDailyTick = pubSubToFirestoreFunction("daily-tick");
+export const saveDailyTick = saveTickScheduledFunction("daily-tick");
