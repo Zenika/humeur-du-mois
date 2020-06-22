@@ -239,7 +239,11 @@ workflows:
       - prod-validate-functions-config:
           context: firebase-deploy-zenika
           requires: *validate-functions-config-requires
-          filters: *filters-for-prod
+          filters: &filters-for-prod
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.+-prod.*/
       - prod-check-config:
           context: firebase-deploy-zenika
           requires:
