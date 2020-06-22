@@ -6,7 +6,7 @@ export interface Tick {
   emittedAt: firestore.Timestamp;
 }
 
-const saveTickScheduledFunction = (topic: string) =>
+const pubSubToFirestoreFunction = (topic: string) =>
   functions.pubsub
     .schedule("0 0 * * *")
     .timeZone("Europe/Paris")
@@ -19,4 +19,4 @@ const saveTickScheduledFunction = (topic: string) =>
         } as Tick)
     );
 
-export const saveDailyTick = saveTickScheduledFunction("daily-tick");
+export const saveDailyTick = pubSubToFirestoreFunction("daily-tick");
