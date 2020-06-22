@@ -12,7 +12,7 @@
     "ui:build:watch": "npm --prefix ui run build:watch",
     "prettier": "prettier .circleci/config.yml \"functions/{**/,}*.{ts,json}\" \"ui/{**/,}*.{ts,json,html}\"",
     "prettier:check": "npm run prettier -- --check",
-    "prettier:write": "npm run prettier -- --write --end-of-line crlf",
+    "prettier:write": "npm run prettier -- --write",
     "test": "ava ./deployment/check-config/**.test.js",
     "config:check": "node ./deployment/check-config/check-config.js"
   },
