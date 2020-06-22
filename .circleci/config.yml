@@ -230,19 +230,6 @@ workflows:
             branches:
               only:
                 - master
-
-      - set-up-gcloud:
-          filters:
-            branches:
-              only:
-                - master
-
-      - prod-set-up-gcloud:
-          filters: &filters-for-prod
-            branches:
-              only: test-prod-deploy
-            tags:
-              only: /^v.+-prod.*/
       - test-tooling:
           requires:
             - install-tooling-dependencies
