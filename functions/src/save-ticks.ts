@@ -10,13 +10,13 @@ const saveTickScheduledFunction = (topic: string) =>
   functions.pubsub
     .schedule("0 0 * * *")
     .timeZone("Europe/Paris")
-    .onRun(() => {
+    .onRun(() =>
       firestore()
         .collection(topic)
         .add({
           receivedAt: firestore.Timestamp.now(),
           emittedAt: firestore.Timestamp.now()
-        } as Tick);
-    });
+        } as Tick)
+    );
 
 export const saveDailyTick = saveTickScheduledFunction("daily-tick");
