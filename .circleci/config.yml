@@ -164,61 +164,6 @@ jobs:
     docker: *deploy-firebase-app-docker
     steps: *deploy-firebase-app-steps
 
-  install-app-engine-cron-dependencies:
-    docker:
-      - image: circleci/python:2.7
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - app-engine-cron-dependencies-{{ checksum "cron/requirements.txt" }}
-            - app-engine-cron-dependencies-
-      - run: pip install --target cron/lib --requirement cron/requirements.txt
-      - save_cache:
-          paths:
-            - cron/lib
-          key: app-engine-cron-dependencies-{{ checksum "cron/requirements.txt" }}
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - cron/lib
-
-  set-up-gcloud:
-    docker: &google-cloud-sdk
-      - image: google/cloud-sdk:206.0.0
-    steps:
-      - run: echo $DEFAULT_GCLOUD_SERVICE_ACCOUNT_KEY > gcloud-service-key.json
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - gcloud-service-key.json
-
-  prod-set-up-gcloud:
-    docker: *google-cloud-sdk
-    steps:
-      - run: echo $PROD_GCLOUD_SERVICE_ACCOUNT_KEY > gcloud-service-key.json
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - gcloud-service-key.json
-
-  deploy-app-engine-cron: &deploy-app-engine-cron
-    environment:
-      GCLOUD_PROJECT: humeur-du-mois-2018
-    docker: *google-cloud-sdk
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ./
-      - run: gcloud auth activate-service-account --key-file=gcloud-service-key.json
-      - run: gcloud config set project $GCLOUD_PROJECT
-      - run: gcloud app deploy cron/app.yaml cron/cron.yaml --promote
-
-  prod-deploy-app-engine-cron:
-    <<: *deploy-app-engine-cron
-    environment:
-      GCLOUD_PROJECT: humeur-du-mois-2018-prod
-
 workflows:
   version: 2
 
@@ -285,33 +230,6 @@ workflows:
             branches:
               only:
                 - master
-
-      - install-app-engine-cron-dependencies:
-          filters:
-            tags:
-              only: /.*/
-      - set-up-gcloud:
-          filters:
-            branches:
-              only:
-                - master
-      - deploy-app-engine-cron:
-          context: firebase-deploy-zenika
-          requires:
-            - install-app-engine-cron-dependencies
-            - set-up-gcloud
-            - deploy-firebase-app
-          filters:
-            branches:
-              only:
-                - master
-
-      - prod-set-up-gcloud:
-          filters: &filters-for-prod
-            branches:
-              only: test-prod-deploy
-            tags:
-              only: /^v.+-prod.*/
       - test-tooling:
           requires:
             - install-tooling-dependencies
@@ -321,7 +239,11 @@ workflows:
       - prod-validate-functions-config:
           context: firebase-deploy-zenika
           requires: *validate-functions-config-requires
-          filters: *filters-for-prod
+          filters: &filters-for-prod
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.+-prod.*/
       - prod-check-config:
           context: firebase-deploy-zenika
           requires:
@@ -336,10 +258,4 @@ workflows:
             - lint-functions
             - prod-validate-functions-config
             - build-functions
-          filters: *filters-for-prod
-      - prod-deploy-app-engine-cron:
-          requires:
-            - install-app-engine-cron-dependencies
-            - prod-set-up-gcloud
-            - prod-deploy-firebase-app
           filters: *filters-for-prod

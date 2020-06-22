@@ -7,15 +7,16 @@ export interface Tick {
 }
 
 const pubSubToFirestoreFunction = (topic: string) =>
-  functions.pubsub.topic(topic).onPublish(event =>
-    firestore()
-      .collection(topic)
-      .add({
-        receivedAt: firestore.Timestamp.now(),
-        emittedAt: firestore.Timestamp.fromDate(
-          new Date(Buffer.from(event.data, "base64").toString())
-        )
-      } as Tick)
-  );
+  functions.pubsub
+    .schedule("0 0 * * *")
+    .timeZone("Europe/Paris")
+    .onRun(() =>
+      firestore()
+        .collection(topic)
+        .add({
+          receivedAt: firestore.Timestamp.now(),
+          emittedAt: firestore.Timestamp.now()
+        } as Tick)
+    );
 
 export const saveDailyTick = pubSubToFirestoreFunction("daily-tick");
