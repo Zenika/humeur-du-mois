@@ -3,7 +3,7 @@ version: 2
 jobs:
   install-ui-dependencies:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
@@ -24,7 +24,7 @@ jobs:
 
   build-ui:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - attach_workspace:
@@ -33,7 +33,7 @@ jobs:
 
   build-ui-for-production:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - attach_workspace:
@@ -42,7 +42,7 @@ jobs:
 
   install-functions-dependencies:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
@@ -63,7 +63,7 @@ jobs:
 
   lint-functions:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - attach_workspace:
@@ -72,7 +72,7 @@ jobs:
 
   build-functions:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - attach_workspace:
@@ -81,7 +81,7 @@ jobs:
 
   install-tooling-dependencies:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
@@ -102,7 +102,7 @@ jobs:
     environment:
       FIREBASE_PROJECT: default
     docker: &validate-functions-config-docker
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps: &validate-functions-config-steps
       - checkout
       - attach_workspace:
@@ -115,7 +115,7 @@ jobs:
     environment:
       FIREBASE_PROJECT: prod
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - attach_workspace:
@@ -125,7 +125,7 @@ jobs:
 
   test-tooling:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
       - attach_workspace:
@@ -151,7 +151,7 @@ jobs:
     environment:
       FIREBASE_PROJECT: default
     docker: &deploy-firebase-app-docker
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps: &deploy-firebase-app-steps
       - checkout
       - attach_workspace:
