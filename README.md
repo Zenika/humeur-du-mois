@@ -4,7 +4,7 @@ Is everything alright for you at Zenika? We'd like to know! This is an app that 
 
 ## Status
 
-Prototype.
+In production.
 
 ## Links
 
