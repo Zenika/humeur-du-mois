@@ -2,24 +2,16 @@ import * as firebase from "firebase-admin";
 import fetch from "node-fetch";
 import { Config, asNumber } from "./config";
 
-interface AlibeezSuccessResponse {
-  employees: AlibeezEmployee[];
-  size: number;
-  errors: { [key: string]: AlibeezError };
-}
-
-interface AlibeezError {
-  statusCode: number;
-  statusText: string;
-  errorCode: string;
-  errorMessage: string;
-}
 interface AlibeezEmployee {
-  email: string;
-  fullName: string | null;
-  manager: AlibeezManager | null;
-  location: string | null;
-  division: string | null;
+  username: string;
+  firstName: string | null;
+  lastName: string | null;
+  operationalManager: string | null;
+  operationalManagerShortUsername: string | null;
+  tags: {
+    etablissement: string | null;
+    agency: string | null;
+  };
 }
 
 interface AlibeezManager {
@@ -60,10 +52,6 @@ const saveEmployees = async (employees: Employee[]) => {
   await batch.commit();
 };
 
-const hasValidEmail = (employee: AlibeezEmployee) =>
-  employee.email.endsWith("@zenika.com");
-const hasNoValidEmail = (employee: AlibeezEmployee) => !hasValidEmail(employee);
-
 export const importEmployeesFromAlibeez = async (config: Config) => {
   const requestRef = await firebase
     .firestore()
@@ -94,18 +82,14 @@ export const importEmployeesFromAlibeez = async (config: Config) => {
       }' error: ${await response.text()}`
     );
   }
-  const { employees } = (await response.json()) as AlibeezSuccessResponse;
-  const employeesWithValidEmail = employees.filter(hasValidEmail);
-  const employeesWithNoValidEmail = employees.filter(hasNoValidEmail);
-  employeesWithNoValidEmail.forEach(employee => {
-    console.info("employee with no valid email: " + employee.fullName);
-  });
-
-  const employeesToSave = employeesWithValidEmail.map(employee => ({
-    email: employee.email,
-    fullName: employee.fullName,
-    managerEmail: employee.manager ? employee.manager.email : null,
-    agency: employee.location
+  const employees = (await response.json()) as AlibeezEmployee[];
+  const employeesToSave = employees.map(employee => ({
+    email: employee.username,
+    fullName: `${employee.firstName} ${employee.lastName}`,
+    managerEmail: employee.operationalManagerShortUsername
+      ? `${employee.operationalManagerShortUsername}@zenika.com`
+      : null,
+    agency: employee.tags.etablissement
   }));
   const leftToSend = [...employeesToSave];
   while (leftToSend.length > 0) {
