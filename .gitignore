@@ -3,4 +3,4 @@ service-account.json
 node_modules/
 .vscode/
 .firebase
-firebase-debug.log
+*-debug.log
