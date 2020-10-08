@@ -20,7 +20,6 @@ export default (): webpack.Configuration => ({
   },
   resolve: { extensions: [".js", ".ts"] },
   externals: {
-    "auth0-js": "auth0",
     "firebase/app": "firebase"
   },
   plugins: [
