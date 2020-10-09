@@ -113,7 +113,7 @@ export const sendCampaignStartsReminder = functions.firestore
         <p>Hi,</p>
         <p>
           Tell us how it's been for you this past month!
-          Go to ${linkToApp}.
+          Go to <a href="${linkToApp}">${linkToApp}</a>.
         </p>
         <p>See you soon!</p>
         `
