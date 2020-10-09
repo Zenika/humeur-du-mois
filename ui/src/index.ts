@@ -2,10 +2,12 @@ import firebase from "firebase/app";
 import { authenticateAuth0, authenticateFirebase } from "./auth";
 import { getCurrentCampaignState, castVote, Payload } from "./api";
 import { AUTH0_CONFIG } from "./config";
-import "./styles/style.css";
 import "./styles/navbar.css";
+import "./styles/style.css";
 import { renderTemplate, VoteData, StatsData } from "./services/renderTemplate";
 import { computeDataFromDataBase } from "./services/computeDataFromDataBase";
+import { signOutFirebase } from "./auth/firebase";
+import { signOutAuth0 } from "./auth/auth0";
 
 window.addEventListener("load", async function () {
   const submitGreat = document.getElementById("submitGreat")!;
@@ -33,6 +35,7 @@ window.addEventListener("load", async function () {
   );
   const voteButton = document.getElementById("buttonVote")!;
   const errorDisplay = document.getElementById("errorDisplay")!;
+  const logoutButton = document.getElementById("logoutButton")!;
 
   const pages = [
     loggingInPage,
@@ -151,7 +154,7 @@ window.addEventListener("load", async function () {
     changePageTo(errorPage);
   };
   try {
-    const session = await authenticateAuth0({
+    const { session, webAuth } = await authenticateAuth0({
       ...AUTH0_CONFIG,
       redirectUri: window.location.href
     });
@@ -161,7 +164,14 @@ window.addEventListener("load", async function () {
     }
     await authenticateFirebase(session);
     userId.innerText = session.user.email;
-    enableFirestore(session.user.email);
+
+    logoutButton.onclick = async () => {
+      await signOutFirebase();
+      signOutAuth0(webAuth);
+    };
+
+    await enableFirestore(session.user.email);
+    show(logoutButton);
   } catch (err) {
     errorOut(err);
     return;

@@ -9,3 +9,7 @@ export async function authenticate({ user, accessToken }: Session) {
   });
   return await firebase.auth().signInWithCustomToken(response.token);
 }
+
+export async function signOutFirebase(): Promise<void> {
+  return firebase.auth().signOut();
+}

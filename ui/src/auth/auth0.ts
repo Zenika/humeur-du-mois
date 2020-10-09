@@ -31,20 +31,29 @@ async function convertToSession(
   return { user, accessToken, idToken, expiresAt };
 }
 
+export type WebAuthSession = {
+  session: Session | null;
+  webAuth: auth0.WebAuth;
+};
+
 export async function authenticate(
   config: auth0.AuthOptions
-): Promise<Session | null> {
+): Promise<WebAuthSession> {
   const webAuth = new auth0.WebAuth(config);
   const decodedHash = await parseHash(webAuth);
   const session =
     (await convertToSession(webAuth, decodedHash)) ||
     sessionRepository.restore();
   if (session) {
-    await sessionRepository.persist(session);
-    return session;
+    sessionRepository.persist(session);
+    return { webAuth, session };
   } else {
-    sessionRepository.forget(); // ensures nothing is left hanging
-    webAuth.authorize(); // this triggers a redirect to Auth0
-    return null;
+    signOutAuth0(webAuth);
+    return { webAuth, session: null };
   }
+}
+
+export function signOutAuth0(webAuth: auth0.WebAuth): void {
+  sessionRepository.forget(); // ensures nothing is left hanging
+  webAuth.authorize(); // this triggers a redirect to Auth0
 }

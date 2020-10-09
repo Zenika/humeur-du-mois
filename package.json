@@ -7,6 +7,7 @@
     "functions:shell": "firebase functions:shell",
     "deploy": "npm run firebase deploy",
     "firebase": "firebase",
+    "firebase:emulators": "firebase emulators:start",
     "watch": "run-p functions:build:watch ui:build:watch",
     "functions:build:watch": "npm --prefix functions run build:watch",
     "ui:build:watch": "npm --prefix ui run build:watch",

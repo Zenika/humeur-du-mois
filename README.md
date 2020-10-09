@@ -26,6 +26,7 @@ The app uses Firebase so you must have permission to access. Contact dsi@zenika.
 
 ### Commands
 
+- `npm run firebase:emulators` to launch the Firebase Local Emulator Suite
 - `npm start` to serve locally
   - functions are compiled and deployed on save
   - UI is compiled on save but the browser is not reloaded
@@ -35,4 +36,5 @@ The app uses Firebase so you must have permission to access. Contact dsi@zenika.
 - `npm run deploy` to deploy
 
 ### Troubleshooting on linux
- - If you're running the app on linux you might have a 'ENOSPC' error, this is due to too many files being watched. It can be fixed using `echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p` (see: https://github.com/facebook/jest/issues/3254#issuecomment-297214395 )
+
+- If you're running the app on linux you might have a 'ENOSPC' error, this is due to too many files being watched. It can be fixed using `echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p` (see: https://github.com/facebook/jest/issues/3254#issuecomment-297214395 )
