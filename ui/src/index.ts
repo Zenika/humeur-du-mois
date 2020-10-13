@@ -51,6 +51,7 @@ window.addEventListener("load", async function () {
   const userIdElement = document.getElementById("userId")!;
   const userEmail = document.getElementById("userEmail")!;
   const sendingSection = document.getElementById("sendingSection")!;
+  const sendingSectionLoader = document.getElementById("sendingSectionLoader")!;
   const managerName = document.getElementById("managerName")!;
   const hideClass = "hidden";
 
@@ -58,7 +59,6 @@ window.addEventListener("load", async function () {
   let selectedAgency = "";
 
   const htmlLoader = `
-  <h2>
     <div class="loader">
       <svg class="circular" viewBox="25 25 50 50">
         <circle
@@ -71,9 +71,11 @@ window.addEventListener("load", async function () {
           strokeMiterlimit="10"
         />
       </svg>
-    </div>
-    Hold on, we're retrieving the data you requested ...
-  </h2>`;
+    </div>`;
+
+  const statsLoader = `<div class="loading-message">${htmlLoader} Hold on, we're retrieving the data you requested ...</div>`;
+
+  sendingSectionLoader.innerHTML = htmlLoader;
 
   const show = (element: HTMLElement) => {
     element.classList.remove(hideClass);
@@ -92,7 +94,7 @@ window.addEventListener("load", async function () {
   const displayStatsPage = async (agency?: string) => {
     changePageTo(statsPage);
     statsTitle.style.display = "none";
-    statsTab.innerHTML = htmlLoader;
+    statsTab.innerHTML = statsLoader;
     voteData = await retrieveStatsData(agency);
     statsTitle.style.display = "";
     displayStatsData(voteData, agency);
@@ -283,7 +285,6 @@ window.addEventListener("load", async function () {
     if (employee.managerEmail) {
       managerName.innerText = employee.managerEmail;
     }
-    show(sendingSection);
   };
 
   try {
@@ -313,7 +314,11 @@ window.addEventListener("load", async function () {
       signOutAuth0(webAuth);
     };
 
-    // 5 - Fetch the list of agencies
+    // 5 - Display the sending section (vote button + manager email)
+    hide(sendingSectionLoader);
+    show(sendingSection);
+
+    // 6 - Fetch the list of agencies
     await fillAgenciesList();
   } catch (err) {
     errorOut(err);

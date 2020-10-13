@@ -53,7 +53,8 @@ button {
   padding: 0 32px;
 }
 
-.page h2 {
+.page h2,
+.loading-message {
   align-items: center;
   color: rgba(0, 0, 0, 0.6);
   display: flex;
@@ -232,6 +233,13 @@ tr:hover td {
   animation: dash 1.5s ease-in-out infinite,
     colorRotation 6s ease-in-out infinite;
   stroke-linecap: round;
+}
+
+#sendingSectionLoader:not(.hidden) {
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes rotate {
