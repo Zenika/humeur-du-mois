@@ -32,39 +32,45 @@ const errorResponse = (message: string) => ({ error: { message } });
  * Cannot use functions.https.onCall here because this function is called
  * before the user is authenticated to Firebase.
  */
-export const exchangeToken = functions.https.onRequest((request, response) => {
-  const { userId, accessToken } = request.body.data as RequestPayload;
-  if (!userId || !accessToken) {
-    response.status(400).send(errorResponse("Missing fields in request body"));
-    return;
-  }
-
-  const authenticationClient = new AuthenticationClient({
-    domain: config.auth0.domain,
-    clientId: config.auth0.client_id
-  });
-
-  authenticationClient.getProfile(
-    accessToken,
-    async (userInfoErr, user: any) => {
-      if (userInfoErr) {
-        console.error(userInfoErr);
-        response.status(401).send(errorResponse("Unauthorized"));
-        return;
-      } else if (userId !== user.sub) {
-        response
-          .status(401)
-          .send(errorResponse("userId and accessToken do not match"));
-        return;
-      }
-      try {
-        const customToken = await exchangeTokenApp
-          .auth()
-          .createCustomToken(userId, { email: user.email });
-        response.send({ result: { token: customToken } });
-      } catch (err) {
-        response.status(500).send(errorResponse("Error creating custom token"));
-      }
+export const exchangeToken = functions
+  .region("europe-west1")
+  .https.onRequest((request, response) => {
+    const { userId, accessToken } = request.body.data as RequestPayload;
+    if (!userId || !accessToken) {
+      response
+        .status(400)
+        .send(errorResponse("Missing fields in request body"));
+      return;
     }
-  );
-});
+
+    const authenticationClient = new AuthenticationClient({
+      domain: config.auth0.domain,
+      clientId: config.auth0.client_id
+    });
+
+    authenticationClient.getProfile(
+      accessToken,
+      async (userInfoErr, user: any) => {
+        if (userInfoErr) {
+          console.error(userInfoErr);
+          response.status(401).send(errorResponse("Unauthorized"));
+          return;
+        } else if (userId !== user.sub) {
+          response
+            .status(401)
+            .send(errorResponse("userId and accessToken do not match"));
+          return;
+        }
+        try {
+          const customToken = await exchangeTokenApp
+            .auth()
+            .createCustomToken(userId, { email: user.email });
+          response.send({ result: { token: customToken } });
+        } catch (err) {
+          response
+            .status(500)
+            .send(errorResponse("Error creating custom token"));
+        }
+      }
+    );
+  });
