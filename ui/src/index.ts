@@ -76,6 +76,8 @@ window.addEventListener("load", async function () {
   const statsLoader = `<div class="loading-message">${htmlLoader} Hold on, we're retrieving the data you requested ...</div>`;
 
   sendingSectionLoader.innerHTML = htmlLoader;
+  statsTitle.style.display = "none";
+  statsTab.innerHTML = statsLoader;
 
   const show = (element: HTMLElement) => {
     element.classList.remove(hideClass);
@@ -91,19 +93,19 @@ window.addEventListener("load", async function () {
     show(incoming);
   };
 
-  const displayStatsPage = async (agency?: string) => {
-    changePageTo(statsPage);
-    statsTitle.style.display = "none";
-    statsTab.innerHTML = statsLoader;
-    voteData = await retrieveStatsData(agency);
-    await fillAgenciesList();
-    statsTitle.style.display = "";
-    displayStatsData(voteData, agency);
-  };
-
   const displayHomePage = () => {
     hideAllPages();
     show(homePage);
+  };
+
+  const renderInitialStatsPage = async () => {
+    voteData = await retrieveStatsData();
+    await fillAgenciesList();
+    renderStatsData(voteData);
+  };
+
+  const displayStatsPage = async (agency?: string) => {
+    changePageTo(statsPage);
   };
 
   const retrieveStatsData = async (agency?: string) => {
@@ -152,7 +154,7 @@ window.addEventListener("load", async function () {
     });
   };
 
-  const displayStatsData = (voteData: VoteData, agency?: string) => {
+  const renderStatsData = (voteData: VoteData, agency?: string) => {
     statsTab.innerHTML = renderTemplate(
       computeDataFromDataBase(
         agency ? filterStatsData(voteData, agency) : voteData
@@ -235,7 +237,7 @@ window.addEventListener("load", async function () {
       agencyName.innerText = newSelectedAgency;
 
       selectedAgency = newSelectedAgency;
-      displayStatsData(
+      renderStatsData(
         voteData,
         selectedAgency === "" ? undefined : selectedAgency
       );
@@ -305,9 +307,8 @@ window.addEventListener("load", async function () {
     initVoteButtonsEventHandlers();
     initStatsButtonsEventHandlers();
 
-    // 3 - Firebase authentication, fetch the campaign and employee data
+    // 3 - Firebase authentication
     await authenticateFirebase(session);
-    await initCampaignAndEmployeeData(session.user.email);
 
     // 4 - Now that the user is fully logged in, they can logout
     logoutButton.onclick = async () => {
@@ -315,9 +316,19 @@ window.addEventListener("load", async function () {
       signOutAuth0(webAuth);
     };
 
-    // 5 - Display the sending section (vote button + manager email)
-    hide(sendingSectionLoader);
-    show(sendingSection);
+    // 5 - Load data for both pages in parallel
+    initCampaignAndEmployeeData(session.user.email)
+      .then(() => {
+        hide(sendingSectionLoader);
+        show(sendingSection);
+      })
+      .catch(errorOut);
+
+    renderInitialStatsPage()
+      .then(() => {
+        statsTitle.style.display = "";
+      })
+      .catch(errorOut);
   } catch (err) {
     errorOut(err);
     return;
