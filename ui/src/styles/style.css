@@ -188,7 +188,9 @@ tr:hover td {
 }
 
 .hidden {
-  display: none;
+  /* !important required here to ensure all .hidden are hidden ignoring all
+  other rules of higher specifify */
+  display: none !important;
 }
 
 .errorDisplay {

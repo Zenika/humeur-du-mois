@@ -76,7 +76,6 @@ window.addEventListener("load", async function () {
   const statsLoader = `<div class="loading-message">${htmlLoader} Hold on, we're retrieving the data you requested ...</div>`;
 
   sendingSectionLoader.innerHTML = htmlLoader;
-  statsTitle.style.display = "none";
   statsTab.innerHTML = statsLoader;
 
   const show = (element: HTMLElement) => {
@@ -326,7 +325,7 @@ window.addEventListener("load", async function () {
 
     renderInitialStatsPage()
       .then(() => {
-        statsTitle.style.display = "";
+        show(statsTitle);
       })
       .catch(errorOut);
   } catch (err) {
