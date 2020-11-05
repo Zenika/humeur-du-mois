@@ -61,15 +61,6 @@ jobs:
           paths:
             - functions/node_modules
 
-  lint-functions:
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ./
-      - run: npm --prefix functions run lint
-
   build-functions:
     docker:
       - image: circleci/node:10
@@ -190,12 +181,6 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - lint-functions:
-          requires:
-            - install-functions-dependencies
-          filters:
-            tags:
-              only: /.*/
       - build-functions:
           requires:
             - install-functions-dependencies
@@ -223,7 +208,6 @@ workflows:
             - install-tooling-dependencies
             - build-ui
             - build-ui-for-production
-            - lint-functions
             - build-functions
             - validate-functions-config
           filters:
@@ -255,7 +239,6 @@ workflows:
             - install-tooling-dependencies
             - build-ui
             - build-ui-for-production
-            - lint-functions
             - prod-validate-functions-config
             - build-functions
           filters: *filters-for-prod
