@@ -96,6 +96,7 @@ window.addEventListener("load", async function () {
     statsTitle.style.display = "none";
     statsTab.innerHTML = statsLoader;
     voteData = await retrieveStatsData(agency);
+    await fillAgenciesList();
     statsTitle.style.display = "";
     displayStatsData(voteData, agency);
   };
@@ -317,9 +318,6 @@ window.addEventListener("load", async function () {
     // 5 - Display the sending section (vote button + manager email)
     hide(sendingSectionLoader);
     show(sendingSection);
-
-    // 6 - Fetch the list of agencies
-    await fillAgenciesList();
   } catch (err) {
     errorOut(err);
     return;
