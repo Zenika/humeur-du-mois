@@ -302,13 +302,13 @@ window.addEventListener("load", async function () {
     userIdElement.innerText = session.user.email;
     displayHomePage();
     initVoteButtonsEventHandlers();
+    initStatsButtonsEventHandlers();
 
     // 3 - Firebase authentication, fetch the campaign and employee data
     await authenticateFirebase(session);
     await initCampaignAndEmployeeData(session.user.email);
 
-    // 4 - Now that the user is fully logged in, they can go on the stats page and logout
-    initStatsButtonsEventHandlers();
+    // 4 - Now that the user is fully logged in, they can logout
     logoutButton.onclick = async () => {
       await signOutFirebase();
       signOutAuth0(webAuth);
