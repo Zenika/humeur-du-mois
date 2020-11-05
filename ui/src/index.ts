@@ -48,9 +48,10 @@ window.addEventListener("load", async function () {
     unknownEmployeePage,
     statsPage
   ];
-  const userId = document.getElementById("userId")!;
+  const userIdElement = document.getElementById("userId")!;
   const userEmail = document.getElementById("userEmail")!;
-  const managerNotice = document.getElementById("managerNotice")!;
+  const sendingSection = document.getElementById("sendingSection")!;
+  const sendingSectionLoader = document.getElementById("sendingSectionLoader")!;
   const managerName = document.getElementById("managerName")!;
   const hideClass = "hidden";
 
@@ -58,7 +59,6 @@ window.addEventListener("load", async function () {
   let selectedAgency = "";
 
   const htmlLoader = `
-  <h2>
     <div class="loader">
       <svg class="circular" viewBox="25 25 50 50">
         <circle
@@ -71,9 +71,12 @@ window.addEventListener("load", async function () {
           strokeMiterlimit="10"
         />
       </svg>
-    </div>
-    Hold on, we're retrieving the data you requested ...
-  </h2>`;
+    </div>`;
+
+  const statsLoader = `<div class="loading-message">${htmlLoader} Hold on, we're retrieving the data you requested ...</div>`;
+
+  sendingSectionLoader.innerHTML = htmlLoader;
+  statsTab.innerHTML = statsLoader;
 
   const show = (element: HTMLElement) => {
     element.classList.remove(hideClass);
@@ -89,18 +92,19 @@ window.addEventListener("load", async function () {
     show(incoming);
   };
 
-  const displayStatsPage = async (agency?: string) => {
-    changePageTo(statsPage);
-    statsTitle.style.display = "none";
-    statsTab.innerHTML = htmlLoader;
-    voteData = await retrieveStatsData(agency);
-    statsTitle.style.display = "";
-    displayStatsData(voteData, agency);
-  };
-
   const displayHomePage = () => {
     hideAllPages();
     show(homePage);
+  };
+
+  const renderInitialStatsPage = async () => {
+    voteData = await retrieveStatsData();
+    await fillAgenciesList();
+    renderStatsData(voteData);
+  };
+
+  const displayStatsPage = async (agency?: string) => {
+    changePageTo(statsPage);
   };
 
   const retrieveStatsData = async (agency?: string) => {
@@ -120,7 +124,18 @@ window.addEventListener("load", async function () {
     }));
   };
 
-  const fillAgenciesList = (agencyList: Set<string>) => {
+  const fillAgenciesList = async () => {
+    const statsCampaignAgency: firebase.firestore.QuerySnapshot = await firebase
+      .firestore()
+      .collection(`stats-campaign-agency`)
+      .get();
+
+    const agencies = new Set(
+      statsCampaignAgency.docs.map(
+        snapshot => (snapshot.data() as StatsData).agency
+      )
+    );
+
     agencySelector.childNodes.forEach(child => {
       agencySelector.removeChild(child);
     });
@@ -129,7 +144,8 @@ window.addEventListener("load", async function () {
     agencyName.innerText = "Global";
     globalElement.setAttribute("value", "");
     agencySelector.appendChild(globalElement);
-    agencyList.forEach(agency => {
+
+    agencies.forEach(agency => {
       const element = this.document.createElement("option");
       element.innerText = agency;
       element.setAttribute("value", agency);
@@ -137,7 +153,7 @@ window.addEventListener("load", async function () {
     });
   };
 
-  const displayStatsData = (voteData: VoteData, agency?: string) => {
+  const renderStatsData = (voteData: VoteData, agency?: string) => {
     statsTab.innerHTML = renderTemplate(
       computeDataFromDataBase(
         agency ? filterStatsData(voteData, agency) : voteData
@@ -153,50 +169,60 @@ window.addEventListener("load", async function () {
     console.error(err);
     changePageTo(errorPage);
   };
-  try {
-    const { session, webAuth } = await authenticateAuth0({
-      ...AUTH0_CONFIG,
-      redirectUri: window.location.href
-    });
-    if (!session) return; // this means a redirect has been issued
-    if (!session.user.email) {
-      throw new Error("expected user to have email but it did not");
-    }
-    await authenticateFirebase(session);
-    userId.innerText = session.user.email;
 
-    logoutButton.onclick = async () => {
-      await signOutFirebase();
-      signOutAuth0(webAuth);
+  const saveResponse = async (response: string, comment?: string) => {
+    changePageTo(recordingPage);
+    const payload: Payload = {
+      vote: response
+    };
+    if (comment) {
+      payload.comment = comment;
+    }
+    try {
+      await castVote(payload);
+    } catch (err) {
+      if (err.status === "ALREADY_EXISTS") {
+        changePageTo(alreadyVotedPage);
+      } else {
+        errorOut(err.message);
+      }
+      return;
+    }
+    changePageTo(thankYouPage);
+  };
+
+  const initVoteButtonsEventHandlers = () => {
+    let mood: string;
+    const buttonMap = [submitGreat, submitNotThatGreat, submitNotGreatAtAll];
+    submitGreat.onclick = () => {
+      buttonMap.forEach(button => button.classList.remove("focusButton"));
+      submitGreat.classList.add("focusButton");
+      mood = "great";
+    };
+    submitNotThatGreat.onclick = () => {
+      buttonMap.forEach(button => button.classList.remove("focusButton"));
+      submitNotThatGreat.classList.add("focusButton");
+      mood = "notThatGreat";
+    };
+    submitNotGreatAtAll.onclick = () => {
+      buttonMap.forEach(button => button.classList.remove("focusButton"));
+      submitNotGreatAtAll.classList.add("focusButton");
+      mood = "notGreatAtAll";
     };
 
-    await enableFirestore(session.user.email);
-    show(logoutButton);
-  } catch (err) {
-    errorOut(err);
-    return;
-  }
+    voteButton.onclick = () => {
+      const comment = commentTextarea.value || undefined;
+      if (!mood) {
+        errorDisplay.hidden = false;
+        return;
+      }
+      saveResponse(mood, comment);
+    };
+  };
 
-  async function enableFirestore(userId: string) {
-    const db = firebase.firestore();
-    db.settings({ timestampsInSnapshots: true });
-
-    const { campaign, alreadyVoted } = await getCurrentCampaignState();
-
+  const initStatsButtonsEventHandlers = () => {
     statsButton.onclick = () => {
       displayStatsPage();
-    };
-
-    homeButton.onclick = () => {
-      if (!campaign) {
-        changePageTo(noCampaignPage);
-        return;
-      }
-      if (alreadyVoted) {
-        changePageTo(alreadyVotedPage);
-        return;
-      }
-      displayHomePage();
     };
 
     agencySelector.onchange = async () => {
@@ -210,22 +236,30 @@ window.addEventListener("load", async function () {
       agencyName.innerText = newSelectedAgency;
 
       selectedAgency = newSelectedAgency;
-      displayStatsData(
+      renderStatsData(
         voteData,
         selectedAgency === "" ? undefined : selectedAgency
       );
     };
-    const statsCampaignAgency: firebase.firestore.QuerySnapshot = await firebase
-      .firestore()
-      .collection(`stats-campaign-agency`)
-      .get();
-    fillAgenciesList(
-      new Set(
-        statsCampaignAgency.docs.map(
-          snapshot => (snapshot.data() as StatsData).agency
-        )
-      )
-    );
+  };
+
+  const initCampaignAndEmployeeData = async (userId: string) => {
+    const db = firebase.firestore();
+    db.settings({ timestampsInSnapshots: true });
+
+    const { campaign, alreadyVoted } = await getCurrentCampaignState();
+
+    homeButton.onclick = () => {
+      if (!campaign) {
+        changePageTo(noCampaignPage);
+        return;
+      }
+      if (alreadyVoted) {
+        changePageTo(alreadyVotedPage);
+        return;
+      }
+      displayHomePage();
+    };
 
     if (!campaign) {
       changePageTo(noCampaignPage);
@@ -252,56 +286,50 @@ window.addEventListener("load", async function () {
     }
     if (employee.managerEmail) {
       managerName.innerText = employee.managerEmail;
-      show(managerNotice);
+    }
+  };
+
+  try {
+    // 1 - Auth0 authentication
+    const { session, webAuth } = await authenticateAuth0({
+      ...AUTH0_CONFIG,
+      redirectUri: window.location.href
+    });
+    if (!session) return; // this means a redirect has been issued
+    if (!session.user.email) {
+      throw new Error("expected user to have email but it did not");
     }
 
-    const saveResponse = async (response: string, comment?: string) => {
-      changePageTo(recordingPage);
-      const payload: Payload = {
-        vote: response
-      };
-      if (comment) {
-        payload.comment = comment;
-      }
-      try {
-        await castVote(payload);
-      } catch (err) {
-        if (err.status === "ALREADY_EXISTS") {
-          changePageTo(alreadyVotedPage);
-        } else {
-          errorOut(err.message);
-        }
-        return;
-      }
-      changePageTo(thankYouPage);
-    };
-    let mood: string;
-    const buttonMap = [submitGreat, submitNotThatGreat, submitNotGreatAtAll];
-    submitGreat.onclick = () => {
-      buttonMap.map(button => button.classList.remove("focusButton"));
-      submitGreat.classList.add("focusButton");
-      mood = "great";
-    };
-    submitNotThatGreat.onclick = () => {
-      buttonMap.map(button => button.classList.remove("focusButton"));
-      submitNotThatGreat.classList.add("focusButton");
-      mood = "notThatGreat";
-    };
-    submitNotGreatAtAll.onclick = () => {
-      buttonMap.map(button => button.classList.remove("focusButton"));
-      submitNotGreatAtAll.classList.add("focusButton");
-      mood = "notGreatAtAll";
+    // 2 - Display the main content (Optimistic UI)
+    userIdElement.innerText = session.user.email;
+    displayHomePage();
+    initVoteButtonsEventHandlers();
+    initStatsButtonsEventHandlers();
+
+    // 3 - Firebase authentication
+    await authenticateFirebase(session);
+
+    // 4 - Now that the user is fully logged in, they can logout
+    logoutButton.onclick = async () => {
+      await signOutFirebase();
+      signOutAuth0(webAuth);
     };
 
-    voteButton.onclick = () => {
-      const comment = commentTextarea.value || undefined;
-      if (!mood) {
-        errorDisplay.hidden = false;
-        return;
-      }
-      saveResponse(mood, comment);
-    };
+    // 5 - Load data for both pages in parallel
+    initCampaignAndEmployeeData(session.user.email)
+      .then(() => {
+        hide(sendingSectionLoader);
+        show(sendingSection);
+      })
+      .catch(errorOut);
 
-    changePageTo(homePage);
+    renderInitialStatsPage()
+      .then(() => {
+        show(statsTitle);
+      })
+      .catch(errorOut);
+  } catch (err) {
+    errorOut(err);
+    return;
   }
 });
