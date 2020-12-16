@@ -6,6 +6,7 @@ test("renderTemplate", t => {
   const statsData: StatsData = {
     great: 4,
     notThatGreat: 1,
+    ok: 0,
     notGreatAtAll: 0
   };
   let voteData: VoteData = [
@@ -20,7 +21,7 @@ test("renderTemplate", t => {
   <table>
     <tr>
       <th>Campaign</th>
-      <th>😁</th><th>😐</th><th>😤</th>
+      <th>😁</th><th>🙂</th><th>😐</th><th>😤</th>
     </tr>
 
         <tr>

@@ -1,6 +1,7 @@
 service-account.json
 .runtimeconfig.json
 node_modules/
+.idea/
 .vscode/
 .firebase
 *-debug.log

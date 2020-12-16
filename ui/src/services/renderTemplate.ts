@@ -12,8 +12,8 @@ export type VoteData = {
 export function renderTemplate(voteData?: VoteData) {
   if (!voteData)
     return `Oops, something went wrong. We got no data to show you, try reloading and contacting dreamlabs if this keeps happening`;
-  const keys = ["great", "notThatGreat", "notGreatAtAll"];
-  const emojis = ["😁", "😐", "😤"];
+  const keys = ["great", "ok", "notThatGreat", "notGreatAtAll"];
+  const emojis = ["😁", "🙂", "😐", "😤"];
   return `
         <table>
           <tr>

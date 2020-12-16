@@ -6,6 +6,7 @@ import { Config } from "./config";
 type Statistic = {
   mood: {
     great?: number;
+    ok?: number;
     notThatGreat?: number;
     notGreatAtAll?: number;
   };
@@ -14,6 +15,7 @@ type Statistic = {
 };
 type StatisticToInsert = {
   great?: number;
+  ok?: number;
   notThatGreat?: number;
   notGreatAtAll?: number;
   campaign: string;

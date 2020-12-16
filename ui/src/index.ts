@@ -11,6 +11,7 @@ import { signOutAuth0 } from "./auth/auth0";
 
 window.addEventListener("load", async function () {
   const submitGreat = document.getElementById("submitGreat")!;
+  const submitOk = document.getElementById("submitOk")!;
   const submitNotThatGreat = document.getElementById("submitNotThatGreat")!;
   const submitNotGreatAtAll = document.getElementById("submitNotGreatAtAll")!;
   const loggingInPage = document.getElementById("loggingInPage")!;
@@ -193,11 +194,21 @@ window.addEventListener("load", async function () {
 
   const initVoteButtonsEventHandlers = () => {
     let mood: string;
-    const buttonMap = [submitGreat, submitNotThatGreat, submitNotGreatAtAll];
+    const buttonMap = [
+      submitGreat,
+      submitOk,
+      submitNotThatGreat,
+      submitNotGreatAtAll
+    ];
     submitGreat.onclick = () => {
       buttonMap.forEach(button => button.classList.remove("focusButton"));
       submitGreat.classList.add("focusButton");
       mood = "great";
+    };
+    submitOk.onclick = () => {
+      buttonMap.forEach(button => button.classList.remove("focusButton"));
+      submitOk.classList.add("focusButton");
+      mood = "ok";
     };
     submitNotThatGreat.onclick = () => {
       buttonMap.forEach(button => button.classList.remove("focusButton"));
