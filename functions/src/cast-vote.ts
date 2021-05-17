@@ -9,7 +9,7 @@ const config = functions.config() as Config;
 const requireUniqueVote = asBoolean(
   config.features.voting_campaigns.require_unique_vote
 );
-const validVotes = ["great", "notThatGreat", "notGreatAtAll"];
+const validVotes = ["great", "ok", "notThatGreat", "notGreatAtAll"];
 
 interface RequestPayload {
   vote: string;

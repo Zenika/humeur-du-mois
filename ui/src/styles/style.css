@@ -169,8 +169,11 @@ tr:hover td {
 .button--great {
   color: #1b5e20;
 }
-.button--no-that-great {
+.button--ok {
   color: #263238;
+}
+.button--no-that-great {
+  color: #d67d00;
 }
 .button--not-great-at-all {
   color: #b71c1c;

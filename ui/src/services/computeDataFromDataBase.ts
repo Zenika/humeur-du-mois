@@ -9,6 +9,7 @@ export function computeDataFromDataBase(voteRawData: VoteData) {
       great: 0,
       notGreatAtAll: 0,
       notThatGreat: 0,
+      ok: 0,
       ...row.counts
     }
   }));

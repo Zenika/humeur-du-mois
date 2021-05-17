@@ -1,6 +1,4 @@
 import * as functions from "firebase-functions";
-import * as firebase from "firebase-admin";
-import * as mailgun from "mailgun-js";
 import { Config, isEnabled, asBoolean } from "./config";
 import { Vote } from "./cast-vote";
 import { enqueue } from "./process-email-queue";
@@ -10,18 +8,6 @@ const config = functions.config() as Config;
 const redirectToVoter = asBoolean(
   config.features.send_vote_to_manager.redirect_to_voter
 );
-const mailgunClient = mailgun({
-  domain: config.mailgun.domain,
-  apiKey: config.mailgun.api_key,
-  host: config.mailgun.host
-});
-const db = firebase.firestore();
-
-const voteMap: { [key: string]: string } = {
-  great: "Great",
-  notThatGreat: "Not that great",
-  notGreatAtAll: "Not great at all"
-};
 
 export const sendEmailToManager = functions.firestore
   .document("vote/{voteId}")
