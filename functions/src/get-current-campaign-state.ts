@@ -1,8 +1,6 @@
 import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
-import {
-  computeCurrentCampaign,
-} from "./compute-current-campaign";
+import { computeCurrentCampaign } from "./compute-current-campaign";
 import { firestore } from "firebase-admin";
 import { generateAndSaveRandomEmailToken } from "./generate-random-email-token";
 
