@@ -213,7 +213,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
       - test-tooling:
           requires:
             - install-tooling-dependencies
