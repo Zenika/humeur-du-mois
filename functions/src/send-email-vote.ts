@@ -57,6 +57,7 @@ export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
   </style>
   <script async src="https://cdn.ampproject.org/v0.js"></script>
   <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+  <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
   <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
   <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
   <style amp-custom>
@@ -217,7 +218,7 @@ button {
     </div>
     <div id="errorDisplay" class="errorDisplay" submit-error>
       <template type="amp-mustache">
-        Error to send vote : {{message}}
+        Error to send vote : {{error.message}}
       </template>
     </div>
     <div id="successDisplay" class="successDisplay" submit-success>
