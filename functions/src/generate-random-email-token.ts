@@ -6,8 +6,8 @@ export function generateRandomEmailToken() {
 
 function encodeAsBase64Url(buffer: Buffer): string {
   return buffer
-    .toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=*$/, '');
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=*$/, "");
 }

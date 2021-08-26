@@ -33,7 +33,8 @@ export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
     const employee = employeeDocument.data() as Employee;
 
     const token = generateRandomEmailToken();
-    await db.collection("token")
+    await db
+      .collection("token")
       .doc(token)
       .create({ employeeEmail: employee.email, campaignId: campaign.id });
 
