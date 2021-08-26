@@ -5,6 +5,7 @@ import { Config, isEnabled, asNumber } from "./config";
 import { enqueue } from "./process-email-queue";
 import { Employee } from "./import-employees-from-alibeez";
 import { CampaignInfo } from "./compute-current-campaign";
+import { generateRandomEmailToken } from "./generate-random-email-token";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -30,6 +31,13 @@ export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
   for (const employeeDocumentRef of employeeDocumentRefs) {
     const employeeDocument = await employeeDocumentRef.get();
     const employee = employeeDocument.data() as Employee;
+
+    const token = generateRandomEmailToken();
+    await db
+      .collection("token")
+      .doc(token)
+      .create({ employeeEmail: employee.email, campaignId: campaign.id });
+
     const message = {
       from: config.features.reminders.voting_campaign_starts.sender,
       to: employee.email,
