@@ -45,10 +45,20 @@ export const emailVote = functions.https.onRequest(
       return;
     }
     res.set("AMP-Email-Allow-Sender", email);
-    await doVote(req.body.vote, email, req.body.comment, token);
-    res.status(200).send({
-      message: `Vote ${req.body.vote} with ${req.body.comment} saved `
-    });
+    try {
+      await doVote(req.body.vote, email, req.body.comment, token);
+      res.status(200).send({
+        message: `Vote ${req.body.vote} with ${req.body.comment} saved `
+      });
+    }
+    catch (err) {
+      console.log(err);
+      console.log(req.body.vote, email, req.body.comment, token);
+      res.status(400).send({
+        error: err,
+        message: `Error`
+      });
+    }
   }
 );
 async function doVote(
