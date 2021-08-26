@@ -42,25 +42,34 @@ export const emailVote = functions.https.onRequest(
       res.set("AMP-Email-Allow-Sender", email);
     }
     await doVote(req.body.vote, email, req.body.comment, token);
-    res.status(200).send({ message: "Vote ${req.body.vote} with ${req.body.comment} saved " });
+    res
+      .status(200)
+      .send({
+        message: "Vote ${req.body.vote} with ${req.body.comment} saved "
+      });
   }
 );
-async function doVote(voteValue: string, voterEmail: string, comment: string, token: string) {
+async function doVote(
+  voteValue: string,
+  voterEmail: string,
+  comment: string,
+  token: string
+) {
   const voteDate = new Date();
-    const campaign = computeCurrentCampaign(voteDate, {
-      enabled: isEnabled(config.features.voting_campaigns),
-      startOn: asNumber(config.features.voting_campaigns.start_on),
-      endOn: asNumber(config.features.voting_campaigns.end_on)
-    });
-    if (!campaign.open) {
-      throw new functions.https.HttpsError(
-        "failed-precondition",
-        "No campaign currently opened",
-        {
-          voteDate
-        }
-      );
-    }
+  const campaign = computeCurrentCampaign(voteDate, {
+    enabled: isEnabled(config.features.voting_campaigns),
+    startOn: asNumber(config.features.voting_campaigns.start_on),
+    endOn: asNumber(config.features.voting_campaigns.end_on)
+  });
+  if (!campaign.open) {
+    throw new functions.https.HttpsError(
+      "failed-precondition",
+      "No campaign currently opened",
+      {
+        voteDate
+      }
+    );
+  }
   if (!validVotes.includes(voteValue)) {
     throw new functions.https.HttpsError(
       "invalid-argument",
@@ -95,10 +104,7 @@ async function doVote(voteValue: string, voterEmail: string, comment: string, to
   }
   if (requireUniqueVote) {
     try {
-      await db
-        .collection("vote")
-        .doc(`${campaign.id}-${token}`)
-        .create(vote);
+      await db.collection("vote").doc(`${campaign.id}-${token}`).create(vote);
     } catch (err) {
       if (err.code === 6 /* ALREADY_EXISTS */) {
         throw new functions.https.HttpsError(
@@ -115,4 +121,3 @@ async function doVote(voteValue: string, voterEmail: string, comment: string, to
     await db.collection("vote").add(vote);
   }
 }
-
