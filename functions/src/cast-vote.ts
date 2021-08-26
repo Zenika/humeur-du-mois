@@ -47,7 +47,7 @@ export const emailVote = functions.https.onRequest(
     res.set("AMP-Email-Allow-Sender", email);
     //await doVote(req.body.vote, email, req.body.comment, token);
     res.status(200).send({
-      message: "Vote ${req.body.vote} with ${req.body.comment} saved "
+      message: `Vote ${req.body.vote} with ${req.body.comment} saved `
     });
   }
 );
