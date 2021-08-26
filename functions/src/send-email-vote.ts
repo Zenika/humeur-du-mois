@@ -165,6 +165,10 @@ export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
   color: #1b5e20;
 }
 
+.submittingDisplay {
+    color: orange;
+}
+
 .button-vote-wrapper {
     display: flex;
     justify-content: center;
@@ -193,6 +197,7 @@ button {
 
 <body>
   <form id="homePage" class="page" action-xhr="${linkToApp}/api/emailVote" method="POST">
+  <input type="hidden" name="token" value="${token}"/>
     <h1 class="page__title">
       <span>Hi, <span id="userId">${employee.fullName}</span></span>
     </h1>
@@ -217,11 +222,14 @@ button {
       The result will be sent to <span id="managerName">${employee.managerEmail}</span>
     </div>
     <div id="errorDisplay" class="errorDisplay" submit-error>
-      Error to send vote
+      Error to send vote : {{message}}
     </div>
     <div id="successDisplay" class="successDisplay" submit-success>
-        Your answer was properly recorded.
-      </div>
+        Your answer was properly recorded. {{message}}
+    </div>
+    <div id="submitting" class="submittingDisplay" submitting>
+        Please wait ...
+    </div>
     <div class="button-vote-wrapper">
       <button id="buttonVote" type="submit" class="button--small">
         Vote

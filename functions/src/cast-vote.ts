@@ -26,15 +26,27 @@ export interface Vote extends Employee {
 }
 
 export const castVote = functions.https.onCall(
-  async (payload: RequestPayload, context) => {
-    if (!validVotes.includes(payload.vote)) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        `'${payload.vote}' is not a valid value for 'vote'`
-      );
-    }
+  async (payload: RequestPayload, context: any) => {
     const voterEmail: string = context.auth!.token.email;
-    const voteDate = new Date();
+    const voteValue = payload.vote;
+    const comment = payload.comment;
+    await doVote(voteValue, voterEmail, comment, context.auth!.uid);
+  }
+);
+
+export const emailVote = functions.https.onRequest(
+  async (req: functions.Request, res: functions.Response) => {
+    const token = req.body.token;
+    const email = req.header("AMP-Email-Sender");
+    if (email) {
+      res.set("AMP-Email-Allow-Sender", email);
+    }
+    await doVote(req.body.vote, email, req.body.comment, token);
+    res.status(200).send({ message: "Vote ${req.body.vote} with ${req.body.comment} saved " });
+  }
+);
+async function doVote(voteValue: string, voterEmail: string, comment: string, token: string) {
+  const voteDate = new Date();
     const campaign = computeCurrentCampaign(voteDate, {
       enabled: isEnabled(config.features.voting_campaigns),
       startOn: asNumber(config.features.voting_campaigns.start_on),
@@ -49,63 +61,58 @@ export const castVote = functions.https.onCall(
         }
       );
     }
+  if (!validVotes.includes(voteValue)) {
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      `'${voteValue}' is not a valid value for 'vote'`
+    );
+  }
+  const employeeSnapshot = await db
+    .collection("employees")
+    .doc(voterEmail)
+    .get();
+  if (!employeeSnapshot) {
+    throw new functions.https.HttpsError(
+      "not-found",
+      `failed to load latest employees import`
+    );
+  }
+  const employee = employeeSnapshot.data() as Employee | undefined;
 
-    const employeeSnapshot = await db
-      .collection("employees")
-      .doc(voterEmail)
-      .get();
-    if (!employeeSnapshot) {
-      throw new functions.https.HttpsError(
-        "not-found",
-        `failed to load latest employees import`
-      );
-    }
-    const employee = employeeSnapshot.data() as Employee | undefined;
+  if (!employee) {
+    throw new functions.https.HttpsError("not-found", `Employee not found`);
+  }
 
-    if (!employee) {
-      throw new functions.https.HttpsError("not-found", `Employee not found`);
-    }
-
-    const vote: Vote = {
-      campaign: campaign.id,
-      recordedAt: firestore.Timestamp.fromDate(voteDate),
-      value: payload.vote,
-      voteFromUi: true,
-      ...employee
-    };
-    if (payload.comment) {
-      vote.comment = payload.comment;
-    }
-    if (requireUniqueVote) {
-      try {
-        await db
-          .collection("vote")
-          .doc(`${campaign.id}-${context.auth!.uid}`)
-          .create(vote);
-      } catch (err) {
-        if (err.code === 6 /* ALREADY_EXISTS */) {
-          throw new functions.https.HttpsError(
-            "already-exists",
-            "Looks like you have already voted.",
-            {
-              voteDate
-            }
-          );
-        }
-        throw err;
+  const vote: Vote = {
+    campaign: campaign.id,
+    recordedAt: firestore.Timestamp.fromDate(voteDate),
+    value: voteValue,
+    voteFromUi: true,
+    ...employee
+  };
+  if (comment) {
+    vote.comment = comment;
+  }
+  if (requireUniqueVote) {
+    try {
+      await db
+        .collection("vote")
+        .doc(`${campaign.id}-${token}`)
+        .create(vote);
+    } catch (err) {
+      if (err.code === 6 /* ALREADY_EXISTS */) {
+        throw new functions.https.HttpsError(
+          "already-exists",
+          "Looks like you have already voted.",
+          {
+            voteDate
+          }
+        );
       }
-    } else {
-      await db.collection("vote").add(vote);
+      throw err;
     }
+  } else {
+    await db.collection("vote").add(vote);
   }
-);
+}
 
-export const emailVote = functions.https.onRequest(
-  async (req: functions.Request, res: functions.Response) => {
-    const email = req.header("AMP-Email-Sender");
-    if (email) {
-      res.set("AMP-Email-Allow-Sender", email);
-    }
-    res.status(200).send({ result: "OK" });
-  }
-);
