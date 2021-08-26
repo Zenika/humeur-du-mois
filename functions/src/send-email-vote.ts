@@ -249,6 +249,6 @@ export const sendEmailVote = functions.https.onCall(
 
     await sendEmailToEmployees(campaign);
 
-    return "OK"
+    return "OK";
   }
 );
