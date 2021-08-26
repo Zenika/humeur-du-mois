@@ -214,6 +214,7 @@ workflows:
             branches:
               only:
                 - main
+                - amp
       - test-tooling:
           requires:
             - install-tooling-dependencies
