@@ -235,8 +235,8 @@ button {
 };
 
 // Test, Send a new vote email always
-export const sendEmailVote = functions.https.onCall(
-  async (payload: unknown, context: unknown) => {
+export const sendEmailVote = functions.https.onRequest(
+  async (req: functions.Request, res: functions.Response) => {
     const voteDate = new Date();
     const campaign = {
       open: true,
@@ -249,6 +249,6 @@ export const sendEmailVote = functions.https.onCall(
 
     await sendEmailToEmployees(campaign);
 
-    return "OK";
+    res.status(200).send("OK");
   }
 );
