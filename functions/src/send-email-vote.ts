@@ -192,7 +192,7 @@ button {
 </head>
 
 <body>
-  <form id="homePage" class="page" action-xhr="${linkToApp}" method="POST">
+  <form id="homePage" class="page" action-xhr="${linkToApp}/api/emailVote" method="POST">
     <h1 class="page__title">
       <span>Hi, <span id="userId">${employee.fullName}</span></span>
     </h1>
