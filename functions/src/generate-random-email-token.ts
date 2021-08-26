@@ -8,5 +8,5 @@ export async function generateAndSaveRandomEmailToken(
   const ref = await db
     .collection("token")
     .add({ employeeEmail: employeeEmail, campaignId: campaignId });
-  return ref.id
+  return ref.id;
 }
