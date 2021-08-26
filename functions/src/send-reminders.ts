@@ -116,7 +116,31 @@ export const sendCampaignStartsReminder = functions.firestore
           Go to <a href="${linkToApp}">${linkToApp}</a>.
         </p>
         <p>See you soon!</p>
-        `
+        `,
+      "amp-html": `
+        <!doctype html>
+        <html ⚡4email data-css-strict>
+        <head>
+          <meta charset="utf-8">
+          <script async src="https://cdn.ampproject.org/v0.js"></script>
+          <style amp4email-boilerplate>body{visibility:hidden}</style>
+          <style amp-custom>
+            h1 {
+              margin: 1rem;
+            }
+          </style>
+        </head>
+        <body>
+          <p>Hi,</p>
+          <p>
+            Tell us how it's been for you this past month!
+            Go to <a href="${linkToApp}">${linkToApp}</a>.
+          </p>
+          <p>See you soon!</p>
+          <p>This email uses AMP!</p>
+        </body>
+        </html>
+      `
     };
 
     await reminderRef.update({
