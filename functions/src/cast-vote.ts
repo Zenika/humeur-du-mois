@@ -102,10 +102,10 @@ export const castVote = functions.https.onCall(
 
 export const emailVote = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
-    const email = req.header('AMP-Email-Sender');
+    const email = req.header("AMP-Email-Sender");
     if (email) {
-      res.set('AMP-Email-Allow-Sender', email)
+      res.set("AMP-Email-Allow-Sender", email);
     }
-    res.status(200).send({result: 'OK'});
+    res.status(200).send({ result: "OK" });
   }
-)
+);
