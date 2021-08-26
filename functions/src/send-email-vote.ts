@@ -193,7 +193,7 @@ button {
       <button class="button--big button--great" type="button" id="submitGreat" option="great">
         <span class="button__emoji">😁</span> Great!
       </button>
-      <button class="button--big button--ok" type="button" id="submitOk" option="ok>
+      <button class="button--big button--ok" type="button" id="submitOk" option="ok">
         <span class="button__emoji">🙂</span> OK
       </button>
       <button class="button--big button--no-that-great" type="button" id="submitNotThatGreat" option="not-that-great">
@@ -247,6 +247,8 @@ export const sendEmailVote = functions.https.onCall(
         .substr(0, 7)
     };
 
-    sendEmailToEmployees(campaign);
+    await sendEmailToEmployees(campaign);
+
+    return "OK"
   }
 );
