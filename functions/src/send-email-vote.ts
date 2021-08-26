@@ -216,10 +216,14 @@ button {
       The result will be sent to <span id="managerName">${employee.managerEmail}</span>
     </div>
     <div id="errorDisplay" class="errorDisplay" submit-error>
-      Error to send vote : {{message}}
+      <template type="amp-mustache">
+        Error to send vote : {{message}}
+      </template>
     </div>
     <div id="successDisplay" class="successDisplay" submit-success>
+      <template type="amp-mustache">
         Your answer was properly recorded. {{message}}
+      </template>
     </div>
     <div id="submitting" class="submittingDisplay" submitting>
         Please wait ...
