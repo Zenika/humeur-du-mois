@@ -171,10 +171,15 @@ window.addEventListener("load", async function () {
     changePageTo(errorPage);
   };
 
-  const saveResponse = async (response: string, comment?: string) => {
+  const saveResponse = async (
+    voteToken: string,
+    response: string,
+    comment?: string
+  ) => {
     changePageTo(recordingPage);
     const payload: Payload = {
-      vote: response
+      vote: response,
+      voteToken
     };
     if (comment) {
       payload.comment = comment;
@@ -192,7 +197,7 @@ window.addEventListener("load", async function () {
     changePageTo(thankYouPage);
   };
 
-  const initVoteButtonsEventHandlers = () => {
+  const initVoteButtonsEventHandlers = (voteToken: string) => {
     let mood: string;
     const buttonMap = [
       submitGreat,
@@ -227,7 +232,7 @@ window.addEventListener("load", async function () {
         errorDisplay.hidden = false;
         return;
       }
-      saveResponse(mood, comment);
+      saveResponse(voteToken, mood, comment);
     };
   };
 
@@ -258,7 +263,11 @@ window.addEventListener("load", async function () {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
 
-    const { campaign, alreadyVoted } = await getCurrentCampaignState();
+    const {
+      campaign,
+      alreadyVoted,
+      voteToken
+    } = await getCurrentCampaignState();
 
     homeButton.onclick = () => {
       if (!campaign) {
@@ -314,7 +323,7 @@ window.addEventListener("load", async function () {
     // 2 - Display the main content (Optimistic UI)
     userIdElement.innerText = session.user.email;
     displayHomePage();
-    initVoteButtonsEventHandlers();
+    initVoteButtonsEventHandlers(voteToken);
     initStatsButtonsEventHandlers();
 
     // 3 - Firebase authentication
