@@ -38,10 +38,16 @@ export const emailVote = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
     const token = req.body.token;
     const email = req.header("AMP-Email-Sender");
-    if (email) {
-      res.set("AMP-Email-Allow-Sender", email);
+    if (!email) {
+      res
+      .status(401)
+      .send({
+        message: "Bad Email"
+      });
+      return;
     }
-    await doVote(req.body.vote, email, req.body.comment, token);
+    res.set("AMP-Email-Allow-Sender", email);
+    //await doVote(req.body.vote, email, req.body.comment, token);
     res
       .status(200)
       .send({
