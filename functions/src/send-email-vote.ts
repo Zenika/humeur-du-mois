@@ -17,27 +17,24 @@ const campaignConfig = {
   endOn: asNumber(config.features.voting_campaigns.end_on)
 };
 
-export const sendEmailToEmployees = async (campaign: CampaignInfo) =>
-{
-    if (!campaign.open) return;
+export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
+  if (!campaign.open) return;
 
-    const monthLongName = new Date(
-        Date.UTC(campaign.year, campaign.month)
-      ).toLocaleString("en-us", {
-        month: "long"
-      });
-  
-      const employeeDocumentRefs = await db
-        .collection("employees")
-        .listDocuments();
-      for (const employeeDocumentRef of employeeDocumentRefs) {
-        const employeeDocument = await employeeDocumentRef.get();
-        const employee = employeeDocument.data() as Employee;
-        const message = {
-          from: config.features.reminders.voting_campaign_starts.sender,
-          to: employee.email,
-          subject: `Humeur du mois is open for ${monthLongName}!`,
-          html: `
+  const monthLongName = new Date(
+    Date.UTC(campaign.year, campaign.month)
+  ).toLocaleString("en-us", {
+    month: "long"
+  });
+
+  const employeeDocumentRefs = await db.collection("employees").listDocuments();
+  for (const employeeDocumentRef of employeeDocumentRefs) {
+    const employeeDocument = await employeeDocumentRef.get();
+    const employee = employeeDocument.data() as Employee;
+    const message = {
+      from: config.features.reminders.voting_campaign_starts.sender,
+      to: employee.email,
+      subject: `Humeur du mois is open for ${monthLongName}!`,
+      html: `
             <p>Hi ${employee.fullName},</p>
             <p>
               Tell us how it's been for you this past month!
@@ -45,7 +42,7 @@ export const sendEmailToEmployees = async (campaign: CampaignInfo) =>
             </p>
             <p>See you soon!</p>
             `,
-          "amp-html": `
+      "amp-html": `
           <!doctype html>
 <html ⚡4email>
 
@@ -231,25 +228,25 @@ button {
 
 </html>
           `
-        };
-  
-        await enqueue(message);
-      }
-}
+    };
 
-// Test, Send a new vote email always 
+    await enqueue(message);
+  }
+};
+
+// Test, Send a new vote email always
 export const sendEmailVote = functions.https.onCall(
-    async (payload: unknown, context: unknown) => {
-        const voteDate = new Date()
-        const campaign = {
-            open: true,
-            year: voteDate.getUTCFullYear(),
-            month: voteDate.getUTCMonth(),
-            id: new Date(Date.UTC(voteDate.getUTCFullYear(), voteDate.getUTCMonth()))
-              .toISOString()
-              .substr(0, 7)
-          }
-        
-        sendEmailToEmployees(campaign);
-    }
+  async (payload: unknown, context: unknown) => {
+    const voteDate = new Date();
+    const campaign = {
+      open: true,
+      year: voteDate.getUTCFullYear(),
+      month: voteDate.getUTCMonth(),
+      id: new Date(Date.UTC(voteDate.getUTCFullYear(), voteDate.getUTCMonth()))
+        .toISOString()
+        .substr(0, 7)
+    };
+
+    sendEmailToEmployees(campaign);
+  }
 );

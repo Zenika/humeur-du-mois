@@ -101,7 +101,7 @@ export const sendCampaignStartsReminder = functions.firestore
       return;
     }
 
-    sendEmailToEmployees(campaign)
+    sendEmailToEmployees(campaign);
 
     // await reminderRef.update({
     //   message
