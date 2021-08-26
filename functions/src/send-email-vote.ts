@@ -1,22 +1,16 @@
 import * as functions from "firebase-functions";
 import { firestore } from "firebase-admin";
-import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Config, isEnabled, asNumber } from "./config";
 import { enqueue } from "./process-email-queue";
 import { Employee } from "./import-employees-from-alibeez";
 import { CampaignInfo } from "./compute-current-campaign";
-import { generateRandomEmailToken } from "./generate-random-email-token";
+import { generateAndSaveRandomEmailToken } from "./generate-random-email-token";
 
 const db = firestore();
 const config = functions.config() as Config;
 const linkToApp =
   config.features.reminders.app_link ||
   `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
-const campaignConfig = {
-  enabled: isEnabled(config.features.voting_campaigns),
-  startOn: asNumber(config.features.voting_campaigns.start_on),
-  endOn: asNumber(config.features.voting_campaigns.end_on)
-};
 
 export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
   if (!campaign.open) return;
@@ -32,11 +26,11 @@ export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
     const employeeDocument = await employeeDocumentRef.get();
     const employee = employeeDocument.data() as Employee;
 
-    const token = generateRandomEmailToken();
-    await db
-      .collection("token")
-      .doc(token)
-      .create({ employeeEmail: employee.email, campaignId: campaign.id });
+    const token = await generateAndSaveRandomEmailToken(
+      employee.email,
+      campaign.id,
+      db
+    );
 
     const message = {
       from: config.features.reminders.voting_campaign_starts.sender,
