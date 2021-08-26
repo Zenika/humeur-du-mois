@@ -26,6 +26,8 @@ export {
   sendCampaignEndsReminder
 } from "./send-reminders";
 
+export { sendEmailVote as emailToEmployees } from './send-email-vote'
+
 export { processEmailQueue } from "./process-email-queue";
 
 export { getCurrentCampaignState } from "./get-current-campaign-state";
