@@ -38,7 +38,8 @@ export const castVote = functions.https.onCall(
 export const emailVote = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
     const email = req.header("AMP-Email-Sender");
-    if (!email || email !== config) {
+    //TODO check email is from email
+    if (!email) {
       res.status(401).send({
         message: "Bad Email"
       });
