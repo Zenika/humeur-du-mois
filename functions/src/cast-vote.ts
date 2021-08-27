@@ -3,6 +3,7 @@ import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Employee } from "./import-employees-from-alibeez";
+import { TokenData } from "./generate-random-email-token";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -36,17 +37,28 @@ export const castVote = functions.https.onCall(
 
 export const emailVote = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
-    const token = req.body.token;
     const email = req.header("AMP-Email-Sender");
-    if (!email) {
+    if (!email || email !== config) {
       res.status(401).send({
         message: "Bad Email"
       });
       return;
     }
     res.set("AMP-Email-Allow-Sender", email);
+
+    const token = req.body.token;
+    const tokenSnapshot = await db
+    .collection("token").doc(token).get()
+    if (!tokenSnapshot) {
+      res.status(401).send({
+        message: "Bad Token"
+      });
+      return;
+    }
+    const tokenData = tokenSnapshot.data() as TokenData;
     try {
-      await doVote(req.body.vote, email, req.body.comment, token);
+      console.log(`Vote ${req.body.vote} by ${tokenData.employeeEmail}`);
+      await doVote(req.body.vote, tokenData.employeeEmail, req.body.comment, token);
       res.status(200).send({
         message: `Vote ${req.body.vote} with ${req.body.comment} saved `
       });

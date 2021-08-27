@@ -1,5 +1,10 @@
 import { firestore } from "firebase-admin";
 
+export interface TokenData {
+  employeeEmail: string;
+  campaignId: string;
+}
+
 export async function generateAndSaveRandomEmailToken(
   employeeEmail: string,
   campaignId: string,
