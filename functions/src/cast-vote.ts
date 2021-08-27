@@ -47,8 +47,7 @@ export const emailVote = functions.https.onRequest(
     res.set("AMP-Email-Allow-Sender", email);
 
     const token = req.body.token;
-    const tokenSnapshot = await db
-    .collection("token").doc(token).get()
+    const tokenSnapshot = await db.collection("token").doc(token).get();
     if (!tokenSnapshot) {
       res.status(401).send({
         message: "Bad Token"
@@ -58,12 +57,16 @@ export const emailVote = functions.https.onRequest(
     const tokenData = tokenSnapshot.data() as TokenData;
     try {
       console.log(`Vote ${req.body.vote} by ${tokenData.employeeEmail}`);
-      await doVote(req.body.vote, tokenData.employeeEmail, req.body.comment, token);
+      await doVote(
+        req.body.vote,
+        tokenData.employeeEmail,
+        req.body.comment,
+        token
+      );
       res.status(200).send({
         message: `Vote ${req.body.vote} with ${req.body.comment} saved `
       });
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
       console.log(req.body.vote, email, req.body.comment, token);
       res.status(400).send({
