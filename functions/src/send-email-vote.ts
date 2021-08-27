@@ -204,10 +204,10 @@ button {
       <button class="button--big button--ok" type="button" id="submitOk" option="ok">
         <span class="button__emoji">🙂</span> OK
       </button>
-      <button class="button--big button--no-that-great" type="button" id="submitNotThatGreat" option="not-that-great">
+      <button class="button--big button--no-that-great" type="button" id="submitNotThatGreat" option="notThatGreat">
         <span class="button__emoji">😐</span> Not that great
       </button>
-      <button class="button--big button--not-great-at-all" type="button" id="submitNotGreatAtAll" option="not-great-at-all">
+      <button class="button--big button--not-great-at-all" type="button" id="submitNotGreatAtAll" option="notGreatAtAll">
         <span class="button__emoji">😤</span> Not great at all
       </button>
     </amp-selector>
