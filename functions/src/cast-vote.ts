@@ -14,8 +14,8 @@ const validVotes = ["great", "ok", "notThatGreat", "notGreatAtAll"];
 
 interface RequestPayload {
   vote: string;
-  comment: string;
-  token: string;
+  comment?: string;
+  voteToken: string;
 }
 
 export interface Vote extends Employee {
@@ -33,7 +33,8 @@ export const castVote = functions.https.onCall(
     const voterEmail: string = context.auth!.token.email;
     const voteValue = payload.vote;
     const comment = payload.comment;
-    await doVote(voteValue, voterEmail, comment, context.auth!.uid);
+    const voteToken = payload.voteToken;
+    await doVote(voteValue, voterEmail, comment || "", voteToken);
   }
 );
 
@@ -106,21 +107,27 @@ async function doVote(
       `'${voteValue}' is not a valid value for 'vote'`
     );
   }
+
+  const tokenSnapshot = await db.collection("token").doc(token).get();
+  if (
+    !tokenSnapshot ||
+    !tokenSnapshot.exists ||
+    tokenSnapshot.data()!.campaignId !== campaign.id
+  ) {
+    throw new functions.https.HttpsError(
+      "permission-denied",
+      `token is not a valid token for this campaign`
+    );
+  }
+
   const employeeSnapshot = await db
     .collection("employees")
     .doc(voterEmail)
     .get();
-  if (!employeeSnapshot) {
-    throw new functions.https.HttpsError(
-      "not-found",
-      `failed to load latest employees import`
-    );
+  if (!employeeSnapshot || !employeeSnapshot.exists) {
+    throw new functions.https.HttpsError("not-found", `employee not found`);
   }
-  const employee = employeeSnapshot.data() as Employee | undefined;
-
-  if (!employee) {
-    throw new functions.https.HttpsError("not-found", `Employee not found`);
-  }
+  const employee = employeeSnapshot.data() as Employee;
 
   const vote: Vote = {
     campaign: campaign.id,
