@@ -9,7 +9,7 @@ const config = functions.config() as Config;
 
 export const statsManager = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
-    const token = req.body.token;
+    const token = req.params.token;
     const tokenSnapshot = await db.collection("token").doc(token).get();
     if (!tokenSnapshot || !tokenSnapshot.exists) {
       res.status(401).send({
@@ -24,13 +24,13 @@ export const statsManager = functions.https.onRequest(
       .where("managerEmail", "==", tokenData.employeeEmail)
       .where("campaign", "==", tokenData.campaignId)
       .get();
-    managersVotes.docs
+    const statsManager = managersVotes.docs
       .map(doc => doc.data() as Vote)
       .reduce(
         (counters, vote) =>
           Object.assign(counters, { [vote.value]: counters[vote.value] + 1 }),
         { great: 0, notGreatAtAll: 0, notThatGreat: 0, ok: 0 }
       );
-    res.status(200).send({ managersVotes });
+    res.status(200).send({ statsManager });
   }
 );
