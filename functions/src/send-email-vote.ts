@@ -164,6 +164,11 @@ export const sendEmailToEmployees = async (
     border: 1px solid rgba(0, 0, 0, 0.12);
     align-items: center;
     cursor: pointer;
+    line-height: 25px;
+}
+
+.button__emoji {
+  margin-right: 0.5em;
 }
 
 .textarea {
@@ -211,6 +216,11 @@ export const sendEmailToEmployees = async (
 button {
     font-size: unset;
     font-family: unset;
+}
+footer {
+  font-size: 0.8em;
+  font-style: italic;
+  color: grey;
 }
   </style>
 </head>
@@ -262,6 +272,7 @@ button {
   </form>
   <footer>
     This email is send to ${employee.fullName} (${employee.email})
+    <br />
     Go to <a href="${linkToApp}">${linkToApp}</a>.
   </footer>
 </body>
