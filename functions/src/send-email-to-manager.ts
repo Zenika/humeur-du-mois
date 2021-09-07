@@ -2,7 +2,10 @@ import * as functions from "firebase-functions";
 import { Config, isEnabled, asBoolean } from "./config";
 import { Vote } from "./cast-vote";
 import { enqueue } from "./process-email-queue";
-import {composeEmailHtml,composeEmailAmpHtml} from "./compose-email-to-manager";
+import {
+  composeEmailHtml,
+  composeEmailAmpHtml
+} from "./compose-email-to-manager";
 import { generateAndSaveRandomEmailToken } from "./generate-random-email-token";
 import { firestore } from "firebase-admin";
 import { Employee } from "./import-employees-from-alibeez";
@@ -33,9 +36,14 @@ export const sendEmailToManager = functions.firestore
       return;
     }
 
-    const managerSnapshot = await db.collection("employees").doc(vote.managerEmail).get()
+    const managerSnapshot = await db
+      .collection("employees")
+      .doc(vote.managerEmail)
+      .get();
     if (!managerSnapshot || !managerSnapshot.exists) {
-      console.error(`Cannot find manager '${vote.managerEmail}' in employees; aborting`)
+      console.error(
+        `Cannot find manager '${vote.managerEmail}' in employees; aborting`
+      );
       return;
     }
 

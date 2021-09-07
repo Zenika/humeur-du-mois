@@ -27,7 +27,7 @@ export const composeEmailHtml = (vote: Vote) => {
 };
 
 export function composeEmailAmpHtml(vote: Vote, token: string) {
-  const content = composeEmailHtml(vote)
+  const content = composeEmailHtml(vote);
   return `
   <!DOCTYPE html>
 <html ⚡4email data-css-strict>
@@ -49,5 +49,5 @@ export function composeEmailAmpHtml(vote: Vote, token: string) {
     ${content}
   </body>
 </html>
-  `
+  `;
 }

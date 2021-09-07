@@ -1,5 +1,5 @@
 import test from "ava";
-import {composeEmailHtml} from "./compose-email-to-manager";
+import { composeEmailHtml } from "./compose-email-to-manager";
 import { firestore } from "firebase-admin";
 
 test("compose email html WITH a comment", t => {
