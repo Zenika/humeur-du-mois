@@ -1,4 +1,6 @@
 import * as functions from "firebase-functions";
+import { Config, isEnabled, asNumber } from "./config";
+
 const config = functions.config() as Config;
 
 export function composeEmailSender() {
