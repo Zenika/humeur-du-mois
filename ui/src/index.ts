@@ -259,7 +259,9 @@ window.addEventListener("load", async function () {
     };
   };
 
-  const initCampaignAndEmployeeData = async (userId: string): Promise<string | undefined> => {
+  const initCampaignAndEmployeeData = async (
+    userId: string
+  ): Promise<string | undefined> => {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
 
@@ -337,7 +339,7 @@ window.addEventListener("load", async function () {
 
     // 5 - Load data for both pages in parallel
     initCampaignAndEmployeeData(session.user.email)
-      .then((voteToken) => {
+      .then(voteToken => {
         if (voteToken) {
           initVoteButtonsEventHandlers(voteToken);
           show(sendingSection);
