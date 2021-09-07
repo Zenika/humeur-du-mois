@@ -102,11 +102,7 @@ export const sendCampaignStartsReminder = functions.firestore
       return;
     }
 
-    sendEmailToEmployees(campaign);
-
-    // await reminderRef.update({
-    //   message
-    // });
+    await sendEmailToEmployees(campaign, false);
   });
 
 export const sendCampaignEndsReminder = functions.firestore
@@ -155,30 +151,5 @@ export const sendCampaignEndsReminder = functions.firestore
       return;
     }
 
-    const monthLongName = new Date(
-      Date.UTC(campaign.year, campaign.month)
-    ).toLocaleString("en-us", {
-      month: "long"
-    });
-
-    const message = {
-      from: composeEmailSender(),
-      to: config.features.reminders.voting_campaign_ends.recipient || [],
-      bcc: await computeBccString(db, campaign.id),
-      subject: `Humeur du mois is about to close for ${monthLongName}!`,
-      html: `
-        <p>Hi,</p>
-        <p>
-          If you haven't already, tell us how it's been for you this past month!
-          Go to <a href="${linkToApp}">${linkToApp}</a>.
-        </p>
-        <p>See you soon!</p>
-        `
-    };
-
-    await reminderRef.update({
-      message
-    });
-
-    await enqueue(message);
+    await sendEmailToEmployees(campaign, true);
   });

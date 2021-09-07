@@ -13,7 +13,10 @@ const linkToApp =
   config.features.reminders.app_link ||
   `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
 
-export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
+export const sendEmailToEmployees = async (
+  campaign: CampaignInfo,
+  endOfCampaigns: boolean
+) => {
   if (!campaign.open) return;
 
   const monthLongName = new Date(
@@ -21,12 +24,31 @@ export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
   ).toLocaleString("en-us", {
     month: "long"
   });
+  const emailsOfEmployeesWhoAlreadyVoted = new Set();
+  if (endOfCampaigns) {
+    (
+      await database
+        .collection("vote")
+        .where("campaign", "==", campaign.id)
+        .get()
+    ).docs
+      .map(voteSnapshot => voteSnapshot.data())
+      .map(vote => vote.email)
+      .forEach(emailsOfEmployeesWhoAlreadyVoted.add);
+    console.info(
+      `Found ${emailsOfEmployeesWhoAlreadyVoted.size} employees who already voted`
+    );
+  }
 
   const employeeDocumentRefs = await db.collection("employees").listDocuments();
   for (const employeeDocumentRef of employeeDocumentRefs) {
     const employeeDocument = await employeeDocumentRef.get();
     const employee = employeeDocument.data() as Employee;
     if (employee.disabled) {
+      continue;
+    }
+
+    if (emailsOfEmployeesWhoAlreadyVoted.has(employee.email)) {
       continue;
     }
 
@@ -39,7 +61,9 @@ export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
     const message = {
       from: composeEmailSender(),
       to: employee.email,
-      subject: `Humeur du mois is open for ${monthLongName}!`,
+      subject: endOfCampaigns
+        ? `Humeur du mois is about to close for ${monthLongName}!`
+        : `Humeur du mois is open for ${monthLongName}!`,
       html: `
             <p>Hi ${employee.fullName},</p>
             <p>
@@ -266,7 +290,7 @@ export const sendEmailVote = functions.https.onRequest(
         .substr(0, 7)
     };
 
-    await sendEmailToEmployees(campaign);
+    await sendEmailToEmployees(campaign, false);
 
     res.status(200).send("OK");
   }
