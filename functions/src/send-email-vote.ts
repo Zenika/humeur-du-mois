@@ -27,10 +27,7 @@ export const sendEmailToEmployees = async (
   const emailsOfEmployeesWhoAlreadyVoted = new Set();
   if (endOfCampaigns) {
     (
-      await database
-        .collection("vote")
-        .where("campaign", "==", campaign.id)
-        .get()
+      await db.collection("vote").where("campaign", "==", campaign.id).get()
     ).docs
       .map(voteSnapshot => voteSnapshot.data())
       .map(vote => vote.email)
