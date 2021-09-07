@@ -59,25 +59,16 @@ export const emailVote = functions.https.onRequest(
       return;
     }
     const tokenData = tokenSnapshot.data() as TokenData;
-    try {
-      console.log(`Vote ${req.body.vote} by ${tokenData.employeeEmail}`);
-      await doVote(
-        req.body.vote,
-        tokenData.employeeEmail,
-        req.body.comment,
-        token
-      );
-      res.status(200).send({
-        message: `Vote ${req.body.vote} with ${req.body.comment} saved `
-      });
-    } catch (err) {
-      console.log(err);
-      console.log(req.body.vote, email, req.body.comment, token);
-      res.status(400).send({
-        error: err,
-        message: `Error`
-      });
-    }
+    
+    await doVote(
+      req.body.vote,
+      tokenData.employeeEmail,
+      req.body.comment,
+      token
+    );
+    res.status(200).send({
+      message: `Thanks! Your answer was properly recorded`
+    });
   }
 );
 async function doVote(
