@@ -34,7 +34,24 @@ export const castVote = functions.https.onCall(
     const voteValue = payload.vote;
     const comment = payload.comment;
     const voteToken = payload.voteToken;
-    await doVote(voteValue, voterEmail, comment || "", voteToken);
+    const tokenSnapshot = await db.collection("token").doc(voteToken).get();
+    if (
+      !tokenSnapshot ||
+      !tokenSnapshot.exists
+    ) {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        `token is unknown`
+      );
+    }
+    const tokenData = tokenSnapshot.data() as TokenData
+    if (tokenData.employeeEmail !== voterEmail) {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        `token is not yours`
+      );
+    }
+    await doVote(voteValue, comment || "", tokenData);
   }
 );
 
@@ -52,19 +69,18 @@ export const emailVote = functions.https.onRequest(
 
     const token = req.body.token;
     const tokenSnapshot = await db.collection("token").doc(token).get();
-    if (!tokenSnapshot) {
+    if (!tokenSnapshot || !tokenSnapshot.exists) {
       res.status(401).send({
         message: "Bad Token"
       });
       return;
     }
     const tokenData = tokenSnapshot.data() as TokenData;
-    
+
     await doVote(
       req.body.vote,
-      tokenData.employeeEmail,
       req.body.comment,
-      token
+      tokenData
     );
     res.status(200).send({
       message: `Thanks! Your answer was properly recorded`
@@ -73,9 +89,8 @@ export const emailVote = functions.https.onRequest(
 );
 async function doVote(
   voteValue: string,
-  voterEmail: string,
   comment: string,
-  token: string
+  token: TokenData
 ) {
   const voteDate = new Date();
   const campaign = computeCurrentCampaign(voteDate, {
@@ -83,6 +98,7 @@ async function doVote(
     startOn: asNumber(config.features.voting_campaigns.start_on),
     endOn: asNumber(config.features.voting_campaigns.end_on)
   });
+
   if (!campaign.open) {
     throw new functions.https.HttpsError(
       "failed-precondition",
@@ -92,6 +108,14 @@ async function doVote(
       }
     );
   }
+
+  if (campaign.id !== token.campaignId) {
+    throw new functions.https.HttpsError(
+      "permission-denied",
+      `token is not a valid token for this campaign`
+    );
+  }
+
   if (!validVotes.includes(voteValue)) {
     throw new functions.https.HttpsError(
       "invalid-argument",
@@ -99,21 +123,9 @@ async function doVote(
     );
   }
 
-  const tokenSnapshot = await db.collection("token").doc(token).get();
-  if (
-    !tokenSnapshot ||
-    !tokenSnapshot.exists ||
-    tokenSnapshot.data()!.campaignId !== campaign.id
-  ) {
-    throw new functions.https.HttpsError(
-      "permission-denied",
-      `token is not a valid token for this campaign`
-    );
-  }
-
   const employeeSnapshot = await db
     .collection("employees")
-    .doc(voterEmail)
+    .doc(token.employeeEmail)
     .get();
   if (!employeeSnapshot || !employeeSnapshot.exists) {
     throw new functions.https.HttpsError("not-found", `employee not found`);
