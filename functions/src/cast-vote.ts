@@ -80,10 +80,14 @@ export const emailVote = functions.https.onRequest(
       });
     } catch (error) {
       if (error instanceof functions.https.HttpsError) {
-        res.status(error.httpErrorCode.status).send(error.toJSON());
+        res.status(error.httpErrorCode.status).send({
+          error: error.toJSON()
+        });
       } else {
         res.status(500).send({
-          message: error.message
+          error: {
+            message: error.message
+          }
         });
       }
     }
