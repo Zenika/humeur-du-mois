@@ -3,20 +3,16 @@ import { firestore } from "firebase-admin";
 import { Config } from "./config";
 import { TokenData } from "./generate-random-email-token";
 import { Vote } from "./cast-vote";
+import { allowCorsEmail } from "./cors";
 
 const db = firestore();
 const config = functions.config() as Config;
 
 export const statsManager = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
-    const email = req.header("AMP-Email-Sender");
-    if (!email || config.features.emails.sender.email !== email) {
-      res.status(401).send({
-        message: "Bad Email"
-      });
+    if (!allowCorsEmail(req, res)) {
       return;
     }
-    res.set("AMP-Email-Allow-Sender", config.features.emails.sender.email);
     const token = req.query.token;
     if (!token) {
       res.status(401).send({

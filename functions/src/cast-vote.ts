@@ -4,6 +4,7 @@ import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Employee } from "./import-employees-from-alibeez";
 import { TokenData } from "./generate-random-email-token";
+import { allowCorsEmail } from "./cors";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -56,14 +57,9 @@ export const castVote = functions.https.onCall(
 // Vote from email
 export const emailVote = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
-    const email = req.header("AMP-Email-Sender");
-    if (!email || config.features.emails.sender.email !== email) {
-      res.status(401).send({
-        message: "Bad Email"
-      });
+    if (!allowCorsEmail(req, res)) {
       return;
     }
-    res.set("AMP-Email-Allow-Sender", config.features.emails.sender.email);
 
     const token = req.body.token;
     const tokenSnapshot = await db.collection("token").doc(token).get();
