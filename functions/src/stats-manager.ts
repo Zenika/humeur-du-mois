@@ -51,7 +51,13 @@ export const statsManager = functions.https.onRequest(
       .get();
     res.status(200).send({
       manager: statsManager,
-      agency: statsAgency.exists ? statsAgency.data() : {},
+      agency: {
+        great: 0,
+        notGreatAtAll: 0,
+        notThatGreat: 0,
+        ok: 0,
+        ...(statsAgency.exists ? statsAgency.data() : {})
+      },
       campaign: tokenData.campaignId
     });
   }
