@@ -166,7 +166,7 @@ window.addEventListener("load", async function () {
     return voteRawData.filter(rawVote => rawVote.counts.agency === agency);
   };
 
-  const errorOut = (err: Error) => {
+  const errorOut = (err: unknown) => {
     console.error(err);
     changePageTo(errorPage);
   };
@@ -259,7 +259,7 @@ window.addEventListener("load", async function () {
     };
   };
 
-  const initCampaignAndEmployeeData = async (userId: string) => {
+  const initCampaignAndEmployeeData = async (userId: string): Promise<string | undefined> => {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
 
@@ -295,8 +295,7 @@ window.addEventListener("load", async function () {
       .doc(userId.toLowerCase())
       .get();
     if (!employeeSnapshot) {
-      errorOut(new Error("cannot find latest employee data import"));
-      return;
+      throw new Error("cannot find latest employee data import");
     }
     const employee = employeeSnapshot.data();
     if (!employee) {
@@ -307,6 +306,8 @@ window.addEventListener("load", async function () {
     if (employee.managerEmail) {
       managerName.innerText = employee.managerEmail;
     }
+
+    return voteToken;
   };
 
   try {
@@ -323,7 +324,6 @@ window.addEventListener("load", async function () {
     // 2 - Display the main content (Optimistic UI)
     userIdElement.innerText = session.user.email;
     displayHomePage();
-    initVoteButtonsEventHandlers(voteToken);
     initStatsButtonsEventHandlers();
 
     // 3 - Firebase authentication
@@ -337,9 +337,12 @@ window.addEventListener("load", async function () {
 
     // 5 - Load data for both pages in parallel
     initCampaignAndEmployeeData(session.user.email)
-      .then(() => {
+      .then((voteToken) => {
+        if (voteToken) {
+          initVoteButtonsEventHandlers(voteToken);
+          show(sendingSection);
+        }
         hide(sendingSectionLoader);
-        show(sendingSection);
       })
       .catch(errorOut);
 
