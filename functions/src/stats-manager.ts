@@ -31,6 +31,16 @@ export const statsManager = functions.https.onRequest(
           Object.assign(counters, { [vote.value]: counters[vote.value] + 1 }),
         { great: 0, notGreatAtAll: 0, notThatGreat: 0, ok: 0 }
       );
-    res.status(200).send({ statsManager });
+    const statsAgency = await db
+      .collection("stats-campaign-agency")
+      .doc(`${tokenData.campaignId}_${tokenData.agency}`)
+      .get();
+    res
+      .status(200)
+      .send({
+        manager: statsManager,
+        agency: statsAgency.exists ? statsAgency.data() : {},
+        campaign: tokenData.campaignId
+      });
   }
 );
