@@ -9,7 +9,7 @@ const config = functions.config() as Config;
 
 export const statsManager = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
-    const token = req.params.token;
+    const token = req.query.token;
     const tokenSnapshot = await db.collection("token").doc(token).get();
     if (!tokenSnapshot || !tokenSnapshot.exists) {
       res.status(401).send({
@@ -35,12 +35,10 @@ export const statsManager = functions.https.onRequest(
       .collection("stats-campaign-agency")
       .doc(`${tokenData.campaignId}_${tokenData.agency}`)
       .get();
-    res
-      .status(200)
-      .send({
-        manager: statsManager,
-        agency: statsAgency.exists ? statsAgency.data() : {},
-        campaign: tokenData.campaignId
-      });
+    res.status(200).send({
+      manager: statsManager,
+      agency: statsAgency.exists ? statsAgency.data() : {},
+      campaign: tokenData.campaignId
+    });
   }
 );
