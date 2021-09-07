@@ -8,6 +8,7 @@ import { daysBeforeCampaignEnds } from "./days-before-campaign-ends";
 import { enqueue } from "./process-email-queue";
 import { Employee } from "./import-employees-from-alibeez";
 import { sendEmailToEmployees } from "./send-email-vote";
+import { composeEmailSender } from "./compose-email-sender";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -161,7 +162,7 @@ export const sendCampaignEndsReminder = functions.firestore
     });
 
     const message = {
-      from: config.features.reminders.voting_campaign_ends.sender,
+      from: composeEmailSender(),
       to: config.features.reminders.voting_campaign_ends.recipient || [],
       bcc: await computeBccString(db, campaign.id),
       subject: `Humeur du mois is about to close for ${monthLongName}!`,

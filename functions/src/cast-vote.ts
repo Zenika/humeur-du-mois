@@ -15,6 +15,7 @@ const validVotes = ["great", "ok", "notThatGreat", "notGreatAtAll"];
 interface RequestPayload {
   vote: string;
   comment: string;
+  token: string;
 }
 
 export interface Vote extends Employee {
@@ -26,6 +27,7 @@ export interface Vote extends Employee {
   emailToManagerSent?: boolean;
 }
 
+// Vote from the UI
 export const castVote = functions.https.onCall(
   async (payload: RequestPayload, context: any) => {
     const voterEmail: string = context.auth!.token.email;
@@ -35,17 +37,17 @@ export const castVote = functions.https.onCall(
   }
 );
 
+// Vote from email
 export const emailVote = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
     const email = req.header("AMP-Email-Sender");
-    //TODO check email is from email
-    if (!email) {
+    if (!email || config.features.emails.sender.email !== email) {
       res.status(401).send({
         message: "Bad Email"
       });
       return;
     }
-    res.set("AMP-Email-Allow-Sender", email);
+    res.set("AMP-Email-Allow-Sender", config.features.emails.sender.email);
 
     const token = req.body.token;
     const tokenSnapshot = await db.collection("token").doc(token).get();

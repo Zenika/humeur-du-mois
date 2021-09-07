@@ -5,6 +5,7 @@ import { enqueue } from "./process-email-queue";
 import { Employee } from "./import-employees-from-alibeez";
 import { CampaignInfo } from "./compute-current-campaign";
 import { generateAndSaveRandomEmailToken } from "./generate-random-email-token";
+import { composeEmailSender } from "./compose-email-sender";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -33,7 +34,7 @@ export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
     );
 
     const message = {
-      from: config.features.reminders.voting_campaign_starts.sender,
+      from: composeEmailSender(),
       to: employee.email,
       subject: `Humeur du mois is open for ${monthLongName}!`,
       html: `
