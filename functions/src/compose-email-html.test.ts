@@ -1,22 +1,22 @@
 import test from "ava";
-import composeEmailHtml from "./compose-email-html";
+import {composeEmailHtml} from "./compose-email-to-manager";
 import { firestore } from "firebase-admin";
 
 test("compose email html WITH a comment", t => {
   const vote = {
-    managerEmail: "hugo.wood@zenika.com",
-    fullName: "clement van peuter",
+    managerEmail: "h.w@zenika.com",
+    fullName: "cvp",
     value: "great",
     comment: "Zenika c'est trop bien",
     campaign: "plop",
-    email: " clement.vanpeuter@zenika.com",
+    email: " cvp@zenika.com",
     agency: "nantes",
     recordedAt: firestore.Timestamp.now()
   };
   const expected = `
-  <p>Hi hugo.wood@zenika.com,</p>
+  <p>Hi h.w@zenika.com,</p>
   <p>
-    clement van peuter has shared how they feel:
+    cvp has shared how they feel:
     <p style="font-size:50px; color:#1b5e20;">Great 😁</p>
   </p>
   <p>
@@ -31,18 +31,18 @@ test("compose email html WITH a comment", t => {
 
 test("compose email html WITHOUT a comment", t => {
   const vote = {
-    managerEmail: "hugo.wood@zenika.com",
-    fullName: "clement van peuter",
+    managerEmail: "h.w@zenika.com",
+    fullName: "cvp",
     value: "great",
     campaign: "plop",
-    email: " clement.vanpeuter@zenika.com",
+    email: " cvp@zenika.com",
     agency: "nantes",
     recordedAt: firestore.Timestamp.now()
   };
   const expected = `
-  <p>Hi hugo.wood@zenika.com,</p>
+  <p>Hi h.w@zenika.com,</p>
   <p>
-    clement van peuter has shared how they feel:
+    cvp has shared how they feel:
     <p style="font-size:50px; color:#1b5e20;">Great 😁</p>
   </p>
   <p>See you soon!</p>`;

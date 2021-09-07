@@ -49,7 +49,10 @@ export const getCurrentCampaignState = functions.https.onCall(
       .get();
 
     let voteToken = voteTokenQueryResults.empty
-      ? await generateAndSaveRandomEmailToken(voterEmail, campaign.id, db)
+      ? await generateAndSaveRandomEmailToken(
+          { employeeEmail: voterEmail, campaignId: campaign.id },
+          db
+        )
       : voteTokenQueryResults.docs[0].id;
 
     return {

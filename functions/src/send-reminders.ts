@@ -5,10 +5,7 @@ import { Tick } from "./save-ticks";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Config, isEnabled, asNumber } from "./config";
 import { daysBeforeCampaignEnds } from "./days-before-campaign-ends";
-import { enqueue } from "./process-email-queue";
-import { Employee } from "./import-employees-from-alibeez";
 import { sendEmailToEmployees } from "./send-email-vote";
-import { composeEmailSender } from "./compose-email-sender";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -19,49 +16,6 @@ const campaignConfig = {
   enabled: isEnabled(config.features.voting_campaigns),
   startOn: asNumber(config.features.voting_campaigns.start_on),
   endOn: asNumber(config.features.voting_campaigns.end_on)
-};
-const mailgunClient = mailgun({
-  domain: config.mailgun.domain,
-  apiKey: config.mailgun.api_key,
-  host: config.mailgun.host
-});
-
-const computeBccString = async (
-  database: firestore.Firestore,
-  campaignId: string
-) => {
-  const emailsOfEmployeesWhoAlreadyVoted = new Set(
-    (
-      await database
-        .collection("vote")
-        .where("campaign", "==", campaignId)
-        .get()
-    ).docs
-      .map(voteSnapshot => voteSnapshot.data())
-      .map(vote => vote.email)
-  );
-  console.info(
-    `Found ${emailsOfEmployeesWhoAlreadyVoted.size} employees who already voted`
-  );
-
-  const employees = (
-    await Promise.all(
-      (
-        await database.collection("employees").listDocuments()
-      ).map(employeeDocumentRef => employeeDocumentRef.get())
-    )
-  ).map(employeeSnapshot => employeeSnapshot.data());
-  console.info(`Found ${employees.length} employees`);
-
-  const employeesWhoHaveNotVotedYet = employees.filter(
-    employee =>
-      employee && !emailsOfEmployeesWhoAlreadyVoted.has(employee.email)
-  ) as firestore.DocumentData[]; // type isn't inferred correctly
-  console.info(
-    `Found ${employeesWhoHaveNotVotedYet.length} employees who haven't voted yet`
-  );
-
-  return employeesWhoHaveNotVotedYet.map(employee => employee.email).join(", ");
 };
 
 export const sendCampaignStartsReminder = functions.firestore

@@ -6,7 +6,7 @@ const voteMap: { [key: string]: { color: string; label: string } } = {
   notGreatAtAll: { label: "Bad 😤", color: "#b71c1c" }
 };
 
-const composeEmailHtml = (vote: Vote) => {
+export const composeEmailHtml = (vote: Vote) => {
   let comment = "";
   if (vote.comment) {
     comment = `
@@ -26,4 +26,28 @@ const composeEmailHtml = (vote: Vote) => {
   <p>See you soon!</p>`;
 };
 
-export default composeEmailHtml;
+export function composeEmailAmpHtml(vote: Vote, token: string) {
+  const content = composeEmailHtml(vote)
+  return `
+  <!DOCTYPE html>
+<html ⚡4email data-css-strict>
+  <head>
+    <meta charset="utf-8" />
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <style amp4email-boilerplate>
+      body {
+        visibility: hidden;
+      }
+    </style>
+    <style amp-custom>
+      h1 {
+        margin: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    ${content}
+  </body>
+</html>
+  `
+}

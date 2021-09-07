@@ -50,8 +50,10 @@ export const sendEmailToEmployees = async (
     }
 
     const token = await generateAndSaveRandomEmailToken(
-      employee.email,
-      campaign.id,
+      {
+        employeeEmail: employee.email,
+        campaignId: campaign.id
+      },
       db
     );
 
