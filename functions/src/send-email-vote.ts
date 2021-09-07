@@ -22,7 +22,7 @@ export const sendEmailToEmployees = async (campaign: CampaignInfo) => {
     month: "long"
   });
 
-  const employeeDocumentRefs = await db.collection("employees").listDocuments()
+  const employeeDocumentRefs = await db.collection("employees").listDocuments();
   for (const employeeDocumentRef of employeeDocumentRefs) {
     const employeeDocument = await employeeDocumentRef.get();
     const employee = employeeDocument.data() as Employee;

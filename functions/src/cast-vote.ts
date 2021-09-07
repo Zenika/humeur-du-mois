@@ -73,11 +73,20 @@ export const emailVote = functions.https.onRequest(
       return;
     }
     const tokenData = tokenSnapshot.data() as TokenData;
-
-    await doVote(req.body.vote, req.body.comment, tokenData);
-    res.status(200).send({
-      message: `Thanks! Your answer was properly recorded`
-    });
+    try {
+      await doVote(req.body.vote, req.body.comment, tokenData);
+      res.status(200).send({
+        message: `Thanks! Your answer was properly recorded`
+      });
+    } catch (error) {
+      if (error instanceof functions.https.HttpsError) {
+        res.status(error.httpErrorCode.status).send(error.toJSON());
+      } else {
+        res.status(500).send({
+          message: error.message
+        });
+      }
+    }
   }
 );
 async function doVote(voteValue: string, comment: string, token: TokenData) {
