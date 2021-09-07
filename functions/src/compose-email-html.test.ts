@@ -1,9 +1,10 @@
 import test from "ava";
 import { composeEmailHtml } from "./compose-email-to-manager";
 import { firestore } from "firebase-admin";
+import { Vote } from "./cast-vote";
 
 test("compose email html WITH a comment", t => {
-  const vote = {
+  const vote: Vote = {
     managerEmail: "h.w@zenika.com",
     fullName: "cvp",
     value: "great",
@@ -30,7 +31,7 @@ test("compose email html WITH a comment", t => {
 });
 
 test("compose email html WITHOUT a comment", t => {
-  const vote = {
+  const vote: Vote = {
     managerEmail: "h.w@zenika.com",
     fullName: "cvp",
     value: "great",

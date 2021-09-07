@@ -10,16 +10,17 @@ const config = functions.config() as Config;
 const requireUniqueVote = asBoolean(
   config.features.voting_campaigns.require_unique_vote
 );
-const validVotes = ["great", "ok", "notThatGreat", "notGreatAtAll"];
+const validVotes = ["great", "ok", "notThatGreat", "notGreatAtAll"] as const;
+type VoteValue = typeof validVotes[number];
 
 interface RequestPayload {
-  vote: string;
+  vote: VoteValue;
   comment?: string;
   voteToken: string;
 }
 
 export interface Vote extends Employee {
-  value: string;
+  value: VoteValue;
   comment?: string;
   campaign: string;
   recordedAt: firestore.Timestamp;
@@ -93,7 +94,7 @@ export const emailVote = functions.https.onRequest(
     }
   }
 );
-async function doVote(voteValue: string, comment: string, token: TokenData) {
+async function doVote(voteValue: VoteValue, comment: string, token: TokenData) {
   const voteDate = new Date();
   const campaign = computeCurrentCampaign(voteDate, {
     enabled: isEnabled(config.features.voting_campaigns),
