@@ -177,7 +177,7 @@ export interface EmailsConfig {
   sender: {
     name: string;
     email: string;
-  }
+  };
 }
 
 export interface FeaturesConfig {

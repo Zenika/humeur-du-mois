@@ -35,16 +35,13 @@ export const castVote = functions.https.onCall(
     const comment = payload.comment;
     const voteToken = payload.voteToken;
     const tokenSnapshot = await db.collection("token").doc(voteToken).get();
-    if (
-      !tokenSnapshot ||
-      !tokenSnapshot.exists
-    ) {
+    if (!tokenSnapshot || !tokenSnapshot.exists) {
       throw new functions.https.HttpsError(
         "permission-denied",
         `token is unknown`
       );
     }
-    const tokenData = tokenSnapshot.data() as TokenData
+    const tokenData = tokenSnapshot.data() as TokenData;
     if (tokenData.employeeEmail !== voterEmail) {
       throw new functions.https.HttpsError(
         "permission-denied",
@@ -77,21 +74,13 @@ export const emailVote = functions.https.onRequest(
     }
     const tokenData = tokenSnapshot.data() as TokenData;
 
-    await doVote(
-      req.body.vote,
-      req.body.comment,
-      tokenData
-    );
+    await doVote(req.body.vote, req.body.comment, tokenData);
     res.status(200).send({
       message: `Thanks! Your answer was properly recorded`
     });
   }
 );
-async function doVote(
-  voteValue: string,
-  comment: string,
-  token: TokenData
-) {
+async function doVote(voteValue: string, comment: string, token: TokenData) {
   const voteDate = new Date();
   const campaign = computeCurrentCampaign(voteDate, {
     enabled: isEnabled(config.features.voting_campaigns),
