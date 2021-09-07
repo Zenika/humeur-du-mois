@@ -253,7 +253,7 @@ footer {
     </div>
     <div id="errorDisplay" class="errorDisplay" submit-error>
       <template type="amp-mustache">
-        Error to send vote : {{error.message}}
+        Error: {{error.message}}
       </template>
     </div>
     <div id="successDisplay" class="successDisplay" submit-success>
