@@ -99,6 +99,7 @@ export function composeEmailAmpHtml(vote: Vote, token: string) {
     ${content}
 
     <amp-list src="https://us-central1-humeur-du-mois-2018.cloudfunctions.net/statsManager?token=10y6KFyCb9Wf4uw5DCCd" layout="fixed-height" height="120" items="." single-item>
+    Loading stats ...
     <template type="amp-mustache">
       <div id="statsTab">
         <table>
