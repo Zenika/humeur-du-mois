@@ -24,6 +24,7 @@ export interface Employee {
   fullName: string | null;
   managerEmail: string | null;
   agency: string | null;
+  disabled: boolean | null;
 }
 
 const obfuscateKey = (key: string) => {
