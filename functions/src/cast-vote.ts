@@ -3,8 +3,13 @@ import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Employee } from "./import-employees-from-alibeez";
-import { TokenData } from "./generate-random-email-token";
+
 import { allowCorsEmail } from "./cors";
+import {
+  decodeTokenData,
+  TokenData,
+  TokenInfo
+} from "./generate-random-email-token";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -20,12 +25,15 @@ interface RequestPayload {
   voteToken: string;
 }
 
+export type VoteType = "ui" | "amp";
+
 export interface Vote extends Employee {
   value: VoteValue;
   comment?: string;
   campaign: string;
   recordedAt: firestore.Timestamp;
   voteFromUi?: boolean; //States if votes comes from Ui. If not, sendEmailToManager will abort
+  voteType?: VoteType;
   emailToManagerSent?: boolean;
 }
 
@@ -36,21 +44,14 @@ export const castVote = functions.https.onCall(
     const voteValue = payload.vote;
     const comment = payload.comment;
     const voteToken = payload.voteToken;
-    const tokenSnapshot = await db.collection("token").doc(voteToken).get();
-    if (!tokenSnapshot || !tokenSnapshot.exists) {
-      throw new functions.https.HttpsError(
-        "permission-denied",
-        `token is unknown`
-      );
-    }
-    const tokenData = tokenSnapshot.data() as TokenData;
+    const tokenData = await decodeTokenData(voteToken);
     if (tokenData.employeeEmail !== voterEmail) {
       throw new functions.https.HttpsError(
         "permission-denied",
         `token is not yours`
       );
     }
-    await doVote(voteValue, comment || "", tokenData);
+    await doVote(voteValue, comment || "", tokenData, "ui");
   }
 );
 
@@ -62,16 +63,9 @@ export const emailVote = functions.https.onRequest(
     }
 
     const token = req.body.token;
-    const tokenSnapshot = await db.collection("token").doc(token).get();
-    if (!tokenSnapshot || !tokenSnapshot.exists) {
-      res.status(401).send({
-        message: "Bad Token"
-      });
-      return;
-    }
-    const tokenData = tokenSnapshot.data() as TokenData;
+    const tokenData = await decodeTokenData(token);
     try {
-      await doVote(req.body.vote, req.body.comment, tokenData);
+      await doVote(req.body.vote, req.body.comment, tokenData, "amp");
       res.status(200).send({
         message: `Thanks! Your answer was properly recorded`
       });
@@ -90,7 +84,13 @@ export const emailVote = functions.https.onRequest(
     }
   }
 );
-async function doVote(voteValue: VoteValue, comment: string, token: TokenData) {
+
+async function doVote(
+  voteValue: VoteValue,
+  comment: string,
+  token: TokenInfo,
+  voteType: VoteType
+) {
   const voteDate = new Date();
   const campaign = computeCurrentCampaign(voteDate, {
     enabled: isEnabled(config.features.voting_campaigns),
@@ -136,6 +136,7 @@ async function doVote(voteValue: VoteValue, comment: string, token: TokenData) {
     recordedAt: firestore.Timestamp.fromDate(voteDate),
     value: voteValue,
     voteFromUi: true,
+    voteType,
     ...employee
   };
   if (comment) {
@@ -143,7 +144,10 @@ async function doVote(voteValue: VoteValue, comment: string, token: TokenData) {
   }
   if (requireUniqueVote) {
     try {
-      await db.collection("vote").doc(`${campaign.id}-${token}`).create(vote);
+      await db
+        .collection("vote")
+        .doc(`${campaign.id}-${token.id}`)
+        .create(vote);
     } catch (err) {
       if (err.code === 6 /* ALREADY_EXISTS */) {
         throw new functions.https.HttpsError(
