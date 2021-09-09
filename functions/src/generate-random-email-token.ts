@@ -9,16 +9,28 @@ export interface TokenData {
 export interface TokenInfo extends TokenData {
   id: string;
 }
+const db = firestore();
 
 export async function generateAndSaveRandomEmailToken(
-  employeeEmail: string,
-  campaignId: string,
-  db: firestore.Firestore
+  tokenData: TokenData
 ): Promise<string> {
   const ref = await db
     .collection("token")
-    .add({ employeeEmail: employeeEmail, campaignId: campaignId });
+    .add(tokenData);
   return ref.id;
+}
+
+export async function getOrGenerateRandomEmailToken(tokenData: TokenData) {
+  const voteTokenQueryResults = await db
+      .collection("token")
+      .where("employeeEmail", "==", tokenData.employeeEmail)
+      .where("campaign", "==", tokenData.campaignId)
+      .get();
+
+    let voteToken = voteTokenQueryResults.empty
+      ? await generateAndSaveRandomEmailToken(tokenData)
+      : voteTokenQueryResults.docs[0].id;
+    return voteToken;
 }
 
 export async function decodeTokenData(tokenId: string): Promise<TokenInfo> {

@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { firestore } from "firebase-admin";
-import { generateAndSaveRandomEmailToken } from "./generate-random-email-token";
+import { getOrGenerateRandomEmailToken } from "./generate-random-email-token";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -41,16 +41,8 @@ export const getCurrentCampaignState = functions.https.onCall(
       .where("email", "==", voterEmail)
       .where("campaign", "==", campaign.open ? campaign.id : "")
       .get();
-
-    const voteTokenQueryResults = await db
-      .collection("token")
-      .where("employeeEmail", "==", voterEmail)
-      .where("campaign", "==", campaign.open ? campaign.id : "")
-      .get();
-
-    let voteToken = voteTokenQueryResults.empty
-      ? await generateAndSaveRandomEmailToken(voterEmail, campaign.id, db)
-      : voteTokenQueryResults.docs[0].id;
+    
+    let voteToken = await getOrGenerateRandomEmailToken({ employeeEmail: voterEmail, campaignId: campaign.id});
 
     return {
       campaign: campaign.id,

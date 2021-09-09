@@ -4,7 +4,7 @@ import { Config, isEnabled, asNumber } from "./config";
 import { enqueue } from "./process-email-queue";
 import { Employee } from "./import-employees-from-alibeez";
 import { CampaignInfo } from "./compute-current-campaign";
-import { generateAndSaveRandomEmailToken } from "./generate-random-email-token";
+import { getOrGenerateRandomEmailToken } from "./generate-random-email-token";
 import { composeEmailSender } from "./compose-email-sender";
 
 const db = firestore();
@@ -49,10 +49,10 @@ export const sendEmailToEmployees = async (
       continue;
     }
 
-    const token = await generateAndSaveRandomEmailToken(
-      employee.email,
-      campaign.id,
-      db
+    const token = await getOrGenerateRandomEmailToken({
+        employeeEmail: employee.email,
+        campaignId: campaign.id,
+      }
     );
 
     const message = {
