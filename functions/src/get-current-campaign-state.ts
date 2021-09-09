@@ -41,8 +41,11 @@ export const getCurrentCampaignState = functions.https.onCall(
       .where("email", "==", voterEmail)
       .where("campaign", "==", campaign.open ? campaign.id : "")
       .get();
-    
-    let voteToken = await getOrGenerateRandomEmailToken({ employeeEmail: voterEmail, campaignId: campaign.id});
+
+    let voteToken = await getOrGenerateRandomEmailToken({
+      employeeEmail: voterEmail,
+      campaignId: campaign.id
+    });
 
     return {
       campaign: campaign.id,

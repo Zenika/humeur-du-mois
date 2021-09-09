@@ -50,10 +50,9 @@ export const sendEmailToEmployees = async (
     }
 
     const token = await getOrGenerateRandomEmailToken({
-        employeeEmail: employee.email,
-        campaignId: campaign.id,
-      }
-    );
+      employeeEmail: employee.email,
+      campaignId: campaign.id
+    });
 
     const message = {
       from: composeEmailSender(),
