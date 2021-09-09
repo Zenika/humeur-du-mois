@@ -18,8 +18,7 @@ const linkToApp =
 
 export const sendEmailToEmployees = async (
   campaign: CampaignInfo,
-  endOfCampaigns: boolean,
-  token: TokenInfo
+  endOfCampaigns: boolean
 ) => {
   if (!campaign.open) return;
 
