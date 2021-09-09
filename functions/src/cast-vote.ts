@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Employee } from "./import-employees-from-alibeez";
-import { TokenData } from "./generate-random-email-token";
+import { decodeTokenData, TokenData, TokenInfo } from "./generate-random-email-token";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -34,14 +34,7 @@ export const castVote = functions.https.onCall(
     const voteValue = payload.vote;
     const comment = payload.comment;
     const voteToken = payload.voteToken;
-    const tokenSnapshot = await db.collection("token").doc(voteToken).get();
-    if (!tokenSnapshot || !tokenSnapshot.exists) {
-      throw new functions.https.HttpsError(
-        "permission-denied",
-        `token is unknown`
-      );
-    }
-    const tokenData = tokenSnapshot.data() as TokenData;
+    const tokenData = await decodeTokenData(voteToken);
     if (tokenData.employeeEmail !== voterEmail) {
       throw new functions.https.HttpsError(
         "permission-denied",
@@ -65,14 +58,7 @@ export const emailVote = functions.https.onRequest(
     res.set("AMP-Email-Allow-Sender", config.features.emails.sender.email);
 
     const token = req.body.token;
-    const tokenSnapshot = await db.collection("token").doc(token).get();
-    if (!tokenSnapshot || !tokenSnapshot.exists) {
-      res.status(401).send({
-        message: "Bad Token"
-      });
-      return;
-    }
-    const tokenData = tokenSnapshot.data() as TokenData;
+    const tokenData = await decodeTokenData(token);
     try {
       await doVote(req.body.vote, req.body.comment, tokenData);
       res.status(200).send({
@@ -93,7 +79,7 @@ export const emailVote = functions.https.onRequest(
     }
   }
 );
-async function doVote(voteValue: string, comment: string, token: TokenData) {
+async function doVote(voteValue: string, comment: string, token: TokenInfo) {
   const voteDate = new Date();
   const campaign = computeCurrentCampaign(voteDate, {
     enabled: isEnabled(config.features.voting_campaigns),
@@ -146,7 +132,7 @@ async function doVote(voteValue: string, comment: string, token: TokenData) {
   }
   if (requireUniqueVote) {
     try {
-      await db.collection("vote").doc(`${campaign.id}-${token}`).create(vote);
+      await db.collection("vote").doc(`${campaign.id}-${token.id}`).create(vote);
     } catch (err) {
       if (err.code === 6 /* ALREADY_EXISTS */) {
         throw new functions.https.HttpsError(
