@@ -22,12 +22,15 @@ interface RequestPayload {
   voteToken: string;
 }
 
+export type VoteType = "ui" | "amp";
+
 export interface Vote extends Employee {
   value: string;
   comment?: string;
   campaign: string;
   recordedAt: firestore.Timestamp;
   voteFromUi?: boolean; //States if votes comes from Ui. If not, sendEmailToManager will abort
+  voteType?: VoteType;
   emailToManagerSent?: boolean;
 }
 
@@ -45,7 +48,7 @@ export const castVote = functions.https.onCall(
         `token is not yours`
       );
     }
-    await doVote(voteValue, comment || "", tokenData);
+    await doVote(voteValue, comment || "", tokenData, "ui");
   }
 );
 
@@ -64,7 +67,7 @@ export const emailVote = functions.https.onRequest(
     const token = req.body.token;
     const tokenData = await decodeTokenData(token);
     try {
-      await doVote(req.body.vote, req.body.comment, tokenData);
+      await doVote(req.body.vote, req.body.comment, tokenData, "amp");
       res.status(200).send({
         message: `Thanks! Your answer was properly recorded`
       });
@@ -83,7 +86,12 @@ export const emailVote = functions.https.onRequest(
     }
   }
 );
-async function doVote(voteValue: string, comment: string, token: TokenInfo) {
+async function doVote(
+  voteValue: string,
+  comment: string,
+  token: TokenInfo,
+  voteType: VoteType
+) {
   const voteDate = new Date();
   const campaign = computeCurrentCampaign(voteDate, {
     enabled: isEnabled(config.features.voting_campaigns),
@@ -129,6 +137,7 @@ async function doVote(voteValue: string, comment: string, token: TokenInfo) {
     recordedAt: firestore.Timestamp.fromDate(voteDate),
     value: voteValue,
     voteFromUi: true,
+    voteType,
     ...employee
   };
   if (comment) {

@@ -2,13 +2,14 @@ import * as functions from "firebase-functions";
 import * as firebase from "firebase-admin";
 
 import { Config, isEnabled } from "./config";
-import { Vote } from "./cast-vote";
+import { Vote, VoteType } from "./cast-vote";
 
 const config = functions.config() as Config;
 
 export const updateStats = async (
   voteValue: string,
   voteId: string,
+  voteType: VoteType,
   statsDocument: FirebaseFirestore.DocumentReference,
   additionnalFields: object = {}
 ) => {
@@ -26,7 +27,8 @@ export const updateStats = async (
     const updateCounters = {
       ...previousCounters,
       ...additionnalFields,
-      [voteValue]: (previousCounters[voteValue] || 0) + 1
+      [voteValue]: (previousCounters[voteValue] || 0) + 1,
+      [voteType]: (previousCounters[voteType] || 0) + 1
     };
     return transaction
       .set(statsDocument, updateCounters)
@@ -68,6 +70,7 @@ export const updateStatsOnVote = functions.firestore
       updateStats(
         vote.value,
         voteId,
+        vote.voteType || "ui",
         statsRef.ref,
         statsRef.additionnalFields
       ).catch(e => {
