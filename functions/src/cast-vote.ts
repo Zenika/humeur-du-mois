@@ -3,7 +3,11 @@ import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Employee } from "./import-employees-from-alibeez";
-import { decodeTokenData, TokenData, TokenInfo } from "./generate-random-email-token";
+import {
+  decodeTokenData,
+  TokenData,
+  TokenInfo
+} from "./generate-random-email-token";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -132,7 +136,10 @@ async function doVote(voteValue: string, comment: string, token: TokenInfo) {
   }
   if (requireUniqueVote) {
     try {
-      await db.collection("vote").doc(`${campaign.id}-${token.id}`).create(vote);
+      await db
+        .collection("vote")
+        .doc(`${campaign.id}-${token.id}`)
+        .create(vote);
     } catch (err) {
       if (err.code === 6 /* ALREADY_EXISTS */) {
         throw new functions.https.HttpsError(

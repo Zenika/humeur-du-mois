@@ -23,12 +23,12 @@ export async function generateAndSaveRandomEmailToken(
 
 export async function decodeTokenData(tokenId: string): Promise<TokenInfo> {
   const tokenSnapshot = await db.collection("token").doc(tokenId).get();
-    if (!tokenSnapshot || !tokenSnapshot.exists) {
-      throw new functions.https.HttpsError(
-        "permission-denied",
-        `token is unknown`
-      );
-    }
-    const tokenData = tokenSnapshot.data() as TokenData;
-    return {id: tokenId, ...tokenData}
+  if (!tokenSnapshot || !tokenSnapshot.exists) {
+    throw new functions.https.HttpsError(
+      "permission-denied",
+      `token is unknown`
+    );
+  }
+  const tokenData = tokenSnapshot.data() as TokenData;
+  return { id: tokenId, ...tokenData };
 }
