@@ -1,10 +1,13 @@
 import * as functions from "firebase-functions";
 import { firestore } from "firebase-admin";
-import { Config, isEnabled, asNumber } from "./config";
+import { Config } from "./config";
 import { enqueue } from "./process-email-queue";
 import { Employee } from "./import-employees-from-alibeez";
 import { CampaignInfo } from "./compute-current-campaign";
-import { getOrGenerateRandomEmailToken } from "./generate-random-email-token";
+import {
+  getOrGenerateRandomEmailToken,
+  TokenInfo
+} from "./generate-random-email-token";
 import { composeEmailSender } from "./compose-email-sender";
 
 const db = firestore();
@@ -15,7 +18,8 @@ const linkToApp =
 
 export const sendEmailToEmployees = async (
   campaign: CampaignInfo,
-  endOfCampaigns: boolean
+  endOfCampaigns: boolean,
+  token: TokenInfo
 ) => {
   if (!campaign.open) return;
 

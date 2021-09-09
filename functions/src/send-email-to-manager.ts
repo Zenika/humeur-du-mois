@@ -47,14 +47,11 @@ export const sendEmailToManager = functions.firestore
       return;
     }
 
-    const token = await generateAndSaveRandomEmailToken(
-      {
-        employeeEmail: vote.managerEmail,
-        campaignId: vote.campaign,
-        agency: (managerSnapshot.data() as Employee).agency ?? undefined
-      },
-      db
-    );
+    const token = await generateAndSaveRandomEmailToken({
+      employeeEmail: vote.managerEmail,
+      campaignId: vote.campaign,
+      agency: (managerSnapshot.data() as Employee).agency ?? undefined
+    });
 
     const recipient = redirectToVoter ? vote.email : vote.managerEmail;
     const message = {
