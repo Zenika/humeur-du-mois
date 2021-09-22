@@ -26,9 +26,9 @@ export const getCurrentCampaignState = functions.https.onCall(
       endOn: asNumber(config.features.voting_campaigns.end_on)
     });
 
-    if (!campaign.open || !requireUniqueVote) {
+    if (!campaign.open) {
       return {
-        campaign: campaign.open ? campaign.id : null,
+        campaign: null,
         alreadyVoted: false,
         voteToken: null
       };
@@ -49,7 +49,7 @@ export const getCurrentCampaignState = functions.https.onCall(
 
     return {
       campaign: campaign.id,
-      alreadyVoted: !vote.empty,
+      alreadyVoted: requireUniqueVote ? !vote.empty : false,
       voteToken
     };
   }
