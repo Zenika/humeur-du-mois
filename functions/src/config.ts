@@ -193,6 +193,7 @@ export interface FeaturesConfig {
   backup: BackupConfig;
   delete_votes_before: DeleteVotesBeforeConfig;
   change_agency_name: ChangeAgencyNameConfig;
+  allow_send_email_vote: Flag;
 }
 
 export interface ChangeAgencyNameConfig {

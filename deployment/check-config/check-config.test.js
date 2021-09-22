@@ -31,7 +31,8 @@ test("Config is suitable for production", t => {
         enabled: "true",
         start_on: "25",
         end_on: "5"
-      }
+      },
+      allow_send_email_vote: "false"
     }
   };
   const errors = checkConfig(config);
@@ -70,7 +71,8 @@ test("Config is not suitable for production", t => {
         enabled: "false",
         start_on: "2",
         end_on: "6"
-      }
+      },
+      allow_send_email_vote: "true"
     }
   };
   const errors = checkConfig(config);

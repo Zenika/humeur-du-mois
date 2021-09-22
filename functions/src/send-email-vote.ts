@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import { firestore } from "firebase-admin";
-import { Config } from "./config";
+import { asBoolean, Config } from "./config";
 import { enqueue } from "./process-email-queue";
 import { Employee } from "./import-employees-from-alibeez";
 import { CampaignInfo } from "./compute-current-campaign";
@@ -287,9 +287,17 @@ footer {
   }
 };
 
+const allowSendEmailVote = asBoolean(
+  config.features.allow_send_email_vote
+);
+
 // Test, Send a new vote email always
 export const sendEmailVote = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
+    if (!allowSendEmailVote) {
+      res.status(401).send("KO");
+      return;
+    }
     const voteDate = new Date();
     const campaign = {
       open: true,
