@@ -287,9 +287,7 @@ footer {
   }
 };
 
-const allowSendEmailVote = asBoolean(
-  config.features.allow_send_email_vote
-);
+const allowSendEmailVote = asBoolean(config.features.allow_send_email_vote);
 
 // Test, Send a new vote email always
 export const sendEmailVote = functions.https.onRequest(
