@@ -10,7 +10,10 @@ import {
   TokenInfo
 } from "./generate-random-email-token";
 import { composeEmailSender } from "./compose-email-sender";
-import { composeEmailVoteAmpHtml, composeEmailVoteHtml } from "./compose-email-vote";
+import {
+  composeEmailVoteAmpHtml,
+  composeEmailVoteHtml
+} from "./compose-email-vote";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -98,8 +101,8 @@ export const sendEmailVote = functions.https.onRequest(
       });
 
       const employeeRef = await db.collection("employees").doc(email).get();
-      const employee = employeeRef.data() as Employee
-  
+      const employee = employeeRef.data() as Employee;
+
       const message = {
         from: composeEmailSender(),
         to: email,
@@ -107,11 +110,9 @@ export const sendEmailVote = functions.https.onRequest(
         html: composeEmailVoteHtml(employee),
         "amp-html": composeEmailVoteAmpHtml(employee, token)
       };
-  
-      await enqueue(message);
 
-    }
-    else {
+      await enqueue(message);
+    } else {
       // Envoi le mail à tous les employés
       await sendEmailToEmployees(campaign, false);
     }

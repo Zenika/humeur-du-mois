@@ -9,17 +9,17 @@ const linkToApp =
   `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
 
 export const composeEmailVoteHtml = (employee: Employee) => {
-    return `
+  return `
     <p>Hi ${employee.fullName},</p>
             <p>
               Tell us how it's been for you this past month!
               Go to <a href="${linkToApp}">${linkToApp}</a>.
             </p>
             <p>See you soon!</p>`;
-  };
-  
+};
+
 export function composeEmailVoteAmpHtml(employee: Employee, token: string) {
-    return `
+  return `
     <!doctype html>
 <html ⚡4email>
 
@@ -229,4 +229,4 @@ footer {
 
 </html>
     `;
-  }
+}
