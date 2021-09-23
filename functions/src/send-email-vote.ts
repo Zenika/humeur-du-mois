@@ -93,7 +93,7 @@ export const sendEmailVote = functions.https.onRequest(
     };
 
     const email = req.query.email;
-    if (!email) {
+    if (email) {
       // Envoi un mail de vote à un seul employé en générant un nouveau token de vote
       const token = await generateAndSaveRandomEmailToken({
         employeeEmail: email,
@@ -112,11 +112,11 @@ export const sendEmailVote = functions.https.onRequest(
       };
 
       await enqueue(message);
+      res.status(200).send(`Send vote to ${email}`);
     } else {
       // Envoi le mail à tous les employés
       await sendEmailToEmployees(campaign, false);
+      res.status(200).send("OK");
     }
-
-    res.status(200).send("OK");
   }
 );
