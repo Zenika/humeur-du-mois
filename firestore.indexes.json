@@ -1,6 +1,6 @@
 {
   "indexes": [
-    { 
+    {
       "collectionGroup": "token",
       "queryScope": "COLLECTION",
       "fields": [
@@ -15,12 +15,9 @@
         {
           "fieldPath": "created",
           "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "__name__",
-          "order": "DESCENDING"
         }
       ]
     }
-  ]
+  ],
+  "fieldOverrides": []
 }
