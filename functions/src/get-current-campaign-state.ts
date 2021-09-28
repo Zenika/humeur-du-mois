@@ -42,7 +42,8 @@ export const getCurrentCampaignState = functions.https.onCall(
     });
     const vote = await db
       .collection("vote")
-      .doc(`${campaign.id}-${voteToken}`).get();
+      .doc(`${campaign.id}-${voteToken}`)
+      .get();
 
     return {
       campaign: campaign.id,
