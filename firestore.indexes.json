@@ -1,14 +1,27 @@
 {
-  // Example:
-  //
-  // "indexes": [
-  //   {
-  //     "collectionId": "widgets",
-  //     "fields": [
-  //       { "fieldPath": "foo", "mode": "ASCENDING" },
-  //       { "fieldPath": "bar", "mode": "DESCENDING" }
-  //     ]
-  //   }
-  // ]
-  "indexes": []
+  "indexes": [
+    { 
+      "collectionGroup": "token",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "campaignId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "employeeEmail",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "created",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+    
+      ]
+    }
+  ]
 }
