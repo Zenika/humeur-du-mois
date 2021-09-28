@@ -36,20 +36,17 @@ export const getCurrentCampaignState = functions.https.onCall(
 
     const voterEmail: string = context.auth!.token.email;
 
-    const vote = await db
-      .collection("vote")
-      .where("email", "==", voterEmail)
-      .where("campaign", "==", campaign.open ? campaign.id : "")
-      .get();
-
     let voteToken = await getOrGenerateRandomEmailToken({
       employeeEmail: voterEmail,
       campaignId: campaign.id
     });
+    const vote = await db
+      .collection("vote")
+      .doc(`${campaign.id}-${voteToken}`).get();
 
     return {
       campaign: campaign.id,
-      alreadyVoted: requireUniqueVote ? !vote.empty : false,
+      alreadyVoted: requireUniqueVote ? !vote.exists : false,
       voteToken
     };
   }
