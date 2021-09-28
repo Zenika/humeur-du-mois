@@ -16,7 +16,9 @@ const db = firestore();
 export async function generateAndSaveRandomEmailToken(
   tokenData: TokenData
 ): Promise<string> {
-  const ref = await db.collection("token").add({ ...tokenData, created: new Date() });
+  const ref = await db
+    .collection("token")
+    .add({ ...tokenData, created: new Date() });
   return ref.id;
 }
 
