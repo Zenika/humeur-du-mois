@@ -67,7 +67,7 @@ export const castVoteFromEmail = functions.https.onRequest(
     try {
       await doVote(req.body.vote, req.body.comment, tokenData, "amp");
       res.status(200).send({
-        message: `Thanks! Your answer was properly recorded`
+        message: `Thanks!`
       });
     } catch (error) {
       if (error instanceof functions.https.HttpsError) {
