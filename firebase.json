@@ -30,8 +30,8 @@
         "function": "castVoteFromEmail"
       },
       {
-        "source": "/api/statsForManager",
-        "function": "statsForManager"
+        "source": "/api/statsManager",
+        "function": "statsManager"
       }
     ]
   }
