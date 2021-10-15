@@ -1,12 +1,10 @@
 import * as functions from "firebase-functions";
 import { firestore } from "firebase-admin";
-import { Config } from "./config";
 import { TokenData } from "./generate-random-email-token";
 import { Vote } from "./cast-vote";
 import { allowCorsEmail } from "./cors";
 
 const db = firestore();
-const config = functions.config() as Config;
 
 export const statsManager = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {

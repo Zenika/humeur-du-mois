@@ -1,4 +1,13 @@
+import * as functions from "firebase-functions";
+import { Config } from "./config";
 import { Vote } from "./cast-vote";
+
+const config = functions.config() as Config;
+
+const linkToApp =
+  config.features.reminders.app_link ||
+  `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
+
 const voteMap: { [key: string]: { color: string; label: string } } = {
   great: { label: "Great 😁", color: "#1b5e20" },
   ok: { label: "OK 🙂", color: "#263238" },
@@ -97,7 +106,7 @@ export function composeEmailToManagerAmpHtml(vote: Vote, token: string) {
   </head>
   <body>
     ${content}
-    <amp-list src="https://us-central1-humeur-du-mois-2018.cloudfunctions.net/statsManager?token=${token}" layout="fixed-height" height="120" items="." single-item>
+    <amp-list src="${linkToApp}/api/statsManager?token=${token}" layout="fixed-height" height="120" items="." single-item>
     Loading stats ...
     <template type="amp-mustache">
       <div id="statsTab">

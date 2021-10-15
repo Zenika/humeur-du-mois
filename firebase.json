@@ -28,6 +28,10 @@
       {
         "source": "/api/castVoteFromEmail",
         "function": "castVoteFromEmail"
+      },
+      {
+        "source": "/api/statsForManager",
+        "function": "statsForManager"
       }
     ]
   }
