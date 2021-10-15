@@ -117,7 +117,7 @@ export function composeEmailToManagerAmpHtml(vote: Vote, token: string) {
               <th>😁</th><th>🙂</th><th>😐</th><th>😤</th>
             </tr>
             <tr>
-              <td class="table__light">Teams</td>
+              <td class="table__light">Your team</td>
               <td>{{manager.great}}</td><td>{{manager.ok}}</td><td>{{manager.notThatGreat}}</td><td>{{manager.notGreatAtAll}}</td>
             </tr>
             <tr>
