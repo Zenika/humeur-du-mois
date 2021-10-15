@@ -31,7 +31,7 @@ export { processEmailQueue } from "./process-email-queue";
 
 export { getCurrentCampaignState } from "./get-current-campaign-state";
 
-export { castVote, emailVote } from "./cast-vote";
+export { castVote, castVoteFromEmail } from "./cast-vote";
 
 export { backup } from "./backup-votes-and-stats";
 

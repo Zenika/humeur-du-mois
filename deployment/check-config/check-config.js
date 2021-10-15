@@ -7,7 +7,7 @@ const checkConfig = config => {
   const remindersConfig = config.features.reminders;
   const votingCampaignConfig = config.features.voting_campaigns;
   const allowManualTriggerOfCampaignStartReminder =
-    config.features.allow_manual_trigger_of_campaign_start_reminder === "true";
+    config.features.allow_force_send_campaign_reminder === "true";
 
   const errors = ["Some errors occured:"];
 

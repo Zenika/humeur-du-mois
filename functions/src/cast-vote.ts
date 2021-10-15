@@ -56,7 +56,7 @@ export const castVote = functions.https.onCall(
 );
 
 // Vote from email
-export const emailVote = functions.https.onRequest(
+export const castVoteFromEmail = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
     if (!allowCorsEmail(req, res)) {
       return;

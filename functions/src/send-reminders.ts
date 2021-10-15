@@ -170,14 +170,14 @@ const sendCampaignReminder = async (
   }
 };
 
-const allowSendEmailVote = asBoolean(
-  config.features.allow_manual_trigger_of_campaign_start_reminder
+const allowForceSendCampaignReminder = asBoolean(
+  config.features.allow_force_send_campaign_reminder
 );
 
 // this function is only meant to be used for test purposes and should be disabled in prod
 export const forceSendCampaingReminder = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
-    if (!allowSendEmailVote) {
+    if (!allowForceSendCampaignReminder) {
       res.status(401).send("KO");
       return;
     }

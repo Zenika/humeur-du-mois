@@ -182,7 +182,7 @@ footer {
 </head>
 
 <body>
-  <form id="homePage" class="page" action-xhr="${linkToApp}/api/emailVote" method="POST">
+  <form id="homePage" class="page" action-xhr="${linkToApp}/api/castVoteFromEmail" method="POST">
     <input type="hidden" name="token" value="${token}"/>
     <h1 class="page__title">
       <span>Hi, <span id="userId">${employee.fullName}</span></span>
