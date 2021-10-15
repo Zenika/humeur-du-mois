@@ -94,12 +94,6 @@ export interface EndOfMonthRemindersConfig {
 export interface VotingCampaignStartsReminderConfig {
   enabled: Flag;
   /**
-   * Sender of the reminder emails.
-   *
-   * May be in the format "Display Name <address@domain>".
-   */
-  sender: string;
-  /**
    * Mailing list to which to send the reminder emails.
    */
   recipient: string;
@@ -107,12 +101,6 @@ export interface VotingCampaignStartsReminderConfig {
 
 export interface VotingCampaignEndsReminderConfig {
   enabled: Flag;
-  /**
-   * Sender of the reminder emails.
-   *
-   * May be in the format "Display Name <address@domain>".
-   */
-  sender: string;
   /**
    * Mailing list to which to send the reminder emails.
    */
@@ -186,6 +174,10 @@ export interface BackupConfig {
 export interface EmailsConfig {
   enabled: Flag;
   recipient_override?: string;
+  sender: {
+    name: string;
+    email: string;
+  };
 }
 
 export interface FeaturesConfig {
@@ -201,6 +193,7 @@ export interface FeaturesConfig {
   backup: BackupConfig;
   delete_votes_before: DeleteVotesBeforeConfig;
   change_agency_name: ChangeAgencyNameConfig;
+  allow_force_send_campaign_reminder: Flag;
 }
 
 export interface ChangeAgencyNameConfig {

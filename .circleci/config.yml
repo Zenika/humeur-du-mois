@@ -93,7 +93,7 @@ jobs:
     environment:
       FIREBASE_PROJECT: default
     docker: &validate-functions-config-docker
-      - image: circleci/node:10
+      - image: circleci/node:12 # yargs doesn't not support node 10
     steps: &validate-functions-config-steps
       - checkout
       - attach_workspace:

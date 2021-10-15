@@ -23,14 +23,15 @@ export { sendEmailToManager } from "./send-email-to-manager";
 
 export {
   sendCampaignStartsReminder,
-  sendCampaignEndsReminder
+  sendCampaignEndsReminder,
+  forceSendCampaingReminder
 } from "./send-reminders";
 
 export { processEmailQueue } from "./process-email-queue";
 
 export { getCurrentCampaignState } from "./get-current-campaign-state";
 
-export { castVote } from "./cast-vote";
+export { castVote, castVoteFromEmail } from "./cast-vote";
 
 export { backup } from "./backup-votes-and-stats";
 
@@ -47,3 +48,5 @@ export { computeStatistics } from "./compute-statistics";
 export { deleteVotesBefore } from "./delete-votes-before";
 
 export { changeAgencyName } from "./change-agency-name";
+
+export { statsManager } from "./stats-manager";

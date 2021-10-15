@@ -24,6 +24,14 @@
       {
         "source": "/api/castVote",
         "function": "castVote"
+      },
+      {
+        "source": "/api/castVoteFromEmail",
+        "function": "castVoteFromEmail"
+      },
+      {
+        "source": "/api/statsManager",
+        "function": "statsManager"
       }
     ]
   }

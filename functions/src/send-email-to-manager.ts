@@ -2,12 +2,20 @@ import * as functions from "firebase-functions";
 import { Config, isEnabled, asBoolean } from "./config";
 import { Vote } from "./cast-vote";
 import { enqueue } from "./process-email-queue";
-import composeEmailHtml from "./compose-email-html";
+import {
+  composeEmailToManagerHtml,
+  composeEmailToManagerAmpHtml
+} from "./compose-email-to-manager";
+import { generateAndSaveRandomEmailToken } from "./generate-random-email-token";
+import { firestore } from "firebase-admin";
+import { Employee } from "./import-employees-from-alibeez";
 
 const config = functions.config() as Config;
 const redirectToVoter = asBoolean(
   config.features.send_vote_to_manager.redirect_to_voter
 );
+
+const db = firestore();
 
 export const sendEmailToManager = functions.firestore
   .document("vote/{voteId}")
@@ -28,13 +36,31 @@ export const sendEmailToManager = functions.firestore
       return;
     }
 
+    const managerSnapshot = await db
+      .collection("employees")
+      .doc(vote.managerEmail)
+      .get();
+    if (!managerSnapshot || !managerSnapshot.exists) {
+      console.error(
+        `Cannot find manager '${vote.managerEmail}' in employees; aborting`
+      );
+      return;
+    }
+
+    const token = await generateAndSaveRandomEmailToken({
+      employeeEmail: vote.managerEmail,
+      campaignId: vote.campaign,
+      agency: (managerSnapshot.data() as Employee).agency ?? undefined
+    });
+
     const recipient = redirectToVoter ? vote.email : vote.managerEmail;
     const message = {
       from: "Humeur du mois <humeur-du-mois@zenika.com>",
       to: recipient,
       "h:Reply-To": vote.email,
       subject: `${vote.fullName} has shared how they feel`,
-      html: composeEmailHtml(vote)
+      html: composeEmailToManagerHtml(vote),
+      "amp-html": composeEmailToManagerAmpHtml(vote, token)
     };
 
     await enqueue(message);

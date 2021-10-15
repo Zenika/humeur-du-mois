@@ -3,6 +3,7 @@ import firebase from "firebase/app";
 export type Payload = {
   vote: string;
   comment?: string;
+  voteToken: string;
 };
 
 const authorizationHeader = async (): Promise<string> => {
@@ -43,6 +44,7 @@ export const getCurrentCampaignState = () =>
   call("getCurrentCampaignState", {}) as Promise<{
     campaign: string | null;
     alreadyVoted: boolean;
+    voteToken: string;
   }>;
 
 export const castVote = (payload: Payload) =>

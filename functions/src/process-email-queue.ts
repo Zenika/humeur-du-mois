@@ -84,7 +84,9 @@ const processEmail = async (emailSnapshot: DocumentSnapshot) => {
   await emailSnapshot.ref.update({
     message: {
       ...message,
-      html: ""
+      html: "",
+      text: "",
+      "amp-html": ""
     }
   });
   console.info("email sent: ", JSON.stringify(sendResponse));

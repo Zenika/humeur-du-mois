@@ -166,15 +166,20 @@ window.addEventListener("load", async function () {
     return voteRawData.filter(rawVote => rawVote.counts.agency === agency);
   };
 
-  const errorOut = (err: Error) => {
+  const errorOut = (err: unknown) => {
     console.error(err);
     changePageTo(errorPage);
   };
 
-  const saveResponse = async (response: string, comment?: string) => {
+  const saveResponse = async (
+    voteToken: string,
+    response: string,
+    comment?: string
+  ) => {
     changePageTo(recordingPage);
     const payload: Payload = {
-      vote: response
+      vote: response,
+      voteToken
     };
     if (comment) {
       payload.comment = comment;
@@ -192,7 +197,7 @@ window.addEventListener("load", async function () {
     changePageTo(thankYouPage);
   };
 
-  const initVoteButtonsEventHandlers = () => {
+  const initVoteButtonsEventHandlers = (voteToken: string) => {
     let mood: string;
     const buttonMap = [
       submitGreat,
@@ -227,7 +232,7 @@ window.addEventListener("load", async function () {
         errorDisplay.hidden = false;
         return;
       }
-      saveResponse(mood, comment);
+      saveResponse(voteToken, mood, comment);
     };
   };
 
@@ -254,11 +259,17 @@ window.addEventListener("load", async function () {
     };
   };
 
-  const initCampaignAndEmployeeData = async (userId: string) => {
+  const initCampaignAndEmployeeData = async (
+    userId: string
+  ): Promise<string | undefined> => {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
 
-    const { campaign, alreadyVoted } = await getCurrentCampaignState();
+    const {
+      campaign,
+      alreadyVoted,
+      voteToken
+    } = await getCurrentCampaignState();
 
     homeButton.onclick = () => {
       if (!campaign) {
@@ -286,8 +297,7 @@ window.addEventListener("load", async function () {
       .doc(userId.toLowerCase())
       .get();
     if (!employeeSnapshot) {
-      errorOut(new Error("cannot find latest employee data import"));
-      return;
+      throw new Error("cannot find latest employee data import");
     }
     const employee = employeeSnapshot.data();
     if (!employee) {
@@ -298,6 +308,8 @@ window.addEventListener("load", async function () {
     if (employee.managerEmail) {
       managerName.innerText = employee.managerEmail;
     }
+
+    return voteToken;
   };
 
   try {
@@ -314,7 +326,6 @@ window.addEventListener("load", async function () {
     // 2 - Display the main content (Optimistic UI)
     userIdElement.innerText = session.user.email;
     displayHomePage();
-    initVoteButtonsEventHandlers();
     initStatsButtonsEventHandlers();
 
     // 3 - Firebase authentication
@@ -328,9 +339,12 @@ window.addEventListener("load", async function () {
 
     // 5 - Load data for both pages in parallel
     initCampaignAndEmployeeData(session.user.email)
-      .then(() => {
+      .then(voteToken => {
+        if (voteToken) {
+          initVoteButtonsEventHandlers(voteToken);
+          show(sendingSection);
+        }
         hide(sendingSectionLoader);
-        show(sendingSection);
       })
       .catch(errorOut);
 

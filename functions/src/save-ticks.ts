@@ -8,7 +8,7 @@ export interface Tick {
 
 const pubSubToFirestoreFunction = (topic: string) =>
   functions.pubsub
-    .schedule("0 0 * * *")
+    .schedule("0 12 * * *")
     .timeZone("Europe/Paris")
     .onRun(() =>
       firestore()
