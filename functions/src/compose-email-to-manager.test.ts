@@ -1,22 +1,23 @@
 import test from "ava";
-import composeEmailHtml from "./compose-email-html";
+import { composeEmailToManagerHtml } from "./compose-email-to-manager";
 import { firestore } from "firebase-admin";
+import { Vote } from "./cast-vote";
 
 test("compose email html WITH a comment", t => {
-  const vote = {
-    managerEmail: "hugo.wood@zenika.com",
-    fullName: "clement van peuter",
+  const vote: Vote = {
+    managerEmail: "h.w@zenika.com",
+    fullName: "cvp",
     value: "great",
     comment: "Zenika c'est trop bien",
     campaign: "plop",
-    email: " clement.vanpeuter@zenika.com",
+    email: " cvp@zenika.com",
     agency: "nantes",
     recordedAt: firestore.Timestamp.now()
   };
   const expected = `
-  <p>Hi hugo.wood@zenika.com,</p>
+  <p>Hi h.w@zenika.com,</p>
   <p>
-    clement van peuter has shared how they feel:
+    cvp has shared how they feel:
     <p style="font-size:50px; color:#1b5e20;">Great 😁</p>
   </p>
   <p>
@@ -25,28 +26,28 @@ test("compose email html WITH a comment", t => {
   </p>
   <p>See you soon!</p>`;
 
-  const actual = composeEmailHtml(vote);
+  const actual = composeEmailToManagerHtml(vote);
   t.is(actual, expected);
 });
 
 test("compose email html WITHOUT a comment", t => {
-  const vote = {
-    managerEmail: "hugo.wood@zenika.com",
-    fullName: "clement van peuter",
+  const vote: Vote = {
+    managerEmail: "h.w@zenika.com",
+    fullName: "cvp",
     value: "great",
     campaign: "plop",
-    email: " clement.vanpeuter@zenika.com",
+    email: " cvp@zenika.com",
     agency: "nantes",
     recordedAt: firestore.Timestamp.now()
   };
   const expected = `
-  <p>Hi hugo.wood@zenika.com,</p>
+  <p>Hi h.w@zenika.com,</p>
   <p>
-    clement van peuter has shared how they feel:
+    cvp has shared how they feel:
     <p style="font-size:50px; color:#1b5e20;">Great 😁</p>
   </p>
   <p>See you soon!</p>`;
 
-  const actual = composeEmailHtml(vote);
+  const actual = composeEmailToManagerHtml(vote);
   t.is(actual, expected);
 });

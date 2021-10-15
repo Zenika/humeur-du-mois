@@ -4,6 +4,8 @@ import * as functions from "firebase-functions";
 export interface TokenData {
   employeeEmail: string;
   campaignId: string;
+  agency?: string;
+  created?: Date;
 }
 
 export interface TokenInfo extends TokenData {
@@ -14,7 +16,9 @@ const db = firestore();
 export async function generateAndSaveRandomEmailToken(
   tokenData: TokenData
 ): Promise<string> {
-  const ref = await db.collection("token").add(tokenData);
+  const ref = await db
+    .collection("token")
+    .add({ ...tokenData, created: new Date() });
   return ref.id;
 }
 
@@ -22,7 +26,8 @@ export async function getOrGenerateRandomEmailToken(tokenData: TokenData) {
   const voteTokenQueryResults = await db
     .collection("token")
     .where("employeeEmail", "==", tokenData.employeeEmail)
-    .where("campaign", "==", tokenData.campaignId)
+    .where("campaignId", "==", tokenData.campaignId)
+    .orderBy("created", "desc")
     .get();
 
   let voteToken = voteTokenQueryResults.empty

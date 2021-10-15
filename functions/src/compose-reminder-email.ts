@@ -1,75 +1,32 @@
 import * as functions from "firebase-functions";
-import { firestore } from "firebase-admin";
-import { Config, isEnabled, asNumber } from "./config";
-import { enqueue } from "./process-email-queue";
+import { Config } from "./config";
 import { Employee } from "./import-employees-from-alibeez";
-import { CampaignInfo } from "./compute-current-campaign";
-import { getOrGenerateRandomEmailToken } from "./generate-random-email-token";
-import { composeEmailSender } from "./compose-email-sender";
 
-const db = firestore();
 const config = functions.config() as Config;
+
 const linkToApp =
   config.features.reminders.app_link ||
   `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
 
-export const sendEmailToEmployees = async (
-  campaign: CampaignInfo,
-  endOfCampaigns: boolean
-) => {
-  if (!campaign.open) return;
+export function composeReminderEmailSender() {
+  return `${config.features.emails.sender.name || "Humeur du mois"} <${
+    config.features.emails.sender.email || "humeur-du-mois@zenika.com"
+  }>`;
+}
 
-  const monthLongName = new Date(
-    Date.UTC(campaign.year, campaign.month)
-  ).toLocaleString("en-us", {
-    month: "long"
-  });
-  const emailsOfEmployeesWhoAlreadyVoted = new Set();
-  if (endOfCampaigns) {
-    (
-      await db.collection("vote").where("campaign", "==", campaign.id).get()
-    ).docs
-      .map(voteSnapshot => voteSnapshot.data())
-      .map(vote => vote.email)
-      .forEach(emailsOfEmployeesWhoAlreadyVoted.add);
-    console.info(
-      `Found ${emailsOfEmployeesWhoAlreadyVoted.size} employees who already voted`
-    );
-  }
-
-  const employeeDocumentRefs = await db.collection("employees").listDocuments();
-  for (const employeeDocumentRef of employeeDocumentRefs) {
-    const employeeDocument = await employeeDocumentRef.get();
-    const employee = employeeDocument.data() as Employee;
-    if (employee.disabled) {
-      continue;
-    }
-
-    if (emailsOfEmployeesWhoAlreadyVoted.has(employee.email)) {
-      continue;
-    }
-
-    const token = await getOrGenerateRandomEmailToken({
-      employeeEmail: employee.email,
-      campaignId: campaign.id
-    });
-
-    const message = {
-      from: composeEmailSender(),
-      to: employee.email,
-      subject: endOfCampaigns
-        ? `Humeur du mois is about to close for ${monthLongName}!`
-        : `Humeur du mois is open for ${monthLongName}!`,
-      html: `
-            <p>Hi ${employee.fullName},</p>
+export const composeReminderEmailHtml = (employee: Employee) => {
+  return `
+    <p>Hi ${employee.fullName},</p>
             <p>
               Tell us how it's been for you this past month!
               Go to <a href="${linkToApp}">${linkToApp}</a>.
             </p>
-            <p>See you soon!</p>
-            `,
-      "amp-html": `
-          <!doctype html>
+            <p>See you soon!</p>`;
+};
+
+export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
+  return `
+    <!doctype html>
 <html ⚡4email>
 
 <head>
@@ -226,7 +183,7 @@ footer {
 
 <body>
   <form id="homePage" class="page" action-xhr="${linkToApp}/api/emailVote" method="POST">
-  <input type="hidden" name="token" value="${token}"/>
+    <input type="hidden" name="token" value="${token}"/>
     <h1 class="page__title">
       <span>Hi, <span id="userId">${employee.fullName}</span></span>
     </h1>
@@ -277,28 +234,5 @@ footer {
 </body>
 
 </html>
-          `
-    };
-
-    await enqueue(message);
-  }
-};
-
-// Test, Send a new vote email always
-export const sendEmailVote = functions.https.onRequest(
-  async (req: functions.Request, res: functions.Response) => {
-    const voteDate = new Date();
-    const campaign = {
-      open: true,
-      year: voteDate.getUTCFullYear(),
-      month: voteDate.getUTCMonth(),
-      id: new Date(Date.UTC(voteDate.getUTCFullYear(), voteDate.getUTCMonth()))
-        .toISOString()
-        .substr(0, 7)
-    };
-
-    await sendEmailToEmployees(campaign, false);
-
-    res.status(200).send("OK");
-  }
-);
+    `;
+}

@@ -193,6 +193,7 @@ export interface FeaturesConfig {
   backup: BackupConfig;
   delete_votes_before: DeleteVotesBeforeConfig;
   change_agency_name: ChangeAgencyNameConfig;
+  allow_manual_trigger_of_campaign_start_reminder: Flag;
 }
 
 export interface ChangeAgencyNameConfig {

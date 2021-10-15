@@ -3,6 +3,8 @@ import * as functions from "firebase-functions";
 import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Employee } from "./import-employees-from-alibeez";
+
+import { allowCorsEmail } from "./cors";
 import {
   decodeTokenData,
   TokenData,
@@ -14,10 +16,11 @@ const config = functions.config() as Config;
 const requireUniqueVote = asBoolean(
   config.features.voting_campaigns.require_unique_vote
 );
-const validVotes = ["great", "ok", "notThatGreat", "notGreatAtAll"];
+const validVotes = ["great", "ok", "notThatGreat", "notGreatAtAll"] as const;
+type VoteValue = typeof validVotes[number];
 
 interface RequestPayload {
-  vote: string;
+  vote: VoteValue;
   comment?: string;
   voteToken: string;
 }
@@ -25,7 +28,7 @@ interface RequestPayload {
 export type VoteType = "ui" | "amp";
 
 export interface Vote extends Employee {
-  value: string;
+  value: VoteValue;
   comment?: string;
   campaign: string;
   recordedAt: firestore.Timestamp;
@@ -55,14 +58,9 @@ export const castVote = functions.https.onCall(
 // Vote from email
 export const emailVote = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
-    const email = req.header("AMP-Email-Sender");
-    if (!email || config.features.emails.sender.email !== email) {
-      res.status(401).send({
-        message: "Bad Email"
-      });
+    if (!allowCorsEmail(req, res)) {
       return;
     }
-    res.set("AMP-Email-Allow-Sender", config.features.emails.sender.email);
 
     const token = req.body.token;
     const tokenData = await decodeTokenData(token);
@@ -86,8 +84,9 @@ export const emailVote = functions.https.onRequest(
     }
   }
 );
+
 async function doVote(
-  voteValue: string,
+  voteValue: VoteValue,
   comment: string,
   token: TokenInfo,
   voteType: VoteType

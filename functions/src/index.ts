@@ -23,10 +23,9 @@ export { sendEmailToManager } from "./send-email-to-manager";
 
 export {
   sendCampaignStartsReminder,
-  sendCampaignEndsReminder
+  sendCampaignEndsReminder,
+  forceSendCampaingReminder
 } from "./send-reminders";
-
-export { sendEmailVote } from "./send-email-vote";
 
 export { processEmailQueue } from "./process-email-queue";
 
@@ -49,3 +48,5 @@ export { computeStatistics } from "./compute-statistics";
 export { deleteVotesBefore } from "./delete-votes-before";
 
 export { changeAgencyName } from "./change-agency-name";
+
+export { statsManager } from "./stats-manager";
