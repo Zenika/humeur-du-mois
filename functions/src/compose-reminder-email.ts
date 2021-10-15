@@ -17,11 +17,11 @@ export function composeReminderEmailSender() {
 export const composeReminderEmailHtml = (employee: Employee) => {
   return `
     <p>Hi ${employee.fullName},</p>
-            <p>
-              Tell us how it's been for you this past month!
-              Go to <a href="${linkToApp}">${linkToApp}</a>.
-            </p>
-            <p>See you soon!</p>`;
+    <p>
+      Tell us how it's been for you this past month!
+      Go to <a href="${linkToApp}">${linkToApp}</a>.
+    </p>
+    <p>See you soon!</p>`;
 };
 
 export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
