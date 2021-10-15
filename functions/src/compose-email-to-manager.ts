@@ -107,26 +107,26 @@ export function composeEmailToManagerAmpHtml(vote: Vote, token: string) {
   <body>
     ${content}
     <amp-list src="${linkToApp}/api/statsManager?token=${token}" layout="fixed-height" height="120" items="." single-item>
-    Loading stats ...
+    Loading stats...
     <template type="amp-mustache">
       <div id="statsTab">
         <table>
-          <tbody><tr>
-           <th>Stats {{campaign}}</th>
-            <th>😁</th><th>🙂</th><th>😐</th><th>😤</th>
-          </tr>
-
-                <tr>
-                  <td class="table__light">Teams</td>
-                  <td>{{manager.great}}</td><td>{{manager.ok}}</td><td>{{manager.notThatGreat}}</td><td>{{manager.notGreatAtAll}}</td>
-                </tr>
-
-                <tr>
-                  <td class="table__light">{{agency.agency}}</td>
-                  <td>{{agency.great}}</td><td>{{agency.ok}}</td><td>{{agency.notThatGreat}}</td><td>{{agency.notGreatAtAll}}</td>
-                </tr>
-
-        </tbody></table></div>
+          <tbody>
+            <tr>
+            <th>Stats {{campaign}}</th>
+              <th>😁</th><th>🙂</th><th>😐</th><th>😤</th>
+            </tr>
+            <tr>
+              <td class="table__light">Teams</td>
+              <td>{{manager.great}}</td><td>{{manager.ok}}</td><td>{{manager.notThatGreat}}</td><td>{{manager.notGreatAtAll}}</td>
+            </tr>
+            <tr>
+              <td class="table__light">{{agency.agency}}</td>
+              <td>{{agency.great}}</td><td>{{agency.ok}}</td><td>{{agency.notThatGreat}}</td><td>{{agency.notGreatAtAll}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </template>
   </amp-list>
   </body>
