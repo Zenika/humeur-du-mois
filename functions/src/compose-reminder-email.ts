@@ -8,7 +8,13 @@ const linkToApp =
   config.features.reminders.app_link ||
   `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
 
-export const composeEmailVoteHtml = (employee: Employee) => {
+export function composeReminderEmailSender() {
+  return `${config.features.emails.sender.name || "Humeur du mois"} <${
+    config.features.emails.sender.email || "humeur-du-mois@zenika.com"
+  }>`;
+}
+
+export const composeReminderEmailHtml = (employee: Employee) => {
   return `
     <p>Hi ${employee.fullName},</p>
             <p>
@@ -18,7 +24,7 @@ export const composeEmailVoteHtml = (employee: Employee) => {
             <p>See you soon!</p>`;
 };
 
-export function composeEmailVoteAmpHtml(employee: Employee, token: string) {
+export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
   return `
     <!doctype html>
 <html ⚡4email>

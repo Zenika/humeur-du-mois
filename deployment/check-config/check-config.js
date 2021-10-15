@@ -6,7 +6,8 @@ const checkConfig = config => {
   const sendVoteToManagerConfig = config.features.send_vote_to_manager;
   const remindersConfig = config.features.reminders;
   const votingCampaignConfig = config.features.voting_campaigns;
-  const allowSendEmailVote = config.features.allow_send_email_vote;
+  const allowManualTriggerOfCampaignStartReminder =
+    config.features.allow_manual_trigger_of_campaign_start_reminder === "true";
 
   const errors = ["Some errors occured:"];
 
@@ -40,8 +41,8 @@ const checkConfig = config => {
   if (votingCampaignConfig.end_on !== "5") {
     errors.push("- voting_campaign doesn't end on the 5th");
   }
-  if (allowSendEmailVote !== "false") {
-    errors.push("- function to directely send vote email is enabled");
+  if (allowManualTriggerOfCampaignStartReminder) {
+    errors.push("- function to directly send vote email is enabled");
   }
 
   return errors;

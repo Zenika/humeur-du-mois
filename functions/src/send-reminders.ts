@@ -1,17 +1,24 @@
 import * as functions from "firebase-functions";
 import { firestore } from "firebase-admin";
-import * as mailgun from "mailgun-js";
 import { Tick } from "./save-ticks";
 import { computeCurrentCampaign } from "./compute-current-campaign";
-import { Config, isEnabled, asNumber } from "./config";
+import { Config, isEnabled, asNumber, asBoolean } from "./config";
 import { daysBeforeCampaignEnds } from "./days-before-campaign-ends";
-import { sendEmailToEmployees } from "./send-email-vote";
+import { enqueue } from "./process-email-queue";
+import { Employee } from "./import-employees-from-alibeez";
+import { CampaignInfo } from "./compute-current-campaign";
+import {
+  generateAndSaveRandomEmailToken,
+  getOrGenerateRandomEmailToken
+} from "./generate-random-email-token";
+import {
+  composeReminderEmailSender,
+  composeReminderEmailAmpHtml,
+  composeReminderEmailHtml
+} from "./compose-reminder-email";
 
 const db = firestore();
 const config = functions.config() as Config;
-const linkToApp =
-  config.features.reminders.app_link ||
-  `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
 const campaignConfig = {
   enabled: isEnabled(config.features.voting_campaigns),
   startOn: asNumber(config.features.voting_campaigns.start_on),
@@ -56,7 +63,7 @@ export const sendCampaignStartsReminder = functions.firestore
       return;
     }
 
-    await sendEmailToEmployees(campaign, false);
+    await sendCampaignReminder(campaign, false);
   });
 
 export const sendCampaignEndsReminder = functions.firestore
@@ -105,5 +112,110 @@ export const sendCampaignEndsReminder = functions.firestore
       return;
     }
 
-    await sendEmailToEmployees(campaign, true);
+    await sendCampaignReminder(campaign, true);
   });
+
+const sendCampaignReminder = async (
+  campaign: CampaignInfo,
+  endOfCampaign: boolean
+) => {
+  if (!campaign.open) return;
+
+  const monthLongName = new Date(
+    Date.UTC(campaign.year, campaign.month)
+  ).toLocaleString("en-us", {
+    month: "long"
+  });
+  const emailsOfEmployeesWhoAlreadyVoted = new Set();
+  if (endOfCampaign) {
+    (
+      await db.collection("vote").where("campaign", "==", campaign.id).get()
+    ).docs
+      .map(voteSnapshot => voteSnapshot.data())
+      .map(vote => vote.email)
+      .forEach(emailsOfEmployeesWhoAlreadyVoted.add);
+    console.info(
+      `Found ${emailsOfEmployeesWhoAlreadyVoted.size} employees who already voted`
+    );
+  }
+
+  const employeeDocumentRefs = await db.collection("employees").listDocuments();
+  for (const employeeDocumentRef of employeeDocumentRefs) {
+    const employeeDocument = await employeeDocumentRef.get();
+    const employee = employeeDocument.data() as Employee;
+    if (employee.disabled) {
+      continue;
+    }
+
+    if (emailsOfEmployeesWhoAlreadyVoted.has(employee.email)) {
+      continue;
+    }
+
+    const token = await getOrGenerateRandomEmailToken({
+      employeeEmail: employee.email,
+      campaignId: campaign.id
+    });
+
+    const message = {
+      from: composeReminderEmailSender(),
+      to: employee.email,
+      subject: endOfCampaign
+        ? `Humeur du mois is about to close for ${monthLongName}!`
+        : `Humeur du mois is open for ${monthLongName}!`,
+      html: composeReminderEmailHtml(employee),
+      "amp-html": composeReminderEmailAmpHtml(employee, token)
+    };
+
+    await enqueue(message);
+  }
+};
+
+const allowSendEmailVote = asBoolean(
+  config.features.allow_manual_trigger_of_campaign_start_reminder
+);
+
+// this function is only meant to be used for test purposes and should be disabled in prod
+export const forceSendCampaingReminder = functions.https.onRequest(
+  async (req: functions.Request, res: functions.Response) => {
+    if (!allowSendEmailVote) {
+      res.status(401).send("KO");
+      return;
+    }
+    const voteDate = new Date();
+    const campaign = {
+      open: true,
+      year: voteDate.getUTCFullYear(),
+      month: voteDate.getUTCMonth(),
+      id: new Date(Date.UTC(voteDate.getUTCFullYear(), voteDate.getUTCMonth()))
+        .toISOString()
+        .substr(0, 7)
+    };
+
+    const email = req.query.email;
+    if (email) {
+      // Envoi un mail de vote à un seul employé en générant un nouveau token de vote
+      const token = await generateAndSaveRandomEmailToken({
+        employeeEmail: email,
+        campaignId: campaign.id
+      });
+
+      const employeeRef = await db.collection("employees").doc(email).get();
+      const employee = employeeRef.data() as Employee;
+
+      const message = {
+        from: composeReminderEmailSender(),
+        to: email,
+        subject: `Vote to Humeur du mois!`,
+        html: composeReminderEmailHtml(employee),
+        "amp-html": composeReminderEmailAmpHtml(employee, token)
+      };
+
+      await enqueue(message);
+      res.status(200).send(`Send vote to ${email}`);
+    } else {
+      // Envoi le mail à tous les employés
+      await sendCampaignReminder(campaign, false);
+      res.status(200).send("OK");
+    }
+  }
+);

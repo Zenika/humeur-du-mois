@@ -6,7 +6,7 @@ const voteMap: { [key: string]: { color: string; label: string } } = {
   notGreatAtAll: { label: "Bad 😤", color: "#b71c1c" }
 };
 
-export const composeEmailHtml = (vote: Vote) => {
+export const composeEmailToManagerHtml = (vote: Vote) => {
   let comment = "";
   if (vote.comment) {
     comment = `
@@ -26,8 +26,8 @@ export const composeEmailHtml = (vote: Vote) => {
   <p>See you soon!</p>`;
 };
 
-export function composeEmailAmpHtml(vote: Vote, token: string) {
-  const content = composeEmailHtml(vote);
+export function composeEmailToManagerAmpHtml(vote: Vote, token: string) {
+  const content = composeEmailToManagerHtml(vote);
   return `
   <!DOCTYPE html>
 <html ⚡4email data-css-strict>
@@ -75,11 +75,11 @@ export function composeEmailAmpHtml(vote: Vote, token: string) {
       .table__light {
         font-weight: 300;
       }
-      
+
       td {
         text-align: center;
       }
-      
+
       td:nth-child(2) {
         color: #1b5e20;
       }
@@ -89,7 +89,7 @@ export function composeEmailAmpHtml(vote: Vote, token: string) {
       td:nth-child(4) {
         color: #b71c1c;
       }
-      
+
       tr:hover td {
         background: #f7f7f7;
       }
@@ -106,17 +106,17 @@ export function composeEmailAmpHtml(vote: Vote, token: string) {
            <th>Stats {{campaign}}</th>
             <th>😁</th><th>🙂</th><th>😐</th><th>😤</th>
           </tr>
-          
+
                 <tr>
                   <td class="table__light">Teams</td>
                   <td>{{manager.great}}</td><td>{{manager.ok}}</td><td>{{manager.notThatGreat}}</td><td>{{manager.notGreatAtAll}}</td>
                 </tr>
-              
+
                 <tr>
                   <td class="table__light">{{agency.agency}}</td>
                   <td>{{agency.great}}</td><td>{{agency.ok}}</td><td>{{agency.notThatGreat}}</td><td>{{agency.notGreatAtAll}}</td>
                 </tr>
-              
+
         </tbody></table></div>
     </template>
   </amp-list>

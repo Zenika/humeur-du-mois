@@ -3,8 +3,8 @@ import { Config, isEnabled, asBoolean } from "./config";
 import { Vote } from "./cast-vote";
 import { enqueue } from "./process-email-queue";
 import {
-  composeEmailHtml,
-  composeEmailAmpHtml
+  composeEmailToManagerHtml,
+  composeEmailToManagerAmpHtml
 } from "./compose-email-to-manager";
 import { generateAndSaveRandomEmailToken } from "./generate-random-email-token";
 import { firestore } from "firebase-admin";
@@ -59,8 +59,8 @@ export const sendEmailToManager = functions.firestore
       to: recipient,
       "h:Reply-To": vote.email,
       subject: `${vote.fullName} has shared how they feel`,
-      html: composeEmailHtml(vote),
-      "amp-html": composeEmailAmpHtml(vote, token)
+      html: composeEmailToManagerHtml(vote),
+      "amp-html": composeEmailToManagerAmpHtml(vote, token)
     };
 
     await enqueue(message);

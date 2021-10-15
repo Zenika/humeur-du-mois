@@ -1,5 +1,5 @@
 import test from "ava";
-import { composeEmailHtml } from "./compose-email-to-manager";
+import { composeEmailToManagerHtml } from "./compose-email-to-manager";
 import { firestore } from "firebase-admin";
 import { Vote } from "./cast-vote";
 
@@ -26,7 +26,7 @@ test("compose email html WITH a comment", t => {
   </p>
   <p>See you soon!</p>`;
 
-  const actual = composeEmailHtml(vote);
+  const actual = composeEmailToManagerHtml(vote);
   t.is(actual, expected);
 });
 
@@ -48,6 +48,6 @@ test("compose email html WITHOUT a comment", t => {
   </p>
   <p>See you soon!</p>`;
 
-  const actual = composeEmailHtml(vote);
+  const actual = composeEmailToManagerHtml(vote);
   t.is(actual, expected);
 });

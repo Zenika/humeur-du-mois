@@ -23,10 +23,9 @@ export { sendEmailToManager } from "./send-email-to-manager";
 
 export {
   sendCampaignStartsReminder,
-  sendCampaignEndsReminder
+  sendCampaignEndsReminder,
+  forceSendCampaingReminder
 } from "./send-reminders";
-
-export { sendEmailVote } from "./send-email-vote";
 
 export { processEmailQueue } from "./process-email-queue";
 
