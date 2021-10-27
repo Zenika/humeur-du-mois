@@ -47,7 +47,7 @@ export const getCurrentCampaignState = functions.https.onCall(
 
     return {
       campaign: campaign.id,
-      alreadyVoted: requireUniqueVote ? !vote.exists : false,
+      alreadyVoted: requireUniqueVote ? vote.exists : false,
       voteToken
     };
   }
