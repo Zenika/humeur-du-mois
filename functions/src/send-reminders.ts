@@ -171,14 +171,23 @@ const sendCampaignReminder = async (
 };
 
 const allowForceSendCampaignReminder = asBoolean(
-  config.features.allow_force_send_campaign_reminder
+  config.features.reminders.voting_campaign_starts.force.enabled
 );
 
-// this function is only meant to be used for test purposes and should be disabled in prod
+// this function is only meant to be used for test purposes or retry cases
 export const forceSendCampaingReminder = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
     if (!allowForceSendCampaignReminder) {
       res.status(401).send("KO");
+      return;
+    }
+    const authorizationHeader = req.get("Authorization") || "";
+    const keyIsCorrect =
+      authorizationHeader ===
+      `Bearer ${config.features.reminders.voting_campaign_starts.force.key}`;
+    if (!keyIsCorrect) {
+      console.error("Passed the wrong auth key, aborting");
+      res.sendStatus(403);
       return;
     }
     const voteDate = new Date();
@@ -205,7 +214,7 @@ export const forceSendCampaingReminder = functions.https.onRequest(
       const message = {
         from: composeReminderEmailSender(),
         to: email,
-        subject: `Vote to Humeur du mois!`,
+        subject: `Humeur du mois is opened!`,
         html: composeReminderEmailHtml(employee),
         "amp-html": composeReminderEmailAmpHtml(employee, token)
       };

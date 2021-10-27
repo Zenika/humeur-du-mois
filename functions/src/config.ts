@@ -93,10 +93,10 @@ export interface EndOfMonthRemindersConfig {
 
 export interface VotingCampaignStartsReminderConfig {
   enabled: Flag;
-  /**
-   * Mailing list to which to send the reminder emails.
-   */
-  recipient: string;
+  force: {
+    enabled: Flag;
+    key: string;
+  };
 }
 
 export interface VotingCampaignEndsReminderConfig {
@@ -193,7 +193,6 @@ export interface FeaturesConfig {
   backup: BackupConfig;
   delete_votes_before: DeleteVotesBeforeConfig;
   change_agency_name: ChangeAgencyNameConfig;
-  allow_force_send_campaign_reminder: Flag;
 }
 
 export interface ChangeAgencyNameConfig {
