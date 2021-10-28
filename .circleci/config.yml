@@ -106,7 +106,7 @@ jobs:
     environment:
       FIREBASE_PROJECT: prod
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:16
     steps:
       - checkout
       - attach_workspace:
