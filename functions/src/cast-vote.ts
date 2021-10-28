@@ -5,11 +5,7 @@ import { computeCurrentCampaign } from "./compute-current-campaign";
 import { Employee } from "./import-employees-from-alibeez";
 
 import { allowCorsEmail } from "./cors";
-import {
-  decodeTokenData,
-  TokenData,
-  TokenInfo
-} from "./generate-random-email-token";
+import { fetchTokenData, TokenDataWithId } from "./generate-random-email-token";
 
 const db = firestore();
 const config = functions.config() as Config;
@@ -44,7 +40,7 @@ export const castVote = functions.https.onCall(
     const voteValue = payload.vote;
     const comment = payload.comment;
     const voteToken = payload.voteToken;
-    const tokenData = await decodeTokenData(voteToken);
+    const tokenData = await fetchTokenData(voteToken);
     if (tokenData.employeeEmail !== voterEmail) {
       throw new functions.https.HttpsError(
         "permission-denied",
@@ -62,8 +58,8 @@ export const castVoteFromEmail = functions.https.onRequest(
       return;
     }
 
-    const token = req.body.token;
-    const tokenData = await decodeTokenData(token);
+    const tokenId = req.body.token;
+    const tokenData = await fetchTokenData(tokenId);
     try {
       await doVote(req.body.vote, req.body.comment, tokenData, "amp");
       res.status(200).send({
@@ -88,7 +84,7 @@ export const castVoteFromEmail = functions.https.onRequest(
 async function doVote(
   voteValue: VoteValue,
   comment: string,
-  token: TokenInfo,
+  token: TokenDataWithId,
   voteType: VoteType
 ) {
   const voteDate = new Date();
@@ -105,6 +101,13 @@ async function doVote(
       {
         voteDate
       }
+    );
+  }
+
+  if (token.type !== "vote") {
+    throw new functions.https.HttpsError(
+      "permission-denied",
+      `token is not a vote token`
     );
   }
 

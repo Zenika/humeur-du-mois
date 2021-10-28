@@ -48,6 +48,7 @@ export const sendEmailToManager = functions.firestore
     }
 
     const token = await generateAndSaveRandomEmailToken({
+      type: "manager_stats",
       employeeEmail: vote.managerEmail,
       campaignId: vote.campaign,
       agency: (managerSnapshot.data() as Employee).agency ?? undefined
