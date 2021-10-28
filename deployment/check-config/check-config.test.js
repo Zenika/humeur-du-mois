@@ -87,6 +87,5 @@ test("Config is not suitable for production", t => {
   };
   const errors = checkConfig(config);
 
-  if (errors.length < 14) t.fail();
-  else t.pass();
+  t.is(errors.length, 14);
 });
