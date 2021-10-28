@@ -27,14 +27,14 @@ const checkConfig = config => {
   if (computeStatisticsConfigs?.enabled === "true") {
     errors.push("- compute_statistics is enabled");
   }
-  if (importStatsConfig?.enabled === "true") {
-    errors.push("- import_stats is enabled");
+  if (importStatsConfig.enabled === "true" && !importStatsConfig.key) {
+    errors.push("- import_stats is enabled but no key is defined");
   }
   if (importVotesConfig?.enabled === "true") {
     errors.push("- import_votes is enabled");
   }
-  if (backup?.enabled === "true") {
-    errors.push("- backup is enabled");
+  if (backup?.enabled === "true" && !backup.key) {
+    errors.push("- backup is enabled but no key is defined");
   }
   if (
     remindersConfig?.voting_campaign_starts?.force?.enabled === "true" &&
