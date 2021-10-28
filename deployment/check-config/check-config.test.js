@@ -31,8 +31,7 @@ test("Config is suitable for production", t => {
         enabled: "true",
         start_on: "25",
         end_on: "5"
-      },
-      allow_force_send_campaign_reminder: "false"
+      }
     }
   };
   const errors = checkConfig(config);
@@ -81,11 +80,24 @@ test("Config is not suitable for production", t => {
         enabled: "false",
         start_on: "2",
         end_on: "6"
-      },
-      allow_force_send_campaign_reminder: "true"
+      }
     }
   };
   const errors = checkConfig(config);
 
-  t.is(errors.length, 14);
+  t.deepEqual(errors, [
+    "Some errors occured:",
+    "- emails are disabled",
+    "- collect_stats is disabled",
+    "- compute_statistics is enabled",
+    "- import_stats is enabled",
+    "- import_votes is enabled",
+    "- backup is enabled",
+    "- send_vote_to_manager is disabled",
+    "- reminders.voting_campaign_starts is disabled",
+    "- reminders.voting_campaign_ends is disabled",
+    "- voting_campaign is disabled",
+    "- voting_campaign doesn't start on the 25th",
+    "- voting_campaign doesn't end on the 5th"
+  ]);
 });
