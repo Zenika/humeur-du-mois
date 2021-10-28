@@ -200,7 +200,7 @@ export const forceSendCampaingReminder = functions.https.onRequest(
         .substr(0, 7)
     };
 
-    const email = req.query.email;
+    const { email, all } = req.query;
     if (email) {
       // Envoi un mail de vote à un seul employé en générant un nouveau token de vote
       const token = await generateAndSaveRandomEmailToken({
@@ -221,10 +221,14 @@ export const forceSendCampaingReminder = functions.https.onRequest(
 
       await enqueue(message);
       res.status(200).send(`Send vote to ${email}`);
-    } else {
+    } else if (all === "true") {
       // Envoi le mail à tous les employés
       await sendCampaignReminder(campaign, false);
       res.status(200).send("OK");
+    } else {
+      res
+        .status(200)
+        .send("Nothing to do. Either set 'email' or 'all' query params.");
     }
   }
 );
