@@ -36,8 +36,7 @@ test("Config is suitable for production", t => {
   };
   const errors = checkConfig(config);
 
-  if (errors.length > 1) t.fail();
-  else t.pass();
+  t.deepEqual(errors, []);
 });
 
 test("Config is not suitable for production", t => {
