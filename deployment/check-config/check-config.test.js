@@ -92,7 +92,7 @@ test("Config is not suitable for production", t => {
     "- compute_statistics is enabled",
     "- import_stats is enabled",
     "- import_votes is enabled",
-    "- backup is enabled",
+    "- backup is enabled but no key is defined",
     "- send_vote_to_manager is disabled",
     "- reminders.voting_campaign_starts is disabled",
     "- reminders.voting_campaign_ends is disabled",

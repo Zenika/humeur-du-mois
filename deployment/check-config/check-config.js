@@ -28,7 +28,7 @@ const checkConfig = config => {
     errors.push("- compute_statistics is enabled");
   }
   if (importStatsConfig.enabled === "true" && !importStatsConfig.key) {
-    errors.push("- import_stats is enabled but no key is defined");
+    errors.push("- import_stats is enabled");
   }
   if (importVotesConfig?.enabled === "true") {
     errors.push("- import_votes is enabled");
