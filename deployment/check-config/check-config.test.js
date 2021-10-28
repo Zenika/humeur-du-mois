@@ -85,7 +85,6 @@ test("Config is not suitable for production", t => {
   const errors = checkConfig(config);
 
   t.deepEqual(errors, [
-    "Some errors occured:",
     "- emails are disabled",
     "- collect_stats is disabled",
     "- compute_statistics is enabled",

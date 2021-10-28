@@ -16,7 +16,7 @@ const checkConfig = config => {
   const remindersConfig = config.features?.reminders;
   const votingCampaignConfig = config.features?.voting_campaigns;
 
-  const errors = ["Some errors occured:"];
+  const errors = [];
 
   if (emailsConfig?.enabled !== "true") {
     errors.push("- emails are disabled");
@@ -62,7 +62,6 @@ const checkConfig = config => {
   if (votingCampaignConfig?.end_on !== "5") {
     errors.push("- voting_campaign doesn't end on the 5th");
   }
-
   return errors;
 };
 
@@ -71,8 +70,11 @@ if (require.main === module) {
 
   const errors = checkConfig(config);
 
-  if (errors.length > 1) throw Error(errors.join("\n"));
-  else console.log("Config looks fine, continuing...");
+  if (errors.length > 0) {
+    throw Error(["Some errors occured:", ...errors].join("\n"));
+  } else {
+    console.log("Config looks fine, continuing...");
+  }
 }
 
 exports.checkConfig = checkConfig;
