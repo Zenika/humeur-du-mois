@@ -232,9 +232,7 @@ workflows:
           context: firebase-deploy-zenika
           requires:
             - test-tooling
-          filters:
-            branches:
-              only: improve_check_config_prod
+          filters: *filters-for-prod
       - prod-deploy-firebase-app:
           context: firebase-deploy-zenika
           requires:
