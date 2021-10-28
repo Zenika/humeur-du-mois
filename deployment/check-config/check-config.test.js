@@ -53,12 +53,22 @@ test("Config is not suitable for production", t => {
       import_votes: {
         enabled: "true"
       },
+      import_stats: {
+        enabled: "true"
+      },
+      backup: {
+        enabled: "true"
+      },
       send_vote_to_manager: {
         enabled: "false"
       },
       reminders: {
         voting_campaign_ends: {
-          enabled: "false"
+          enabled: "false",
+          force: {
+            enabled: "true",
+            key: ""
+          }
         },
         voting_campaign_starts: {
           enabled: "false"
@@ -77,6 +87,6 @@ test("Config is not suitable for production", t => {
   };
   const errors = checkConfig(config);
 
-  if (errors.length < 11) t.fail();
+  if (errors.length < 14) t.fail();
   else t.pass();
 });
