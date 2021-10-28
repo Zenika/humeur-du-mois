@@ -53,6 +53,9 @@ const checkConfig = config => {
   if (remindersConfig?.voting_campaign_ends.enabled !== "true") {
     errors.push("- reminders.voting_campaign_ends is disabled");
   }
+  if (remindersConfig?.app_link?.endsWith("/")) {
+    errors.push("- app_link ends with a slash");
+  }
   if (votingCampaignConfig?.enabled !== "true") {
     errors.push("- voting_campaign is disabled");
   }

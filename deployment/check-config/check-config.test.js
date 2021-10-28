@@ -70,7 +70,8 @@ test("Config is not suitable for production", t => {
         },
         voting_campaign_starts: {
           enabled: "false"
-        }
+        },
+        app_link: "app/"
       },
       compute_statistics: {
         enabled: "true"
@@ -94,6 +95,7 @@ test("Config is not suitable for production", t => {
     "- send_vote_to_manager is disabled",
     "- reminders.voting_campaign_starts is disabled",
     "- reminders.voting_campaign_ends is disabled",
+    "- app_link ends with a slash",
     "- voting_campaign is disabled",
     "- voting_campaign doesn't start on the 25th",
     "- voting_campaign doesn't end on the 5th"
