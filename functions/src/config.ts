@@ -121,7 +121,7 @@ export interface RemindersConfig {
    * allowed to run. Defaults to the GCP default, which is 60. See
    * https://firebase.google.com/docs/functions/manage-functions#set_timeout_and_memory_allocation.
    */
-  timeout?: number;
+  timeout?: string;
 }
 
 /**
