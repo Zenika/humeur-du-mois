@@ -18,16 +18,16 @@ const checkConfig = config => {
 
   const errors = ["Some errors occured:"];
 
-  if (emailsConfig.enabled !== "true") {
+  if (emailsConfig?.enabled !== "true") {
     errors.push("- emails are disabled");
   }
-  if (collectStatsConfig.enabled !== "true") {
+  if (collectStatsConfig?.enabled !== "true") {
     errors.push("- collect_stats is disabled");
   }
   if (computeStatisticsConfigs?.enabled === "true") {
     errors.push("- compute_statistics is enabled");
   }
-  if (importStatsConfig.enabled === "true") {
+  if (importStatsConfig?.enabled === "true") {
     errors.push("- import_stats is enabled");
   }
   if (importVotesConfig?.enabled === "true") {
