@@ -24,9 +24,13 @@ const campaignConfig = {
   startOn: asNumber(config.features.voting_campaigns.start_on),
   endOn: asNumber(config.features.voting_campaigns.end_on)
 };
+const timeout = config.features.reminders.timeout || 60;
 
-export const sendCampaignStartsReminder = functions.firestore
-  .document("daily-tick/{tickId}")
+export const sendCampaignStartsReminder = functions
+  .runWith({
+    timeoutSeconds: timeout
+  })
+  .firestore.document("daily-tick/{tickId}")
   .onCreate(async tickSnapshot => {
     if (!isEnabled(config.features.reminders.voting_campaign_starts)) {
       console.info("feature is disabled; aborting");
@@ -66,8 +70,11 @@ export const sendCampaignStartsReminder = functions.firestore
     await sendCampaignReminder(campaign, false);
   });
 
-export const sendCampaignEndsReminder = functions.firestore
-  .document("daily-tick/{tickId}")
+export const sendCampaignEndsReminder = functions
+  .runWith({
+    timeoutSeconds: timeout
+  })
+  .firestore.document("daily-tick/{tickId}")
   .onCreate(async tickSnapshot => {
     if (!isEnabled(config.features.reminders.voting_campaign_ends)) {
       console.info("feature is disabled; aborting");
@@ -175,8 +182,11 @@ const allowForceSendCampaignReminder = asBoolean(
 );
 
 // this function is only meant to be used for test purposes or retry cases
-export const forceSendCampaingReminder = functions.https.onRequest(
-  async (req: functions.Request, res: functions.Response) => {
+export const forceSendCampaingReminder = functions
+  .runWith({
+    timeoutSeconds: timeout
+  })
+  .https.onRequest(async (req: functions.Request, res: functions.Response) => {
     if (!allowForceSendCampaignReminder) {
       res.status(401).send("KO");
       return;
@@ -230,5 +240,4 @@ export const forceSendCampaingReminder = functions.https.onRequest(
         .status(200)
         .send("Nothing to do. Either set 'email' or 'all' query params.");
     }
-  }
-);
+  });
