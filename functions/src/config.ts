@@ -118,7 +118,7 @@ export interface RemindersConfig {
   app_link: string;
   /**
    * The maximum number of seconds that a function sending the reminders is
-   * allowed to run. Defaults to the maximum of 540. See
+   * allowed to run. Defaults to the GCP default, which is 60. See
    * https://firebase.google.com/docs/functions/manage-functions#set_timeout_and_memory_allocation.
    */
   timeout?: number;

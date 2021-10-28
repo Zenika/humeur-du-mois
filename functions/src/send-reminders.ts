@@ -24,7 +24,7 @@ const campaignConfig = {
   startOn: asNumber(config.features.voting_campaigns.start_on),
   endOn: asNumber(config.features.voting_campaigns.end_on)
 };
-const timeout = config.features.reminders.timeout || 540;
+const timeout = config.features.reminders.timeout || 60;
 
 export const sendCampaignStartsReminder = functions
   .runWith({
