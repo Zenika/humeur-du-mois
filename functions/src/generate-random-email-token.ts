@@ -10,6 +10,7 @@ export type TokenDataWithId = TokenData & {
 interface VoteTokenData extends TokenBaseData {
   type: "vote";
 }
+
 interface ManagerStatsTokenData extends TokenBaseData {
   type: "manager_stats";
   agency?: string;
@@ -34,6 +35,7 @@ export async function generateAndSaveRandomEmailToken(
 export async function getOrGenerateRandomEmailToken(tokenData: TokenData) {
   const voteTokenQueryResults = await db
     .collection("token")
+    .where("type", "==", tokenData.type)
     .where("employeeEmail", "==", tokenData.employeeEmail)
     .where("campaignId", "==", tokenData.campaignId)
     .orderBy("created", "desc")
