@@ -159,6 +159,7 @@ const sendCampaignReminder = async (
     }
 
     const token = await getOrGenerateRandomEmailToken({
+      type: "vote",
       employeeEmail: employee.email,
       campaignId: campaign.id
     });
@@ -214,6 +215,7 @@ export const forceSendCampaingReminder = functions
     if (email) {
       // Envoi un mail de vote à un seul employé en générant un nouveau token de vote
       const token = await generateAndSaveRandomEmailToken({
+        type: "vote",
         employeeEmail: email,
         campaignId: campaign.id
       });

@@ -1,16 +1,26 @@
 import { firestore } from "firebase-admin";
 import * as functions from "firebase-functions";
 
-export interface TokenData {
-  employeeEmail: string;
-  campaignId: string;
-  agency?: string;
-  created?: Date;
+export type TokenData = VoteTokenData | ManagerStatsTokenData;
+
+export type TokenDataWithId = TokenData & {
+  id: string;
+};
+
+interface VoteTokenData extends TokenBaseData {
+  type: "vote";
 }
 
-export interface TokenInfo extends TokenData {
-  id: string;
+interface ManagerStatsTokenData extends TokenBaseData {
+  type: "manager_stats";
+  agency?: string;
 }
+
+interface TokenBaseData {
+  employeeEmail: string;
+  campaignId: string;
+}
+
 const db = firestore();
 
 export async function generateAndSaveRandomEmailToken(
@@ -25,6 +35,7 @@ export async function generateAndSaveRandomEmailToken(
 export async function getOrGenerateRandomEmailToken(tokenData: TokenData) {
   const voteTokenQueryResults = await db
     .collection("token")
+    .where("type", "==", tokenData.type)
     .where("employeeEmail", "==", tokenData.employeeEmail)
     .where("campaignId", "==", tokenData.campaignId)
     .orderBy("created", "desc")
@@ -36,7 +47,9 @@ export async function getOrGenerateRandomEmailToken(tokenData: TokenData) {
   return voteToken;
 }
 
-export async function decodeTokenData(tokenId: string): Promise<TokenInfo> {
+export async function fetchTokenData(
+  tokenId: string
+): Promise<TokenDataWithId> {
   const tokenSnapshot = await db.collection("token").doc(tokenId).get();
   if (!tokenSnapshot || !tokenSnapshot.exists) {
     throw new functions.https.HttpsError(

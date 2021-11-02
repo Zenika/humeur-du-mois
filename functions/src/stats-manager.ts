@@ -14,18 +14,24 @@ export const statsManager = functions.https.onRequest(
     const token = req.query.token;
     if (!token) {
       res.status(401).send({
-        message: "Token mandatory"
+        message: "no token provided"
       });
       return;
     }
     const tokenSnapshot = await db.collection("token").doc(token).get();
     if (!tokenSnapshot || !tokenSnapshot.exists) {
-      res.status(401).send({
-        message: "Bad Token"
+      res.status(403).send({
+        message: "provided token is unknown"
       });
       return;
     }
     const tokenData = tokenSnapshot.data() as TokenData;
+    if (tokenData.type !== "manager_stats") {
+      res.status(403).send({
+        message: "provided token not authorized to access manager stats"
+      });
+      return;
+    }
 
     const managersVotes = await db
       .collection("vote")
