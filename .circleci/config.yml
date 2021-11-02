@@ -119,7 +119,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: ./
-      - run: node_modules/.bin/firebase deploy --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN --non-interactive
+      - run: node_modules/.bin/firebase deploy --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN --non-interactive --force
 
   prod-deploy-firebase-app:
     environment:
