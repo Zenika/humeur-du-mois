@@ -114,7 +114,7 @@ jobs:
     environment:
       FIREBASE_PROJECT: default
     docker: &deploy-firebase-app-docker
-      - image: circleci/node:16
+      - image: circleci/node:12 # must be node 12 for Cloud Build to work
     steps: &deploy-firebase-app-steps
       - checkout
       - attach_workspace:
