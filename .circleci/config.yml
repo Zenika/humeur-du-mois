@@ -3,7 +3,7 @@ version: 2
 jobs:
   install-ui-dependencies:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:16
     steps:
       - checkout
       - run: npm --prefix ui ci
@@ -14,7 +14,7 @@ jobs:
 
   build-ui:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:16
     steps:
       - checkout
       - attach_workspace:
@@ -23,7 +23,7 @@ jobs:
 
   build-ui-for-production:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:16
     steps:
       - checkout
       - attach_workspace:
@@ -32,7 +32,7 @@ jobs:
 
   install-functions-dependencies:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:16
     steps:
       - checkout
       - run: npm --prefix functions ci
@@ -43,7 +43,7 @@ jobs:
 
   build-functions:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:16
     steps:
       - checkout
       - attach_workspace:
@@ -52,7 +52,7 @@ jobs:
 
   install-tooling-dependencies:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:16
     steps:
       - checkout
       - run: npm ci
@@ -65,7 +65,7 @@ jobs:
     environment:
       FIREBASE_PROJECT: default
     docker: &validate-functions-config-docker
-      - image: circleci/node:12 # yargs doesn't not support node 10
+      - image: circleci/node:16
     steps: &validate-functions-config-steps
       - checkout
       - attach_workspace:
@@ -97,7 +97,7 @@ jobs:
 
   check-formatting:
     docker:
-      - image: circleci/node:12 # prettier does not support 8 anymore
+      - image: circleci/node:16
     steps:
       - checkout
       - attach_workspace:
@@ -114,7 +114,7 @@ jobs:
     environment:
       FIREBASE_PROJECT: default
     docker: &deploy-firebase-app-docker
-      - image: circleci/node:10
+      - image: circleci/node:16
     steps: &deploy-firebase-app-steps
       - checkout
       - attach_workspace:
