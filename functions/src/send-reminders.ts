@@ -140,7 +140,7 @@ const sendCampaignReminder = async (
     ).docs
       .map(voteSnapshot => voteSnapshot.data())
       .map(vote => vote.email)
-      .forEach(emailsOfEmployeesWhoAlreadyVoted.add);
+      .forEach(email => emailsOfEmployeesWhoAlreadyVoted.add(email));
     console.info(
       `Found ${emailsOfEmployeesWhoAlreadyVoted.size} employees who already voted`
     );
