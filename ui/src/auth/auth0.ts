@@ -1,59 +1,35 @@
-import auth0 from "auth0-js";
-import { Session } from "./session-repository";
-import * as sessionRepository from "./session-repository";
+import createAuth0Client, {
+  Auth0Client,
+  Auth0ClientOptions,
+  User
+} from "@auth0/auth0-spa-js";
 
-async function parseHash(webAuth: auth0.WebAuth) {
-  return new Promise<auth0.Auth0DecodedHash | null>((resolve, reject) =>
-    webAuth.parseHash((err, decodedHash) => {
-      window.location.hash = "";
-      return err ? reject(err) : resolve(decodedHash);
-    })
-  );
+export interface Session {
+  user: User;
+  accessToken: string;
 }
-
-async function getUserInfo(webAuth: auth0.WebAuth, accessToken: string) {
-  return new Promise<auth0.Auth0UserProfile>((resolve, reject) =>
-    webAuth.client.userInfo(accessToken, (err, result) =>
-      err ? reject(err) : resolve(result)
-    )
-  );
-}
-
-async function convertToSession(
-  webAuth: auth0.WebAuth,
-  decodedHash: auth0.Auth0DecodedHash | null
-): Promise<Session | null> {
-  if (!decodedHash) return null;
-  const { accessToken, idToken, expiresIn } = decodedHash;
-  if (!accessToken || !idToken || !expiresIn) return null;
-  const user = await getUserInfo(webAuth, accessToken);
-  const expiresAt = expiresIn * 1000 + new Date().getTime();
-  return { user, accessToken, idToken, expiresAt };
-}
-
-export type WebAuthSession = {
-  session: Session | null;
-  webAuth: auth0.WebAuth;
-};
 
 export async function authenticate(
-  config: auth0.AuthOptions
-): Promise<WebAuthSession> {
-  const webAuth = new auth0.WebAuth(config);
-  const decodedHash = await parseHash(webAuth);
-  const session =
-    (await convertToSession(webAuth, decodedHash)) ||
-    sessionRepository.restore();
-  if (session) {
-    sessionRepository.persist(session);
-    return { webAuth, session };
+  config: Auth0ClientOptions
+): Promise<{
+  session?: Session;
+  auth0Client: Auth0Client;
+}> {
+  const auth0Client = await createAuth0Client(config);
+  try {
+    await auth0Client.handleRedirectCallback();
+  } catch (err) {
+    await auth0Client.loginWithRedirect({ prompt: "none" });
+  }
+  const user = await auth0Client.getUser();
+  if (user) {
+    const accessToken = await auth0Client.getTokenSilently();
+    return { auth0Client, session: { user, accessToken } };
   } else {
-    signOutAuth0(webAuth);
-    return { webAuth, session: null };
+    return { auth0Client };
   }
 }
 
-export function signOutAuth0(webAuth: auth0.WebAuth): void {
-  sessionRepository.forget(); // ensures nothing is left hanging
-  webAuth.authorize(); // this triggers a redirect to Auth0
+export async function signOutAuth0(auth0Client: Auth0Client): Promise<void> {
+  await auth0Client.logout({ returnTo: window.location.href });
 }

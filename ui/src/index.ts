@@ -314,9 +314,9 @@ window.addEventListener("load", async function () {
 
   try {
     // 1 - Auth0 authentication
-    const { session, webAuth } = await authenticateAuth0({
+    const { session, auth0Client } = await authenticateAuth0({
       ...AUTH0_CONFIG,
-      redirectUri: window.location.href
+      redirect_uri: window.location.href
     });
     if (!session) return; // this means a redirect has been issued
     if (!session.user.email) {
@@ -334,7 +334,7 @@ window.addEventListener("load", async function () {
     // 4 - Now that the user is fully logged in, they can logout
     logoutButton.onclick = async () => {
       await signOutFirebase();
-      signOutAuth0(webAuth);
+      signOutAuth0(auth0Client);
     };
 
     // 5 - Load data for both pages in parallel
