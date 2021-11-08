@@ -1,7 +1,5 @@
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-//@ts-ignore no types for this package
-import ScriptExtHtmlWebpackPlugin from "script-ext-html-webpack-plugin";
 import webpack from "webpack";
 
 export default (): webpack.Configuration => ({
@@ -24,10 +22,8 @@ export default (): webpack.Configuration => ({
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "src/index.html"
-    }),
-    new ScriptExtHtmlWebpackPlugin({
-      defer: "main.js"
+      template: "src/index.html",
+      scriptLoading: "defer"
     }),
     new MiniCssExtractPlugin({
       filename: "[name].css"
