@@ -318,13 +318,17 @@ window.addEventListener("load", async function () {
 
   try {
     // 1 - Auth0 authentication
-    const { session, auth0Client } = await authenticateAuth0({
-      ...AUTH0_CONFIG,
-      redirect_uri: window.location.href
-    });
-    if (!session) return; // this means a redirect has been issued
+    const { session, auth0Client, err } = await authenticateAuth0(AUTH0_CONFIG);
+    if (err) {
+      errorOut(err);
+      return;
+    }
+    if (!session) {
+      return; // this means a redirect has been issued
+    }
     if (!session.user.email) {
-      throw new Error("expected user to have email but it did not");
+      errorOut(new Error("expected user to have email but it did not"));
+      return;
     }
 
     // 2 - Display the main content (Optimistic UI)
