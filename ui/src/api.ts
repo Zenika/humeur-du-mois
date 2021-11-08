@@ -6,6 +6,14 @@ export type Payload = {
   voteToken: string;
 };
 
+export class ApiCallError extends Error {
+  status: string;
+  constructor(message: string, status: string) {
+    super(message);
+    this.status = status;
+  }
+}
+
 const authorizationHeader = async (): Promise<string> => {
   const currentUser = firebase.auth().currentUser;
   if (!currentUser) {
@@ -30,7 +38,7 @@ export const call = async (functionName: string, payload: any) => {
   });
   const { result, error } = await response.json();
   if (!response.ok) {
-    throw error;
+    throw new ApiCallError(error.message, error.status);
   }
   return result;
 };

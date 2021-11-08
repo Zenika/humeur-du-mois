@@ -1,6 +1,11 @@
 import firebase from "firebase/app";
 import { authenticateAuth0, authenticateFirebase } from "./auth";
-import { getCurrentCampaignState, castVote, Payload } from "./api";
+import {
+  getCurrentCampaignState,
+  castVote,
+  Payload,
+  ApiCallError
+} from "./api";
 import { AUTH0_CONFIG } from "./config";
 import "./styles/navbar.css";
 import "./styles/style.css";
@@ -187,10 +192,12 @@ window.addEventListener("load", async function () {
     try {
       await castVote(payload);
     } catch (err) {
-      if (err.status === "ALREADY_EXISTS") {
+      if (err instanceof ApiCallError && err.status === "ALREADY_EXISTS") {
         changePageTo(alreadyVotedPage);
-      } else {
+      } else if (err instanceof Error) {
         errorOut(err.message);
+      } else {
+        errorOut("An unknown error has occurred");
       }
       return;
     }
