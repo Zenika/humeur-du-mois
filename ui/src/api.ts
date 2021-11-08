@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import { Auth, getAuth } from "firebase/auth";
 
 export type Payload = {
   vote: string;
@@ -14,8 +14,8 @@ export class ApiCallError extends Error {
   }
 }
 
-const authorizationHeader = async (): Promise<string> => {
-  const currentUser = firebase.auth().currentUser;
+const authorizationHeader = async (auth: Auth): Promise<string> => {
+  const currentUser = auth.currentUser;
   if (!currentUser) {
     return "";
   }
@@ -27,12 +27,16 @@ const authorizationHeader = async (): Promise<string> => {
   }
 };
 
-export const call = async (functionName: string, payload: any) => {
+export const call = async (
+  functionName: string,
+  payload: any,
+  { auth }: { auth: Auth }
+) => {
   const response = await fetch(`/api/${functionName}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: await authorizationHeader()
+      Authorization: await authorizationHeader(auth)
     },
     body: JSON.stringify({ data: payload })
   });
@@ -43,17 +47,20 @@ export const call = async (functionName: string, payload: any) => {
   return result;
 };
 
-export const exchangeToken = (payload: {
-  userId: string;
-  accessToken: string;
-}) => call("exchangeToken", payload) as Promise<{ token: string }>;
+export const exchangeToken = (
+  payload: {
+    userId: string;
+    accessToken: string;
+  },
+  { auth }: { auth: Auth }
+) => call("exchangeToken", payload, { auth }) as Promise<{ token: string }>;
 
-export const getCurrentCampaignState = () =>
-  call("getCurrentCampaignState", {}) as Promise<{
+export const getCurrentCampaignState = ({ auth }: { auth: Auth }) =>
+  call("getCurrentCampaignState", {}, { auth }) as Promise<{
     campaign: string | null;
     alreadyVoted: boolean;
     voteToken: string;
   }>;
 
-export const castVote = (payload: Payload) =>
-  call("castVote", payload) as Promise<void>;
+export const castVote = (payload: Payload, { auth }: { auth: Auth }) =>
+  call("castVote", payload, { auth }) as Promise<void>;
