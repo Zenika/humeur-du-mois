@@ -9,9 +9,7 @@ export interface Session {
   accessToken: string;
 }
 
-export async function authenticate(
-  config: Auth0ClientOptions
-): Promise<{
+export async function authenticate(config: Auth0ClientOptions): Promise<{
   session?: Session;
   auth0Client: Auth0Client;
 }> {

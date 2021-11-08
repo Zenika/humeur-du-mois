@@ -272,11 +272,8 @@ window.addEventListener("load", async function () {
     const db = firebase.firestore();
     db.settings({ timestampsInSnapshots: true });
 
-    const {
-      campaign,
-      alreadyVoted,
-      voteToken
-    } = await getCurrentCampaignState();
+    const { campaign, alreadyVoted, voteToken } =
+      await getCurrentCampaignState();
 
     homeButton.onclick = () => {
       if (!campaign) {
