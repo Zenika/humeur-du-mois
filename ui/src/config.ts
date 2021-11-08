@@ -3,9 +3,8 @@ declare const __ENV__: any;
 const ENV: {
   AUTH0_CONFIG: {
     domain: string;
-    clientID: string;
+    client_id: string;
     scope: string;
-    responseType: string;
     audience: string;
   };
 } = __ENV__;

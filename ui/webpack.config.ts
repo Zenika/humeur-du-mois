@@ -36,8 +36,7 @@ export default (): webpack.Configuration => ({
       __ENV__: {
         AUTH0_CONFIG: JSON.stringify({
           domain: "zenika.eu.auth0.com",
-          clientID: "j5xIoOh3R9Jov6wtKQm2BAHUSkrYpttY",
-          responseType: "token id_token",
+          client_id: "j5xIoOh3R9Jov6wtKQm2BAHUSkrYpttY",
           audience: "https://zenika.eu.auth0.com/userinfo",
           scope: "openid email"
         })
