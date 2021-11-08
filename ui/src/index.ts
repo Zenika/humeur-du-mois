@@ -1,12 +1,18 @@
-import firebase from "firebase/app";
-import { authenticateAuth0, authenticateFirebase } from "./auth";
+import { initializeApp } from "firebase/app";
+import { Auth, getAuth } from "firebase/auth";
 import {
-  getCurrentCampaignState,
-  castVote,
-  Payload,
-  ApiCallError
-} from "./api";
-import { AUTH0_CONFIG } from "./config";
+  Firestore,
+  getFirestore,
+  getDoc,
+  getDocs,
+  doc,
+  collection,
+  query,
+  orderBy
+} from "firebase/firestore";
+import { authenticateAuth0, authenticateFirebase } from "./auth";
+import { getCurrentCampaignState, castVote, ApiCallError } from "./api";
+import { AUTH0_CONFIG, FIREBASE_CONFIG } from "./config";
 import "./styles/navbar.css";
 import "./styles/style.css";
 import { renderTemplate, VoteData, StatsData } from "./services/renderTemplate";
@@ -103,9 +109,13 @@ window.addEventListener("load", async function () {
     show(homePage);
   };
 
-  const renderInitialStatsPage = async () => {
-    voteData = await retrieveStatsData();
-    await fillAgenciesList();
+  const renderInitialStatsPage = async ({
+    firestore
+  }: {
+    firestore: Firestore;
+  }) => {
+    voteData = await retrieveStatsData({}, { firestore });
+    await fillAgenciesList({ firestore });
     renderStatsData(voteData);
   };
 
@@ -113,16 +123,14 @@ window.addEventListener("load", async function () {
     changePageTo(statsPage);
   };
 
-  const retrieveStatsData = async (agency?: string) => {
-    const db = firebase.firestore();
-    db.settings({ timestampsInSnapshots: true });
+  const retrieveStatsData = async (
+    { agency }: { agency?: string },
+    { firestore }: { firestore: Firestore }
+  ) => {
     const collectionName = agency ? `stats-campaign-agency` : `stats-campaign`;
-
-    const stats: firebase.firestore.QuerySnapshot = await db
-      .collection(collectionName)
-      .orderBy("campaign", "desc")
-      .get();
-
+    const stats = await getDocs(
+      query(collection(firestore, collectionName), orderBy("campaign", "desc"))
+    );
     return stats.docs.map(snapshot => ({
       campaign: snapshot.id,
       counts: snapshot.data() as StatsData,
@@ -130,12 +138,10 @@ window.addEventListener("load", async function () {
     }));
   };
 
-  const fillAgenciesList = async () => {
-    const statsCampaignAgency: firebase.firestore.QuerySnapshot = await firebase
-      .firestore()
-      .collection(`stats-campaign-agency`)
-      .get();
-
+  const fillAgenciesList = async ({ firestore }: { firestore: Firestore }) => {
+    const statsCampaignAgency = await getDocs(
+      query(collection(firestore, "stats-campaign-agency"))
+    );
     const agencies = new Set(
       statsCampaignAgency.docs.map(
         snapshot => (snapshot.data() as StatsData).agency
@@ -177,20 +183,12 @@ window.addEventListener("load", async function () {
   };
 
   const saveResponse = async (
-    voteToken: string,
-    response: string,
-    comment?: string
+    payload: { vote: string; voteToken: string; comment?: string },
+    { auth }: { auth: Auth }
   ) => {
     changePageTo(recordingPage);
-    const payload: Payload = {
-      vote: response,
-      voteToken
-    };
-    if (comment) {
-      payload.comment = comment;
-    }
     try {
-      await castVote(payload);
+      await castVote(payload, { auth });
     } catch (err) {
       if (err instanceof ApiCallError && err.status === "ALREADY_EXISTS") {
         changePageTo(alreadyVotedPage);
@@ -204,7 +202,10 @@ window.addEventListener("load", async function () {
     changePageTo(thankYouPage);
   };
 
-  const initVoteButtonsEventHandlers = (voteToken: string) => {
+  const initVoteButtonsEventHandlers = (
+    voteToken: string,
+    { auth }: { auth: Auth }
+  ) => {
     let mood: string;
     const buttonMap = [
       submitGreat,
@@ -239,11 +240,15 @@ window.addEventListener("load", async function () {
         errorDisplay.hidden = false;
         return;
       }
-      saveResponse(voteToken, mood, comment);
+      saveResponse({ voteToken, vote: mood, comment }, { auth });
     };
   };
 
-  const initStatsButtonsEventHandlers = () => {
+  const initStatsButtonsEventHandlers = ({
+    firestore
+  }: {
+    firestore: Firestore;
+  }) => {
     statsButton.onclick = () => {
       displayStatsPage();
     };
@@ -252,9 +257,12 @@ window.addEventListener("load", async function () {
       const newSelectedAgency =
         agencySelector.options[agencySelector.selectedIndex].value;
       if (selectedAgency === "" && newSelectedAgency !== "") {
-        voteData = await retrieveStatsData(newSelectedAgency);
+        voteData = await retrieveStatsData(
+          { agency: newSelectedAgency },
+          { firestore }
+        );
       } else if (selectedAgency !== "" && newSelectedAgency === "") {
-        voteData = await retrieveStatsData();
+        voteData = await retrieveStatsData({}, { firestore });
       }
       agencyName.innerText = newSelectedAgency;
 
@@ -267,13 +275,12 @@ window.addEventListener("load", async function () {
   };
 
   const initCampaignAndEmployeeData = async (
-    userId: string
+    userId: string,
+    { auth, firestore }: { auth: Auth; firestore: Firestore }
   ): Promise<string | undefined> => {
-    const db = firebase.firestore();
-    db.settings({ timestampsInSnapshots: true });
-
-    const { campaign, alreadyVoted, voteToken } =
-      await getCurrentCampaignState();
+    const { campaign, alreadyVoted, voteToken } = await getCurrentCampaignState(
+      { auth }
+    );
 
     homeButton.onclick = () => {
       if (!campaign) {
@@ -296,10 +303,9 @@ window.addEventListener("load", async function () {
       return;
     }
 
-    const employeeSnapshot = await db
-      .collection("employees")
-      .doc(userId.toLowerCase())
-      .get();
+    const employeeSnapshot = await getDoc(
+      doc(firestore, "employees", userId.toLowerCase())
+    );
     if (!employeeSnapshot) {
       throw new Error("cannot find latest employee data import");
     }
@@ -317,46 +323,52 @@ window.addEventListener("load", async function () {
   };
 
   try {
-    // 1 - Auth0 authentication
+    // Auth0 authentication
     const { session, auth0Client, err } = await authenticateAuth0(AUTH0_CONFIG);
     if (err) {
       errorOut(err);
       return;
     }
     if (!session) {
-      return; // this means a redirect has been issued
+      // this means a redirect has been issued by authenticateAuth0
+      return;
     }
     if (!session.user.email) {
       errorOut(new Error("expected user to have email but it did not"));
       return;
     }
 
-    // 2 - Display the main content (Optimistic UI)
+    // Initialize Firebase
+    const firebaseApp = initializeApp(FIREBASE_CONFIG);
+    const auth = getAuth(firebaseApp);
+    const firestore = getFirestore(firebaseApp);
+
+    // Display the main content (Optimistic UI)
     userIdElement.innerText = session.user.email;
     displayHomePage();
-    initStatsButtonsEventHandlers();
+    initStatsButtonsEventHandlers({ firestore });
 
-    // 3 - Firebase authentication
-    await authenticateFirebase(session);
+    // Firebase authentication
+    await authenticateFirebase(session, { auth });
 
-    // 4 - Now that the user is fully logged in, they can logout
+    // Now that the user is fully logged in, they can logout
     logoutButton.onclick = async () => {
-      await signOutFirebase();
+      await signOutFirebase({ auth });
       signOutAuth0(auth0Client);
     };
 
-    // 5 - Load data for both pages in parallel
-    initCampaignAndEmployeeData(session.user.email)
+    // Load data for both pages in parallel
+    initCampaignAndEmployeeData(session.user.email, { auth, firestore })
       .then(voteToken => {
         if (voteToken) {
-          initVoteButtonsEventHandlers(voteToken);
+          initVoteButtonsEventHandlers(voteToken, { auth });
           show(sendingSection);
         }
         hide(sendingSectionLoader);
       })
       .catch(errorOut);
 
-    renderInitialStatsPage()
+    renderInitialStatsPage({ firestore })
       .then(() => {
         show(statsTitle);
       })

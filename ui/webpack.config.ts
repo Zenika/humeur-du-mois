@@ -17,9 +17,6 @@ export default (): webpack.Configuration => ({
     ]
   },
   resolve: { extensions: [".js", ".ts"] },
-  externals: {
-    "firebase/app": "firebase"
-  },
   plugins: [
     new HtmlWebpackPlugin({
       template: "src/index.html",
@@ -35,6 +32,15 @@ export default (): webpack.Configuration => ({
           client_id: "j5xIoOh3R9Jov6wtKQm2BAHUSkrYpttY",
           audience: "https://zenika.eu.auth0.com/userinfo",
           scope: "openid email"
+        }),
+        FIREBASE_CONFIG: JSON.stringify({
+          apiKey: "AIzaSyDEcSPU1xW0ReLEvEQoiTH-a003XFsAueQ",
+          authDomain: "humeur-du-mois-2018.firebaseapp.com",
+          databaseURL: "https://humeur-du-mois-2018.firebaseio.com",
+          projectId: "humeur-du-mois-2018",
+          storageBucket: "humeur-du-mois-2018.appspot.com",
+          messagingSenderId: "613593816673",
+          appId: "1:613593816673:web:908fcded3c60516fef5420"
         })
       }
     })
