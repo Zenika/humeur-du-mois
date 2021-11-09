@@ -31,7 +31,8 @@ export default (): webpack.Configuration => ({
           domain: "zenika.eu.auth0.com",
           client_id: "j5xIoOh3R9Jov6wtKQm2BAHUSkrYpttY",
           audience: "https://zenika.eu.auth0.com/userinfo",
-          scope: "openid email"
+          scope: "openid email",
+          connection: "google-oauth2"
         }),
         FIREBASE_CONFIG: JSON.stringify({
           apiKey: "AIzaSyDEcSPU1xW0ReLEvEQoiTH-a003XFsAueQ",
