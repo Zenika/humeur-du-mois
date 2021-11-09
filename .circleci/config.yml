@@ -24,6 +24,17 @@ jobs:
   build-ui-for-production:
     docker:
       - image: circleci/node:16
+    environment:
+      HUMEUR_DU_MOIS_UI_FIREBASE_CONFIG: |
+        {
+          apiKey: "AIzaSyBYU6kv-jxkDE6Ade29kBnEAoW9ZN_yfpc",
+          authDomain: "humeur-du-mois-2018-prod.firebaseapp.com",
+          databaseURL: "https://humeur-du-mois-2018-prod.firebaseio.com",
+          projectId: "humeur-du-mois-2018-prod",
+          storageBucket: "humeur-du-mois-2018-prod.appspot.com",
+          messagingSenderId: "777759273294",
+          appId: "1:777759273294:web:4bea510be52fdd6317ee1f"
+        }
     steps:
       - checkout
       - attach_workspace:
