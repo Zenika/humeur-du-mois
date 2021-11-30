@@ -102,8 +102,12 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
     color: #1b5e20;
 }
 
+.button--ok {
+  color: #263238;
+}
+
 .button--no-that-great {
-    color: #263238;
+  color: #d67d00;
 }
 
 .button--not-great-at-all {
@@ -121,6 +125,11 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
     align-items: center;
     cursor: pointer;
     line-height: 25px;
+}
+
+amp-selector [option][selected] {
+  cursor: auto;
+  outline: 1px solid #f44336;
 }
 
 .button__emoji {
