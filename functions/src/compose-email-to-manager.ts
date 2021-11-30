@@ -96,6 +96,9 @@ export function composeEmailToManagerAmpHtml(vote: Vote, token: string) {
         color: #263238;
       }
       td:nth-child(4) {
+        color: #d67d00;
+      }
+      td:nth-child(5) {
         color: #b71c1c;
       }
 
