@@ -39,11 +39,16 @@ export function renderTemplate(voteData?: VoteData) {
               row => `
                 <tr>
                   <td class="table__light">${row.campaignDate}</td>
-                  ${keys.map(key => `<td>${row.counts[key] ?? 0}</td>`).join("")}
+                  ${keys
+                    .map(key => `<td>${row.counts[key] ?? 0}</td>`)
+                    .join("")}
                   <td class="table__light">${
                     row.counts.total
                       ? row.counts.total
-                      : keys.reduce((total, key) => total + (row.counts[key] || 0), 0)
+                      : keys.reduce(
+                          (total, key) => total + (row.counts[key] || 0),
+                          0
+                        )
                   }</td>
                 </tr>
               `
