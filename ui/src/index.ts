@@ -144,7 +144,7 @@ window.addEventListener("load", async function () {
     );
     const agencies = new Set<string>(
       statsCampaignAgency.docs.map(
-        (snapshot: any) => (snapshot.data() as StatsData).agency || ''
+        (snapshot: any) => (snapshot.data() as StatsData).agency || ""
       )
     );
 
