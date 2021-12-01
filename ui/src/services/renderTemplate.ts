@@ -1,5 +1,12 @@
-export interface StatsData {
-  [key: string]: number;
+export interface CounterData {
+  great: number;
+  ok: number;
+  notThatGreat: number;
+  notGreatAtAll: number;
+}
+export interface StatsData extends CounterData {
+  campaign: string;
+  agency?: string;
   total: number;
 }
 
@@ -13,7 +20,12 @@ export type VoteData = {
 export function renderTemplate(voteData?: VoteData) {
   if (!voteData)
     return `Oops, something went wrong. We got no data to show you, try reloading and contacting dreamlabs if this keeps happening`;
-  const keys = ["great", "ok", "notThatGreat", "notGreatAtAll"];
+  const keys: (keyof CounterData)[] = [
+    "great",
+    "ok",
+    "notThatGreat",
+    "notGreatAtAll"
+  ];
   const emojis = ["😁", "🙂", "😐", "😤"];
   return `
         <table>

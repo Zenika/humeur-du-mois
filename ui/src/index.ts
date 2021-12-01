@@ -131,7 +131,7 @@ window.addEventListener("load", async function () {
     const stats = await getDocs(
       query(collection(firestore, collectionName), orderBy("campaign", "desc"))
     );
-    return stats.docs.map(snapshot => ({
+    return stats.docs.map((snapshot: any) => ({
       campaign: snapshot.id,
       counts: snapshot.data() as StatsData,
       campaignDate: ""
@@ -142,9 +142,9 @@ window.addEventListener("load", async function () {
     const statsCampaignAgency = await getDocs(
       query(collection(firestore, "stats-campaign-agency"))
     );
-    const agencies = new Set(
+    const agencies = new Set<string>(
       statsCampaignAgency.docs.map(
-        snapshot => (snapshot.data() as StatsData).agency
+        (snapshot: any) => (snapshot.data() as StatsData).agency
       )
     );
 
@@ -278,11 +278,9 @@ window.addEventListener("load", async function () {
     userId: string,
     { auth, firestore }: { auth: Auth; firestore: Firestore }
   ): Promise<string | undefined> => {
-    const {
-      campaign,
-      alreadyVoted,
-      voteToken
-    } = await getCurrentCampaignState({ auth });
+    const { campaign, alreadyVoted, voteToken } = await getCurrentCampaignState(
+      { auth }
+    );
 
     homeButton.onclick = () => {
       if (!campaign) {
