@@ -121,11 +121,11 @@ export function composeEmailToManagerAmpHtml(vote: Vote, token: string) {
             </tr>
             <tr>
               <td class="table__light">Your team</td>
-              <td>{{manager.great}}</td><td>{{manager.ok}}</td><td>{{manager.notThatGreat}}</td><td>{{manager.notGreatAtAll}}</td><td>{{manager.total}}</td>
+              <td>{{manager.great}}</td><td>{{manager.ok}}</td><td>{{manager.notThatGreat}}</td><td>{{manager.notGreatAtAll}}</td>
             </tr>
             <tr>
               <td class="table__light">{{agency.agency}}</td>
-              <td>{{agency.great}}</td><td>{{agency.ok}}</td><td>{{agency.notThatGreat}}</td><td>{{agency.notGreatAtAll}}</td><td>{{agency.total}}</td>
+              <td>{{agency.great}}</td><td>{{agency.ok}}</td><td>{{agency.notThatGreat}}</td><td>{{agency.notGreatAtAll}}</td>
             </tr>
           </tbody>
         </table>

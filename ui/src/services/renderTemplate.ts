@@ -1,6 +1,5 @@
 export interface StatsData {
-  [key: string]: number;
-  total: number;
+  [key: string]: any;
 }
 
 export type VoteData = {
@@ -19,8 +18,7 @@ export function renderTemplate(voteData?: VoteData) {
         <table>
           <tr>
            <th>Campaign</th>
-           ${emojis.map(key => `<th>${key}</th>`).join("")}
-           <th>total</th>
+            ${emojis.map(key => `<th>${key}</th>`).join("")}
           </tr>
           ${voteData
             .map(
@@ -28,7 +26,6 @@ export function renderTemplate(voteData?: VoteData) {
                 <tr>
                   <td class="table__light">${row.campaignDate}</td>
                   ${keys.map(key => `<td>${row.counts[key]}</td>`).join("")}
-                  <td class="table__light">${row.counts.total ? row.counts.total : keys.reduce((total, key) => total + row.counts[key], 0)}</td>
                 </tr>
               `
             )

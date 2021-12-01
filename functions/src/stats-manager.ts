@@ -42,8 +42,8 @@ export const statsManager = functions.https.onRequest(
       .map(doc => doc.data() as Vote)
       .reduce(
         (counters, vote) =>
-          Object.assign(counters, { [vote.value]: counters[vote.value] + 1, total: counters["total"] + 1 }),
-        { great: 0, notGreatAtAll: 0, notThatGreat: 0, ok: 0, total: 0 }
+          Object.assign(counters, { [vote.value]: counters[vote.value] + 1 }),
+        { great: 0, notGreatAtAll: 0, notThatGreat: 0, ok: 0 }
       );
     const statsAgency = await db
       .collection("stats-campaign-agency")
@@ -56,7 +56,6 @@ export const statsManager = functions.https.onRequest(
         notGreatAtAll: 0,
         notThatGreat: 0,
         ok: 0,
-        total: 0,
         ...(statsAgency.exists ? statsAgency.data() : {})
       },
       campaign: tokenData.campaignId
