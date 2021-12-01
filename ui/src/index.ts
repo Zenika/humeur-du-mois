@@ -278,9 +278,11 @@ window.addEventListener("load", async function () {
     userId: string,
     { auth, firestore }: { auth: Auth; firestore: Firestore }
   ): Promise<string | undefined> => {
-    const { campaign, alreadyVoted, voteToken } = await getCurrentCampaignState(
-      { auth }
-    );
+    const {
+      campaign,
+      alreadyVoted,
+      voteToken
+    } = await getCurrentCampaignState({ auth });
 
     homeButton.onclick = () => {
       if (!campaign) {

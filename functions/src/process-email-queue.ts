@@ -57,24 +57,22 @@ const requeueIfFails = async <T>(
 
 type FirestoreTriggerHandler = (snapshot: DocumentSnapshot) => void;
 
-const queueWorker =
-  <T>(
-    requeueCollection: CollectionReference,
-    logCollection: CollectionReference,
-    worker: (snapshot: DocumentSnapshot) => T
-  ) =>
-  async (snapshot: DocumentSnapshot) => {
-    const taskResponse = await requeueIfFails(
-      snapshot,
-      requeueCollection.doc(),
-      () => worker(snapshot)
-    );
-    await logCollection.doc(snapshot.id).create({
-      ref: snapshot.ref,
-      processedAt: firestore.Timestamp.now(),
-      taskResponse
-    });
-  };
+const queueWorker = <T>(
+  requeueCollection: CollectionReference,
+  logCollection: CollectionReference,
+  worker: (snapshot: DocumentSnapshot) => T
+) => async (snapshot: DocumentSnapshot) => {
+  const taskResponse = await requeueIfFails(
+    snapshot,
+    requeueCollection.doc(),
+    () => worker(snapshot)
+  );
+  await logCollection.doc(snapshot.id).create({
+    ref: snapshot.ref,
+    processedAt: firestore.Timestamp.now(),
+    taskResponse
+  });
+};
 
 const processEmail = async (emailSnapshot: DocumentSnapshot) => {
   const { message } = emailSnapshot.data()! as QueuedEmail;

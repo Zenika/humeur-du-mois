@@ -9,7 +9,9 @@ export interface Session {
   accessToken: string;
 }
 
-export async function authenticate(config: Auth0ClientOptions): Promise<{
+export async function authenticate(
+  config: Auth0ClientOptions
+): Promise<{
   session?: Session;
   auth0Client: Auth0Client;
   err?: unknown;
@@ -38,7 +40,9 @@ export async function signOutAuth0(auth0Client: Auth0Client): Promise<void> {
   await auth0Client.logout({ returnTo: window.location.href });
 }
 
-async function handleCallback(auth0Client: Auth0Client): Promise<{
+async function handleCallback(
+  auth0Client: Auth0Client
+): Promise<{
   loginRequired: boolean;
   prompt?: "none" | "login";
   err?: unknown;

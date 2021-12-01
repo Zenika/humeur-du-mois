@@ -42,7 +42,10 @@ export const statsManager = functions.https.onRequest(
       .map(doc => doc.data() as Vote)
       .reduce(
         (counters, vote) =>
-          Object.assign(counters, { [vote.value]: counters[vote.value] + 1, total: counters["total"] + 1 }),
+          Object.assign(counters, {
+            [vote.value]: counters[vote.value] + 1,
+            total: counters["total"] + 1
+          }),
         { great: 0, notGreatAtAll: 0, notThatGreat: 0, ok: 0, total: 0 }
       );
     const statsAgency = await db
