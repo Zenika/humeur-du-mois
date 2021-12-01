@@ -28,7 +28,8 @@ export const updateStats = async (
       ...previousCounters,
       ...additionnalFields,
       [voteValue]: (previousCounters[voteValue] || 0) + 1,
-      [voteType]: (previousCounters[voteType] || 0) + 1
+      [voteType]: (previousCounters[voteType] || 0) + 1,
+      total: previousCounters.total,
     };
     return transaction
       .set(statsDocument, updateCounters)
