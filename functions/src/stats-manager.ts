@@ -44,7 +44,7 @@ export const statsManager = functions.https.onRequest(
         (counters, vote) =>
           Object.assign(counters, {
             [vote.value]: counters[vote.value] + 1,
-            total: counters["total"] + 1
+            total: counters.total + 1
           }),
         { great: 0, notGreatAtAll: 0, notThatGreat: 0, ok: 0, total: 0 }
       );

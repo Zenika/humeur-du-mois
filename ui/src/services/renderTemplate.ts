@@ -43,7 +43,7 @@ export function renderTemplate(voteData?: VoteData) {
                     .map(key => `<td>${row.counts[key] ?? 0}</td>`)
                     .join("")}
                   <td class="table__light">${
-                    row.counts.total
+                    typeof row.counts.total === "number"
                       ? row.counts.total
                       : keys.reduce(
                           (total, key) => total + (row.counts[key] || 0),
