@@ -131,7 +131,7 @@ window.addEventListener("load", async function () {
     const stats = await getDocs(
       query(collection(firestore, collectionName), orderBy("campaign", "desc"))
     );
-    return stats.docs.map((snapshot: any) => ({
+    return stats.docs.map(snapshot => ({
       campaign: snapshot.id,
       counts: snapshot.data() as StatsData,
       campaignDate: ""
@@ -144,7 +144,7 @@ window.addEventListener("load", async function () {
     );
     const agencies = new Set<string>(
       statsCampaignAgency.docs.map(
-        (snapshot: any) => (snapshot.data() as StatsData).agency || ""
+        snapshot => (snapshot.data() as StatsData).agency || ""
       )
     );
 
