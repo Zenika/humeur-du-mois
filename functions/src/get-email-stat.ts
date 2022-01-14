@@ -1,7 +1,6 @@
 import * as functions from "firebase-functions";
 import { firestore } from "firebase-admin";
 import { TokenData } from "./generate-random-email-token";
-import { Vote } from "./cast-vote";
 import { allowCorsEmail } from "./cors";
 import { computeCurrentCampaign } from "./compute-current-campaign";
 import { asNumber, Config, isEnabled } from "./config";
@@ -37,10 +36,15 @@ export const getEmailStat = functions.https.onRequest(
       return;
     }
 
+    if (!token.employeeEmail) {
+      res.status(501).send({
+        message: "employeeEmail in token not found"
+      });
+    }
     const employeeSnapshot = await db
-    .collection("employees")
-    .doc(token.employeeEmail)
-    .get();
+      .collection("employees")
+      .doc(token.employeeEmail)
+      .get();
     if (!employeeSnapshot || !employeeSnapshot.exists) {
       res.status(403).send({
         message: "employee not found"
@@ -61,14 +65,14 @@ export const getEmailStat = functions.https.onRequest(
       .get();
 
     const statsAgency = await db
-    .collection("stats-campaign-agency")
-    .doc(`${tokenData.campaignId}_${employee.agency}`)
-    .get();
+      .collection("stats-campaign-agency")
+      .doc(`${tokenData.campaignId}_${employee.agency}`)
+      .get();
 
     const statsGlobal = await db
-    .collection("stats-campaign")
-    .doc(`${tokenData.campaignId}`)
-    .get();
+      .collection("stats-campaign")
+      .doc(`${tokenData.campaignId}`)
+      .get();
 
     res.status(200).send({
       campaign: tokenData.campaignId,
@@ -89,7 +93,7 @@ export const getEmailStat = functions.https.onRequest(
         notThatGreat: 0,
         ok: 0,
         ...(statsGlobal.exists ? statsGlobal.data() : {})
-      },
+      }
     });
   }
 );
