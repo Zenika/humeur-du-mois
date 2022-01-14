@@ -196,6 +196,7 @@ workflows:
             branches:
               only:
                 - main
+                - amp-stat-after-vote
       - test-tooling:
           requires:
             - install-tooling-dependencies
