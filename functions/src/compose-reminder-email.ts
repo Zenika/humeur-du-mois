@@ -245,7 +245,7 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
     <h1 class="page__title">
       <span>Hi, <span id="userId">{{fullName}}</span></span>
     </h1>
-    <amp-list src="${linkToApp}/api/getEmailStat?token=${token}" layout="fixed-height" height="600" items="." single-item>
+    <amp-list id="list" src="${linkToApp}/api/getEmailStat?token=${token}" layout="fixed-height" height="600" items="." single-item>
       <div placeholder>Checking vote status...</div>
       <div fallback><p>Hi ${employee.fullName},</p>
 		    <p>
@@ -320,6 +320,9 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
     </amp-list>
     <template type="amp-mustache" id="submit_success_template">
       Your answer was properly recorded. {{message}}
+      <button id="buttonRefresh" on="tap:myList.refresh" type="submit" class="button--small">
+        See vote stats
+      </button>
     </template>
     <template type="amp-mustache" id="submit_error_template">
       Error: {{error.message}}
