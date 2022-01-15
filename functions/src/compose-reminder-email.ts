@@ -321,8 +321,8 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
     <template type="amp-mustache" id="submit_success_template">
       Your answer was properly recorded. {{message}}
       <div class="button-vote-wrapper">
-        <button id="buttonRefresh" on="tap:myList.refresh" class="button--small">
-          See vote stats
+        <button id="buttonRefresh" on="tap:list.refresh" type="button" class="button--small">
+          See vote results
         </button>
       </div>
     </template>
