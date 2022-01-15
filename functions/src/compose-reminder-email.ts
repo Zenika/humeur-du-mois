@@ -243,7 +243,7 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
 <body>
   <div class="page">
     <h1 class="page__title">
-      <span>Hi, <span id="userId">${employee.fullName}</span></span>
+      <span>Hi, ${employee.fullName}</span>
     </h1>
     <amp-list id="list" src="${linkToApp}/api/getEmailStat?token=${token}" layout="fixed-height" height="600" items="." single-item>
       <div placeholder>Checking vote status...</div>
