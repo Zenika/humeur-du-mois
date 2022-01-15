@@ -36,14 +36,14 @@ export const getEmailStat = functions.https.onRequest(
       return;
     }
 
-    if (!token.employeeEmail) {
+    if (!tokenData.employeeEmail) {
       res.status(501).send({
         message: "employeeEmail in token not found"
       });
     }
     const employeeSnapshot = await db
       .collection("employees")
-      .doc(token.employeeEmail)
+      .doc(tokenData.employeeEmail)
       .get();
     if (!employeeSnapshot || !employeeSnapshot.exists) {
       res.status(403).send({
