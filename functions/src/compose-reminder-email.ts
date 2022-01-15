@@ -320,9 +320,11 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
     </amp-list>
     <template type="amp-mustache" id="submit_success_template">
       Your answer was properly recorded. {{message}}
-      <button id="buttonRefresh" on="tap:myList.refresh" type="submit" class="button--small">
-        See vote stats
-      </button>
+      <div class="button-vote-wrapper">
+        <button id="buttonRefresh" on="tap:myList.refresh" class="button--small">
+          See vote stats
+        </button>
+      </div>
     </template>
     <template type="amp-mustache" id="submit_error_template">
       Error: {{error.message}}
