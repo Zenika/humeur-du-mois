@@ -27,7 +27,7 @@ export const composeReminderEmailHtml = (employee: Employee) => {
 export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
   return `
     <!doctype html>
-<html ⚡4email>
+<html ⚡4email data-css-strict>
 
 <head>
   <meta charset="utf-8">
@@ -128,7 +128,7 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
 }
 
 amp-selector [option][selected] {
-  cursor: auto;
+  cursor: pointer;
   outline: 1px solid #f44336;
 }
 

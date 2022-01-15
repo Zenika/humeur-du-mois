@@ -64,6 +64,16 @@ export const getEmailStat = functions.https.onRequest(
       .doc(`${tokenData.campaignId}-${token}`)
       .get();
 
+    if (!vote.exists) {
+      res.status(200).send({
+        campaign: tokenData.campaignId,
+        campaignOpen: campaign.open,
+        manager: employee.managerEmail,
+        fullname: employee.fullName
+      });
+      return;
+    }
+
     const statsAgency = await db
       .collection("stats-campaign-agency")
       .doc(`${tokenData.campaignId}_${employee.agency}`)
@@ -77,7 +87,7 @@ export const getEmailStat = functions.https.onRequest(
     res.status(200).send({
       campaign: tokenData.campaignId,
       campaignOpen: campaign.open,
-      alreadyVoted: vote.exists,
+      alreadyVoted: true,
       manager: employee.managerEmail,
       fullname: employee.fullName,
       agency: {
