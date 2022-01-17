@@ -257,7 +257,7 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
       <template type="amp-mustache">
         {{#alreadyVoted}}
         <p>
-          You are already voted, see below stats of the campaign vote :
+          You have already voted, thanks! Here are the stats for the current month:
         </p>
           <div id="statsTab">
             <table>
