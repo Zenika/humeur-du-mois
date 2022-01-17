@@ -187,57 +187,61 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
       font-style: italic;
       color: grey;
     }
+    .already-voted {
+      text-align: center;
+      margin: 20px;
+    }
     table {
-        border: 1px solid #eeeeee;
-        border-bottom: 0;
-        border-radius: 3px;
-        border-spacing: 0;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-        color: #333;
-        overflow: hidden;
-        width: 100%;
-      }
-      td,
-      th {
-        background: #ffffff;
-        border-bottom: 1px solid #eeeeee;
-        color: #333333;
-        font-size: 14px;
-        padding: 10px;
-      }
-      td:first-child,
-      th:first-child {
-        text-align: left;
-      }
-      th {
-        color: #666666;
-        font-size: 12px;
-        font-weight: bold;
-      }
-      .table__light {
-        font-weight: 300;
-      }
+      border: 1px solid #eeeeee;
+      border-bottom: 0;
+      border-radius: 3px;
+      border-spacing: 0;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+      color: #333;
+      overflow: hidden;
+      width: 100%;
+    }
+    td,
+    th {
+      background: #ffffff;
+      border-bottom: 1px solid #eeeeee;
+      color: #333333;
+      font-size: 14px;
+      padding: 10px;
+    }
+    td:first-child,
+    th:first-child {
+      text-align: left;
+    }
+    th {
+      color: #666666;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .table__light {
+      font-weight: 300;
+    }
 
-      td {
-        text-align: center;
-      }
+    td {
+      text-align: center;
+    }
 
-      td:nth-child(2) {
-        color: #1b5e20;
-      }
-      td:nth-child(3) {
-        color: #263238;
-      }
-      td:nth-child(4) {
-        color: #d67d00;
-      }
-      td:nth-child(5) {
-        color: #b71c1c;
-      }
+    td:nth-child(2) {
+      color: #1b5e20;
+    }
+    td:nth-child(3) {
+      color: #263238;
+    }
+    td:nth-child(4) {
+      color: #d67d00;
+    }
+    td:nth-child(5) {
+      color: #b71c1c;
+    }
 
-      tr:hover td {
-        background: #f7f7f7;
-      }
+    tr:hover td {
+      background: #f7f7f7;
+    }
   </style>
 </head>
 <body>
@@ -256,9 +260,15 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
       </div>
       <template type="amp-mustache">
         {{#alreadyVoted}}
-        <p>
-          You have already voted, thanks! Here are the stats for the current month:
-        </p>
+          <amp-img alt="Vote"
+            src="https://c.tenor.com/LJ4giybiKCYAAAAC/ballot-cast-your-ballot.gif"
+            width="900"
+            height="675"
+            layout="responsive">
+          </amp-img>
+          <p class="already-voted">
+            You have already voted, thanks! Here are the stats for the current month:
+          </p>
           <div id="statsTab">
             <table>
               <tbody>
