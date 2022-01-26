@@ -14,7 +14,8 @@ import {
 import {
   composeReminderEmailSender,
   composeReminderEmailAmpHtml,
-  composeReminderEmailHtml
+  composeReminderEmailHtml,
+  composeReminderEmailText
 } from "./compose-reminder-email";
 
 const db = firestore();
@@ -227,8 +228,9 @@ export const forceSendCampaingReminder = functions
         from: composeReminderEmailSender(),
         to: email,
         subject: `Humeur du mois is opened!`,
-        html: composeReminderEmailHtml(employee),
-        "amp-html": composeReminderEmailAmpHtml(employee, token)
+        text: composeReminderEmailText(employee),
+        "amp-html": composeReminderEmailAmpHtml(employee, token),
+        html: composeReminderEmailHtml(employee)
       };
 
       await enqueue(message);
