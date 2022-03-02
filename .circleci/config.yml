@@ -50,6 +50,15 @@ jobs:
           at: ./
       - run: npm --prefix functions run build
 
+  test-functions:
+    docker:
+      - image: circleci/node:16
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: npm --prefix functions run test
+
   install-tooling-dependencies:
     docker:
       - image: circleci/node:16
@@ -164,6 +173,12 @@ workflows:
             tags:
               only: /.*/
       - build-functions:
+          requires:
+            - install-functions-dependencies
+          filters:
+            tags:
+              only: /.*/
+      - test-functions:
           requires:
             - install-functions-dependencies
           filters:
