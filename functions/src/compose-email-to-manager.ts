@@ -5,8 +5,13 @@ import { Vote } from "./cast-vote";
 const config = functions.config() as Config;
 
 const linkToApp =
-  config.features.reminders.app_link ||
-  `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
+  (config &&
+    config.features &&
+    config.features.reminders &&
+    config.features.reminders.app_link) ||
+  `https://${
+    process.env.GCLOUD_PROJECT || "humeut-du-mois-2018"
+  }.firebaseapp.com`;
 
 const voteMap: { [key: string]: { color: string; label: string } } = {
   great: { label: "Great 😁", color: "#1b5e20" },
