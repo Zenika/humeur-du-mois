@@ -142,9 +142,9 @@ window.addEventListener("load", async function () {
     const statsCampaignAgency = await getDocs(
       query(collection(firestore, "stats-campaign-agency"))
     );
-    const agencies = new Set(
+    const agencies = new Set<string>(
       statsCampaignAgency.docs.map(
-        snapshot => (snapshot.data() as StatsData).agency
+        snapshot => (snapshot.data() as StatsData).agency || ""
       )
     );
 
