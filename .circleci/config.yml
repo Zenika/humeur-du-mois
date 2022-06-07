@@ -21,7 +21,6 @@ commands:
               << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
 
 jobs:
-
   validate-functions-config:
     parameters:
       firebase-project:
@@ -64,7 +63,7 @@ jobs:
         default: default
       ui-build-config:
         type: string
-        default: ''
+        default: ""
     executor: default
     environment:
       HUMEUR_DU_MOIS_UI_FIREBASE_CONFIG: << parameters.ui-build-config >>
