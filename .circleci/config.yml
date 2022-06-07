@@ -3,6 +3,17 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.2
 
+parameters:
+  tooling-dependencies-cache-version:
+    type: string
+    default: tooling-v1
+  functions-dependencies-cache-version:
+    type: string
+    default: functions-v1
+  ui-dependencies-cache-version:
+    type: string
+    default: ui-v1
+
 executors:
   default:
     docker:
@@ -70,7 +81,13 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
-          cache-version: tooling-v1
+          cache-version: << parameters.tooling-dependencies-cache-version >>
+      - node/install-packages:
+          app-dir: functions
+          cache-version: << parameters.functions-dependencies-cache-version >>
+      - node/install-packages:
+          app-dir: ui
+          cache-version: << parameters.ui-dependencies-cache-version >>
       - run: npx firebase deploy --project=<< parameters.firebase-project >> --token=$FIREBASE_TOKEN --non-interactive --force
 
 workflows:
@@ -81,7 +98,7 @@ workflows:
       - node/run:
           name: build-ui
           app-dir: ui
-          cache-version: ui-v1
+          cache-version: << parameters.ui-dependencies-cache-version >>
           npm-run: build
           filters: &filters-always
             tags:
@@ -89,25 +106,25 @@ workflows:
       - node/run:
           name: build-ui-for-production
           app-dir: ui
-          cache-version: ui-v1
+          cache-version: << parameters.ui-dependencies-cache-version >>
           npm-run: build:prod
           filters: *filters-always
 
       - node/run:
           name: build-functions
           app-dir: functions
-          cache-version: functions-v1
+          cache-version: << parameters.functions-dependencies-cache-version >>
           npm-run: build
           filters: *filters-always
       - node/test:
           name: test-functions
           app-dir: functions
-          cache-version: functions-v1
+          cache-version: << parameters.functions-dependencies-cache-version >>
           filters: *filters-always
 
       - node/test:
           name: test-tooling
-          cache-version: tooling-v1
+          cache-version: << parameters.tooling-dependencies-cache-version >>
           filters: *filters-always
       - check-formatting:
           filters: *filters-always
