@@ -35,7 +35,7 @@ jobs:
       - run: npx typescript-json-schema@0.50.0 --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
-  prod-check-config:
+  check-config:
     parameters:
       firebase-project:
         type: string
@@ -78,12 +78,13 @@ workflows:
 
   build-and-deploy:
     jobs:
+
       - node/run:
           name: build-ui
           app-dir: ui
           cache-version: ui-v1
           npm-run: build
-          filters:
+          filters: &filters-always
             tags:
               only: /.*/
       - node/run:
@@ -91,42 +92,29 @@ workflows:
           app-dir: ui
           cache-version: ui-v1
           npm-run: build:prod
-          filters:
-            tags:
-              only: /.*/
+          filters: *filters-always
 
       - node/run:
           name: build-functions
           app-dir: functions
           cache-version: functions-v1
           npm-run: build
-          filters:
-            tags:
-              only: /.*/
+          filters: *filters-always
       - node/test:
           name: test-functions
           app-dir: functions
           cache-version: functions-v1
-          filters:
-            tags:
-              only: /.*/
+          filters: *filters-always
 
       - node/test:
           name: test-tooling
           cache-version: tooling-v1
-          filters:
-            tags:
-              only: /.*/
+          filters: *filters-always
       - check-formatting:
-          filters:
-            tags:
-              only: /^v.*/
+          filters: *filters-always
+
       - validate-functions-config:
           context: firebase-deploy-zenika
-          filters:
-            tags:
-              ignore: /^v.+-prod.*/
-
       - deploy-firebase-app:
           context: firebase-deploy-zenika
           requires:
@@ -134,7 +122,7 @@ workflows:
             - build-ui-for-production
             - build-functions
             - validate-functions-config
-          filters:
+          filters: &filters-only-main
             branches:
               only:
                 - main
@@ -143,18 +131,21 @@ workflows:
           name: prod-validate-functions-config
           firebase-project: prod
           context: firebase-deploy-zenika
-          filters: &filters-for-prod
+          filters: &filters-only-prod-tag
             branches:
               ignore: /.*/
             tags:
               only: /^v.+-prod.*/
-      - prod-check-config:
+      - check-config:
+          name: prod-check-config
+          firebase-project: prod
           context: firebase-deploy-zenika
           requires:
             - test-tooling
-          filters: *filters-for-prod
+          filters: *filters-only-prod-tag
       - deploy-firebase-app:
           name: prod-deploy-firebase-app
+          firebase-project: prod
           ui-build-config: |
             {
               "apiKey": "AIzaSyBYU6kv-jxkDE6Ade29kBnEAoW9ZN_yfpc",
@@ -171,4 +162,4 @@ workflows:
             - build-ui-for-production
             - prod-validate-functions-config
             - build-functions
-          filters: *filters-for-prod
+          filters: *filters-only-prod-tag
