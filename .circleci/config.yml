@@ -11,14 +11,14 @@ executors:
 commands:
   install-dependency-as-global-package:
     parameters:
-      name:
+      package-name:
         type: string
     steps:
       - run:
-          name: Install << parameters.name >>
+          name: Install << parameters.package-name >>
           command: |
             npm install --global \
-              << parameters.name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.name >>"].version') \
+              << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
 
 jobs:
 
