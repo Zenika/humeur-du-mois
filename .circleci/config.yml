@@ -113,6 +113,7 @@ workflows:
 
       - node/test:
           name: test-tooling
+          cache-version: tooling-v1
           filters:
             tags:
               only: /.*/
