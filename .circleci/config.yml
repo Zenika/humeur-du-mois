@@ -31,7 +31,7 @@ jobs:
     steps:
       - checkout
       - install-dependency-as-global-package:
-          name: firebase-tools
+          package-name: firebase-tools
       - run: firebase --project=<< parameters.firebase-project >> --token=$FIREBASE_TOKEN functions:config:get > config.json
       - run: npx typescript-json-schema@0.50.0 --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
@@ -45,7 +45,7 @@ jobs:
     steps:
       - checkout
       - install-dependency-as-global-package:
-          name: firebase-tools
+          package-name: firebase-tools
       - run: firebase --project=<< parameters.firebase-project >> --token=$FIREBASE_TOKEN functions:config:get > ./deployment/check-config/config.json
       - run: npm run config:check ./config.json
 
@@ -54,7 +54,7 @@ jobs:
     steps:
       - checkout
       - install-dependency-as-global-package:
-          name: prettier
+          package-name: prettier
       - run: npm run prettier:check
 
   deploy-firebase-app:
@@ -71,7 +71,7 @@ jobs:
     steps:
       - checkout
       - install-dependency-as-global-package:
-          name: firebase-tools
+          package-name: firebase-tools
       - run: firebase deploy --project=<< parameters.firebase-project >> --token=$FIREBASE_TOKEN --non-interactive --force
 
 workflows:
