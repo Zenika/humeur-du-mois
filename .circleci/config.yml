@@ -175,6 +175,7 @@ workflows:
           requires:
             - build-ui
             - build-ui-for-production
-            - prod-validate-functions-config
             - build-functions
+            - prod-validate-functions-config
+            - prod-check-config
           filters: *filters-only-prod-tag
