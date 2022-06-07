@@ -1,241 +1,182 @@
-version: 2
+version: 2.1
+
+orbs:
+  node: circleci/node@5.0.2
+
+parameters:
+  tooling-dependencies-cache-version:
+    type: string
+    default: tooling-v1
+  functions-dependencies-cache-version:
+    type: string
+    default: functions-v1
+  ui-dependencies-cache-version:
+    type: string
+    default: ui-v1
+
+executors:
+  default:
+    docker:
+      - image: cimg/node:16.15.1
+
+commands:
+  install-dependency-as-global-package:
+    parameters:
+      package-name:
+        type: string
+    steps:
+      - run:
+          name: Install << parameters.package-name >>
+          command: |
+            npm install --global \
+              << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
 
 jobs:
-  install-ui-dependencies:
-    docker:
-      - image: circleci/node:16
-    steps:
-      - checkout
-      - run: npm --prefix ui ci
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - ui/node_modules
-
-  build-ui:
-    docker:
-      - image: circleci/node:16
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ./
-      - run: npm --prefix ui run build
-
-  build-ui-for-production:
-    docker:
-      - image: circleci/node:16
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ./
-      - run: npm --prefix ui run build:prod
-
-  install-functions-dependencies:
-    docker:
-      - image: circleci/node:16
-    steps:
-      - checkout
-      - run: npm --prefix functions ci
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - functions/node_modules
-
-  build-functions:
-    docker:
-      - image: circleci/node:16
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ./
-      - run: npm --prefix functions run build
-
-  test-functions:
-    docker:
-      - image: circleci/node:16
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ./
-      - run: npm --prefix functions run test
-
-  install-tooling-dependencies:
-    docker:
-      - image: circleci/node:16
-    steps:
-      - checkout
-      - run: npm ci
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - node_modules
-
   validate-functions-config:
-    environment:
-      FIREBASE_PROJECT: default
-    docker: &validate-functions-config-docker
-      - image: circleci/node:16
-    steps: &validate-functions-config-steps
+    parameters:
+      firebase-project:
+        type: string
+        default: default
+    executor: default
+    steps:
       - checkout
-      - attach_workspace:
-          at: ./
-      - run: node_modules/.bin/firebase --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN functions:config:get > config.json
+      - install-dependency-as-global-package:
+          package-name: firebase-tools
+      - run: firebase --project=<< parameters.firebase-project >> --token=$FIREBASE_TOKEN functions:config:get > config.json
       - run: npx typescript-json-schema@0.50.0 --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
-  prod-check-config:
-    environment:
-      FIREBASE_PROJECT: prod
-    docker:
-      - image: circleci/node:16
+  check-config:
+    parameters:
+      firebase-project:
+        type: string
+        default: default
+    executor: default
     steps:
       - checkout
-      - attach_workspace:
-          at: .
-      - run: node_modules/.bin/firebase --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN functions:config:get > ./deployment/check-config/config.json
+      - install-dependency-as-global-package:
+          package-name: firebase-tools
+      - run: firebase --project=<< parameters.firebase-project >> --token=$FIREBASE_TOKEN functions:config:get > ./deployment/check-config/config.json
       - run: npm run config:check ./config.json
 
-  test-tooling:
-    docker:
-      - image: circleci/node:16
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ./
-      - run: npm run test
-
   check-formatting:
-    docker:
-      - image: circleci/node:16
+    executor: default
     steps:
       - checkout
-      - attach_workspace:
-          at: .
+      - install-dependency-as-global-package:
+          package-name: prettier
       - run: npm run prettier:check
 
-  prod-validate-functions-config:
-    environment:
-      FIREBASE_PROJECT: prod
-    docker: *validate-functions-config-docker
-    steps: *validate-functions-config-steps
-
   deploy-firebase-app:
+    parameters:
+      firebase-project:
+        type: string
+        default: default
+      ui-build-config:
+        type: string
+        default: ""
+    executor: default
     environment:
-      FIREBASE_PROJECT: default
-    docker: &deploy-firebase-app-docker
-      - image: circleci/node:12 # must be node 12 for Cloud Build to work
-    steps: &deploy-firebase-app-steps
+      HUMEUR_DU_MOIS_UI_FIREBASE_CONFIG: << parameters.ui-build-config >>
+    steps:
       - checkout
-      - attach_workspace:
-          at: ./
-      - run: node_modules/.bin/firebase deploy --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN --non-interactive --force
-
-  prod-deploy-firebase-app:
-    environment:
-      FIREBASE_PROJECT: prod
-      HUMEUR_DU_MOIS_UI_FIREBASE_CONFIG: |
-        {
-          "apiKey": "AIzaSyBYU6kv-jxkDE6Ade29kBnEAoW9ZN_yfpc",
-          "authDomain": "humeur-du-mois-2018-prod.firebaseapp.com",
-          "databaseURL": "https://humeur-du-mois-2018-prod.firebaseio.com",
-          "projectId": "humeur-du-mois-2018-prod",
-          "storageBucket": "humeur-du-mois-2018-prod.appspot.com",
-          "messagingSenderId": "777759273294",
-          "appId": "1:777759273294:web:4bea510be52fdd6317ee1f"
-        }
-    docker: *deploy-firebase-app-docker
-    steps: *deploy-firebase-app-steps
+      - node/install-packages:
+          cache-version: << pipeline.parameters.tooling-dependencies-cache-version >>
+      - node/install-packages:
+          app-dir: functions
+          cache-version: << pipeline.parameters.functions-dependencies-cache-version >>
+      - node/install-packages:
+          app-dir: ui
+          cache-version: << pipeline.parameters.ui-dependencies-cache-version >>
+      - run: npx firebase deploy --project=<< parameters.firebase-project >> --token=$FIREBASE_TOKEN --non-interactive --force
 
 workflows:
   version: 2
 
   build-and-deploy:
     jobs:
-      - install-ui-dependencies:
-          filters:
+      - node/run:
+          name: build-ui
+          app-dir: ui
+          cache-version: << pipeline.parameters.ui-dependencies-cache-version >>
+          npm-run: build
+          filters: &filters-always
             tags:
               only: /.*/
-      - build-ui:
-          requires:
-            - install-ui-dependencies
-          filters:
-            tags:
-              only: /.*/
-      - build-ui-for-production:
-          requires:
-            - install-ui-dependencies
-          filters:
-            tags:
-              only: /.*/
+      - node/run:
+          name: build-ui-for-production
+          app-dir: ui
+          cache-version: << pipeline.parameters.ui-dependencies-cache-version >>
+          npm-run: build:prod
+          filters: *filters-always
 
-      - install-functions-dependencies:
-          filters:
-            tags:
-              only: /.*/
-      - build-functions:
-          requires:
-            - install-functions-dependencies
-          filters:
-            tags:
-              only: /.*/
-      - test-functions:
-          requires:
-            - install-functions-dependencies
-          filters:
-            tags:
-              only: /.*/
+      - node/run:
+          name: build-functions
+          app-dir: functions
+          cache-version: << pipeline.parameters.functions-dependencies-cache-version >>
+          npm-run: build
+          filters: *filters-always
+      - node/test:
+          name: test-functions
+          app-dir: functions
+          cache-version: << pipeline.parameters.functions-dependencies-cache-version >>
+          filters: *filters-always
 
-      - install-tooling-dependencies:
-          filters:
-            tags:
-              only: /.*/
+      - node/test:
+          name: test-tooling
+          cache-version: << pipeline.parameters.tooling-dependencies-cache-version >>
+          filters: *filters-always
       - check-formatting:
-          requires:
-            - install-tooling-dependencies
-          filters:
-            tags:
-              only: /^v.*/
+          filters: *filters-always
+
       - validate-functions-config:
           context: firebase-deploy-zenika
-          requires: &validate-functions-config-requires
-            - install-tooling-dependencies
       - deploy-firebase-app:
           context: firebase-deploy-zenika
           requires:
-            - install-tooling-dependencies
             - build-ui
             - build-ui-for-production
             - build-functions
             - validate-functions-config
-          filters:
+          filters: &filters-only-main
             branches:
               only:
                 - main
-      - test-tooling:
-          requires:
-            - install-tooling-dependencies
-          filters:
-            tags:
-              only: /.*/
-      - prod-validate-functions-config:
+
+      - validate-functions-config:
+          name: prod-validate-functions-config
+          firebase-project: prod
           context: firebase-deploy-zenika
-          requires: *validate-functions-config-requires
-          filters: &filters-for-prod
+          filters: &filters-only-prod-tag
             branches:
               ignore: /.*/
             tags:
               only: /^v.+-prod.*/
-      - prod-check-config:
+      - check-config:
+          name: prod-check-config
+          firebase-project: prod
           context: firebase-deploy-zenika
           requires:
             - test-tooling
-          filters: *filters-for-prod
-      - prod-deploy-firebase-app:
+          filters: *filters-only-prod-tag
+      - deploy-firebase-app:
+          name: prod-deploy-firebase-app
+          firebase-project: prod
+          ui-build-config: |
+            {
+              "apiKey": "AIzaSyBYU6kv-jxkDE6Ade29kBnEAoW9ZN_yfpc",
+              "authDomain": "humeur-du-mois-2018-prod.firebaseapp.com",
+              "databaseURL": "https://humeur-du-mois-2018-prod.firebaseio.com",
+              "projectId": "humeur-du-mois-2018-prod",
+              "storageBucket": "humeur-du-mois-2018-prod.appspot.com",
+              "messagingSenderId": "777759273294",
+              "appId": "1:777759273294:web:4bea510be52fdd6317ee1f"
+            }
           context: firebase-deploy-zenika
           requires:
-            - install-tooling-dependencies
             - build-ui
             - build-ui-for-production
-            - prod-validate-functions-config
             - build-functions
-          filters: *filters-for-prod
+            - prod-validate-functions-config
+            - prod-check-config
+          filters: *filters-only-prod-tag
