@@ -78,7 +78,6 @@ workflows:
 
   build-and-deploy:
     jobs:
-
       - node/run:
           name: build-ui
           app-dir: ui
