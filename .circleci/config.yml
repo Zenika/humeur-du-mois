@@ -125,7 +125,7 @@ workflows:
           filters: &filters-only-main
             branches:
               only:
-                - main
+                - modernize_ci
 
       - validate-functions-config:
           name: prod-validate-functions-config
@@ -133,9 +133,8 @@ workflows:
           context: firebase-deploy-zenika
           filters: &filters-only-prod-tag
             branches:
-              ignore: /.*/
-            tags:
-              only: /^v.+-prod.*/
+              only:
+                - modernize_ci
       - check-config:
           name: prod-check-config
           firebase-project: prod
