@@ -69,9 +69,9 @@ jobs:
       HUMEUR_DU_MOIS_UI_FIREBASE_CONFIG: << parameters.ui-build-config >>
     steps:
       - checkout
-      - install-dependency-as-global-package:
-          package-name: firebase-tools
-      - run: firebase deploy --project=<< parameters.firebase-project >> --token=$FIREBASE_TOKEN --non-interactive --force
+      - node/install-packages:
+          cache-version: tooling-v1
+      - run: npx firebase deploy --project=<< parameters.firebase-project >> --token=$FIREBASE_TOKEN --non-interactive --force
 
 workflows:
   version: 2
