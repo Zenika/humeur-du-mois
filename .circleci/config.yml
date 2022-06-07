@@ -80,7 +80,7 @@ jobs:
       - attach_workspace:
           at: ./
       - run: node_modules/.bin/firebase --project=$FIREBASE_PROJECT --token=$FIREBASE_TOKEN functions:config:get > config.json
-      - run: npx typescript-json-schema --required --noExtraProps --out config-schema.json functions/src/config.ts Config
+      - run: npx typescript-json-schema@0.50.0 --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
   prod-check-config:
