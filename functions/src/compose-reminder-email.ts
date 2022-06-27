@@ -24,6 +24,16 @@ export const composeReminderEmailHtml = (employee: Employee) => {
     <p>See you soon!</p>`;
 };
 
+export const composeReminderEmailText = (employee: Employee) => {
+  return `
+    Hi ${employee.fullName},
+    
+    Tell us how it's been for you this past month!
+    Go to ${linkToApp}.
+    
+    See you soon!`;
+};
+
 export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
   return `
   <!doctype html>

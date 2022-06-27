@@ -11,7 +11,7 @@ test("6 days remain", t => {
   t.is(actual, 6);
 });
 
-test("21 days remain, end of campaign is next month", t => {
+test("21 days remain, end of campaign is next month, current month is 30 days long", t => {
   const now = new Date(Date.UTC(2018, 8, 20));
   const actual = daysBeforeCampaignEnds(now, {
     enabled: true,
@@ -19,6 +19,16 @@ test("21 days remain, end of campaign is next month", t => {
     endOn: 10
   });
   t.is(actual, 21);
+});
+
+test("21 days remain, end of campaign is next month, current month is 31 days long", t => {
+  const now = new Date(Date.UTC(2018, 9, 20));
+  const actual = daysBeforeCampaignEnds(now, {
+    enabled: true,
+    startOn: 20,
+    endOn: 10
+  });
+  t.is(actual, 22);
 });
 
 test("3 days remain", t => {

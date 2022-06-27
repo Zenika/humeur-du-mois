@@ -160,7 +160,7 @@ test("given campaigns are enabled, campaign spans the entire month, and current 
   t.deepEqual(actual, { open: true, year: 2049, month: 6, id: "2049-07" });
 });
 
-test("dates are compared using UTC", t => {
+test("dates are always compared using UTC, irrespective of the local time zone", t => {
   const campaignOptions: CampaignOptions = {
     enabled: true,
     startOn: 10,
@@ -173,6 +173,7 @@ test("dates are compared using UTC", t => {
   if (timezoneOffset === 0) {
     // there is no point running this test in an environment with no
     // offset from UTC, we may as well abort
+    t.pass();
     return;
   }
   const voteDate =

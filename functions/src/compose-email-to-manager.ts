@@ -5,8 +5,13 @@ import { Vote } from "./cast-vote";
 const config = functions.config() as Config;
 
 const linkToApp =
-  config.features.reminders.app_link ||
-  `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com`;
+  (config &&
+    config.features &&
+    config.features.reminders &&
+    config.features.reminders.app_link) ||
+  `https://${
+    process.env.GCLOUD_PROJECT || "humeut-du-mois-2018"
+  }.firebaseapp.com`;
 
 const voteMap: { [key: string]: { color: string; label: string } } = {
   great: { label: "Great 😁", color: "#1b5e20" },
@@ -121,11 +126,11 @@ export function composeEmailToManagerAmpHtml(vote: Vote, token: string) {
             </tr>
             <tr>
               <td class="table__light">Your team</td>
-              <td>{{manager.great}}</td><td>{{manager.ok}}</td><td>{{manager.notThatGreat}}</td><td>{{manager.notGreatAtAll}}</td>
+              <td>{{manager.great}}</td><td>{{manager.ok}}</td><td>{{manager.notThatGreat}}</td><td>{{manager.notGreatAtAll}}</td><td>{{manager.total}}</td>
             </tr>
             <tr>
               <td class="table__light">{{agency.agency}}</td>
-              <td>{{agency.great}}</td><td>{{agency.ok}}</td><td>{{agency.notThatGreat}}</td><td>{{agency.notGreatAtAll}}</td>
+              <td>{{agency.great}}</td><td>{{agency.ok}}</td><td>{{agency.notThatGreat}}</td><td>{{agency.notGreatAtAll}}</td><td>{{agency.total}}</td>
             </tr>
           </tbody>
         </table>
