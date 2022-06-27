@@ -274,15 +274,15 @@ export function composeReminderEmailAmpHtml(employee: Employee, token: string) {
               <tbody>
                 <tr>
                 <th>Stats {{campaign}}</th>
-                  <th>😁</th><th>🙂</th><th>😐</th><th>😤</th>
+                  <th>😁</th><th>🙂</th><th>😐</th><th>😤</th><th>Total</th>
                 </tr>
                 <tr>
                   <td class="table__light">Zenika</td>
-                  <td>{{global.great}}</td><td>{{global.ok}}</td><td>{{global.notThatGreat}}</td><td>{{global.notGreatAtAll}}</td>
+                  <td>{{global.great}}</td><td>{{global.ok}}</td><td>{{global.notThatGreat}}</td><td>{{global.notGreatAtAll}}</td><td>{{global.total}}</td>
                 </tr>
                 <tr>
                   <td class="table__light">{{agency.agency}}</td>
-                  <td>{{agency.great}}</td><td>{{agency.ok}}</td><td>{{agency.notThatGreat}}</td><td>{{agency.notGreatAtAll}}</td>
+                  <td>{{agency.great}}</td><td>{{agency.ok}}</td><td>{{agency.notThatGreat}}</td><td>{{agency.notGreatAtAll}}</td><td>{{agency.total}}</td>
                 </tr>
               </tbody>
             </table>

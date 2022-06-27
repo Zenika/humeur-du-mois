@@ -95,6 +95,7 @@ export const getEmailStat = functions.https.onRequest(
         notGreatAtAll: 0,
         notThatGreat: 0,
         ok: 0,
+        total: 0,
         ...(statsAgency.exists ? statsAgency.data() : {})
       },
       global: {
@@ -102,6 +103,7 @@ export const getEmailStat = functions.https.onRequest(
         notGreatAtAll: 0,
         notThatGreat: 0,
         ok: 0,
+        total: 0,
         ...(statsGlobal.exists ? statsGlobal.data() : {})
       }
     });
