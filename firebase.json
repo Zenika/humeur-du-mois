@@ -32,6 +32,10 @@
       {
         "source": "/api/statsManager",
         "function": "statsManager"
+      },
+      {
+        "source": "/api/getEmailStat",
+        "function": "getEmailStat"
       }
     ]
   }

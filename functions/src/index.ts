@@ -50,3 +50,5 @@ export { deleteVotesBefore } from "./delete-votes-before";
 export { changeAgencyName } from "./change-agency-name";
 
 export { statsManager } from "./stats-manager";
+
+export { getEmailStat } from "./get-email-stat";
