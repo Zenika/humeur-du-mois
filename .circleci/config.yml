@@ -43,7 +43,7 @@ jobs:
       - install-dependency-as-global-package:
           package-name: firebase-tools
       - run: firebase --project=<< parameters.firebase-project >> --token=$FIREBASE_TOKEN
-      - run: echo firebase functions:config:get 
+      - run: firebase functions:config:get 
       - run: npx typescript-json-schema@0.50.0 --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
