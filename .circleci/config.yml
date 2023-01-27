@@ -32,9 +32,11 @@ commands:
               << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
   setup-firebase-auth:
     steps:
-      - run: export GOOGLE_APPLICATION_CREDENTIALS=google_application_credentials.json
-      - run: echo ${GOOGLE_APPLICATION_CREDENTIALS_CONTENT_JSON} > ${GOOGLE_APPLICATION_CREDENTIALS}
-      - run: echo Service account key written to ${GOOGLE_APPLICATION_CREDENTIALS}
+      - run:
+          command: |
+            export GOOGLE_APPLICATION_CREDENTIALS=google_application_credentials.json
+            echo ${GOOGLE_APPLICATION_CREDENTIALS_CONTENT_JSON} > ${GOOGLE_APPLICATION_CREDENTIALS}
+            echo Service account key written to ${GOOGLE_APPLICATION_CREDENTIALS}
 
 jobs:
   validate-functions-config:
