@@ -33,12 +33,25 @@ commands:
             npm install --global \
               << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
   setup-firebase-auth:
+    parameters:
+      firebase-project:
+        type: string
+        default: default
     steps:
       - run:
           name: Set up Firebase authentication
+          environment:
+            FIREBASE_PROJECT: << parameters.firebase-project >>
           command: |
-            echo ${GOOGLE_APPLICATION_CREDENTIALS_CONTENT_JSON} > ${GOOGLE_APPLICATION_CREDENTIALS}
-            echo Service account key written to ${GOOGLE_APPLICATION_CREDENTIALS}
+            echo Using Firebase project '${FIREBASE_PROJECT}'
+            SERVICE_ACCOUNT_KEY_VAR=SERVICE_ACCOUNT_KEY_${FIREBASE_PROJECT^^}
+            Reading service account key from environment variable '${SERVICE_ACCOUNT_KEY_VAR}'
+            if [[ -z "${!SERVICE_ACCOUNT_KEY_VAR}" ]] then
+              echo Environment variable '${SERVICE_ACCOUNT_KEY_VAR}' is empty!
+              exit 1
+            fi
+            echo ${!SERVICE_ACCOUNT_KEY_VAR} > ${GOOGLE_APPLICATION_CREDENTIALS}
+            echo Service account key written to '${GOOGLE_APPLICATION_CREDENTIALS}'
 
 jobs:
   validate-functions-config:
@@ -49,7 +62,8 @@ jobs:
     executor: default
     steps:
       - checkout
-      - setup-firebase-auth
+      - setup-firebase-auth:
+          firebase-project: << parameters.firebase-project >>
       - install-dependency-as-global-package:
           package-name: firebase-tools
       - run: firebase --project=<< parameters.firebase-project >> functions:config:get > config.json
@@ -64,7 +78,8 @@ jobs:
     executor: default
     steps:
       - checkout
-      - setup-firebase-auth
+      - setup-firebase-auth:
+          firebase-project: << parameters.firebase-project >>
       - install-dependency-as-global-package:
           package-name: firebase-tools
       - run: firebase --project=<< parameters.firebase-project >> functions:config:get > ./deployment/check-config/config.json
@@ -86,12 +101,16 @@ jobs:
       ui-build-config:
         type: string
         default: ""
+      google-application-credentials-content-json:
+        type: env_var_name
+        default: GOOGLE_APPLICATION_CREDENTIALS_CONTENT_JSON
     executor: default
     environment:
       HUMEUR_DU_MOIS_UI_FIREBASE_CONFIG: << parameters.ui-build-config >>
     steps:
       - checkout
-      - setup-firebase-auth
+      - setup-firebase-auth:
+          firebase-project: << parameters.firebase-project >>
       - node/install-packages:
           cache-version: << pipeline.parameters.tooling-dependencies-cache-version >>
       - node/install-packages:
