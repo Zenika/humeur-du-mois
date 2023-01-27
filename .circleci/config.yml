@@ -175,7 +175,8 @@ workflows:
           firebase-project: prod
           filters: &filters-only-prod-tag
             branches:
-              ignore: /.*/
+              # ignore: /.*/
+              only: new_firebase_auth_from_ci
             tags:
               only: /^v.+-prod.*/
       - check-config:
