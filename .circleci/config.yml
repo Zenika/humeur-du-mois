@@ -46,7 +46,7 @@ commands:
             echo Using Firebase project: ${FIREBASE_PROJECT}
             SERVICE_ACCOUNT_KEY_VAR=SERVICE_ACCOUNT_KEY_${FIREBASE_PROJECT^^}
             echo Reading service account key from environment variable: ${SERVICE_ACCOUNT_KEY_VAR}
-            if [[ -z "${!SERVICE_ACCOUNT_KEY_VAR}" ]] then
+            if [ -z "${!SERVICE_ACCOUNT_KEY_VAR}" ] then
               echo Environment variable ${SERVICE_ACCOUNT_KEY_VAR} is empty!
               exit 1
             fi
