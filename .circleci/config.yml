@@ -30,6 +30,11 @@ commands:
           command: |
             npm install --global \
               << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
+  setup-firebase-auth:
+    steps:
+      - run: export GOOGLE_APPLICATION_CREDENTIALS=google_application_credentials.json
+      - run: echo ${GOOGLE_APPLICATION_CREDENTIALS_CONTENT_JSON} > ${GOOGLE_APPLICATION_CREDENTIALS}
+      - run: echo Service account key written to ${GOOGLE_APPLICATION_CREDENTIALS}
 
 jobs:
   validate-functions-config:
@@ -56,7 +61,8 @@ jobs:
       - checkout
       - install-dependency-as-global-package:
           package-name: firebase-tools
-      - run: firebase --project=<< parameters.firebase-project >> --token=$FIREBASE_APP_TOKEN functions:config:get > ./deployment/check-config/config.json
+      - setup-firebase-auth
+      - run: firebase --project=<< parameters.firebase-project >> functions:config:get > ./deployment/check-config/config.json
       - run: npm run config:check ./config.json
 
   check-formatting:
@@ -88,7 +94,8 @@ jobs:
       - node/install-packages:
           app-dir: ui
           cache-version: << pipeline.parameters.ui-dependencies-cache-version >>
-      - run: npx firebase deploy --project=<< parameters.firebase-project >> --token=$FIREBASE_APP_TOKEN --non-interactive --force
+      - setup-firebase-auth
+      - run: npx firebase deploy --project=<< parameters.firebase-project >> --non-interactive --force
 
 workflows:
   version: 2
