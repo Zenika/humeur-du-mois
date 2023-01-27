@@ -18,6 +18,8 @@ executors:
   default:
     docker:
       - image: cimg/node:16.15.1
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: google_application_credentials.json
 
 commands:
   install-dependency-as-global-package:
@@ -30,6 +32,27 @@ commands:
           command: |
             npm install --global \
               << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
+  setup-firebase-auth:
+    parameters:
+      firebase-project:
+        type: string
+        default: default
+    steps:
+      - run:
+          name: Set up Firebase authentication
+          environment:
+            FIREBASE_PROJECT: << parameters.firebase-project >>
+          command: |
+            echo Using Firebase project: ${FIREBASE_PROJECT}
+            SERVICE_ACCOUNT_KEY_VAR=SERVICE_ACCOUNT_KEY_${FIREBASE_PROJECT^^}
+            echo Reading service account key from environment variable: ${SERVICE_ACCOUNT_KEY_VAR}
+            if [ -z "${!SERVICE_ACCOUNT_KEY_VAR}" ]
+            then
+              echo Environment variable ${SERVICE_ACCOUNT_KEY_VAR} is empty!
+              exit 1
+            fi
+            echo ${!SERVICE_ACCOUNT_KEY_VAR} > ${GOOGLE_APPLICATION_CREDENTIALS}
+            echo Service account key written to ${GOOGLE_APPLICATION_CREDENTIALS}
 
 jobs:
   validate-functions-config:
@@ -40,9 +63,11 @@ jobs:
     executor: default
     steps:
       - checkout
+      - setup-firebase-auth:
+          firebase-project: << parameters.firebase-project >>
       - install-dependency-as-global-package:
           package-name: firebase-tools
-      - run: firebase --project=<< parameters.firebase-project >> --token=$FIREBASE_APP_TOKEN functions:config:get > config.json
+      - run: firebase --project=<< parameters.firebase-project >> functions:config:get > config.json
       - run: npx typescript-json-schema@0.50.0 --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
@@ -54,9 +79,11 @@ jobs:
     executor: default
     steps:
       - checkout
+      - setup-firebase-auth:
+          firebase-project: << parameters.firebase-project >>
       - install-dependency-as-global-package:
           package-name: firebase-tools
-      - run: firebase --project=<< parameters.firebase-project >> --token=$FIREBASE_APP_TOKEN functions:config:get > ./deployment/check-config/config.json
+      - run: firebase --project=<< parameters.firebase-project >> functions:config:get > ./deployment/check-config/config.json
       - run: npm run config:check ./config.json
 
   check-formatting:
@@ -80,6 +107,8 @@ jobs:
       HUMEUR_DU_MOIS_UI_FIREBASE_CONFIG: << parameters.ui-build-config >>
     steps:
       - checkout
+      - setup-firebase-auth:
+          firebase-project: << parameters.firebase-project >>
       - node/install-packages:
           cache-version: << pipeline.parameters.tooling-dependencies-cache-version >>
       - node/install-packages:
@@ -88,7 +117,7 @@ jobs:
       - node/install-packages:
           app-dir: ui
           cache-version: << pipeline.parameters.ui-dependencies-cache-version >>
-      - run: npx firebase deploy --project=<< parameters.firebase-project >> --token=$FIREBASE_APP_TOKEN --non-interactive --force
+      - run: npx firebase deploy --project=<< parameters.firebase-project >> --non-interactive --force
 
 workflows:
   version: 2
@@ -129,10 +158,8 @@ workflows:
       - check-formatting:
           filters: *filters-always
 
-      - validate-functions-config:
-          context: firebase-deploy-zenika
+      - validate-functions-config
       - deploy-firebase-app:
-          context: firebase-deploy-zenika
           requires:
             - build-ui
             - build-ui-for-production
@@ -146,7 +173,6 @@ workflows:
       - validate-functions-config:
           name: prod-validate-functions-config
           firebase-project: prod
-          context: firebase-deploy-zenika
           filters: &filters-only-prod-tag
             branches:
               ignore: /.*/
@@ -155,7 +181,6 @@ workflows:
       - check-config:
           name: prod-check-config
           firebase-project: prod
-          context: firebase-deploy-zenika
           requires:
             - test-tooling
           filters: *filters-only-prod-tag
@@ -172,7 +197,6 @@ workflows:
               "messagingSenderId": "777759273294",
               "appId": "1:777759273294:web:4bea510be52fdd6317ee1f"
             }
-          context: firebase-deploy-zenika
           requires:
             - build-ui
             - build-ui-for-production
