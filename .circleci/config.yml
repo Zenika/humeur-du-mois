@@ -168,7 +168,7 @@ workflows:
           filters: &filters-only-main
             branches:
               only:
-                - main
+                - functions-stack-upgrade
 
       - validate-functions-config:
           name: prod-validate-functions-config
