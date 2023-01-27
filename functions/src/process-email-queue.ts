@@ -1,12 +1,12 @@
 import * as functions from "firebase-functions";
 import { firestore } from "firebase-admin";
-import { DocumentSnapshot } from "firebase-functions/lib/providers/firestore";
 import * as mailgun from "mailgun-js";
 import { Config, onlyWhenEnabled } from "./config";
 import { ensureCalledOnce } from "./ensure-called-once";
 import {
   DocumentReference,
-  CollectionReference
+  CollectionReference,
+  DocumentSnapshot
 } from "@google-cloud/firestore";
 
 const config = functions.config() as Config;
@@ -54,8 +54,6 @@ const requeueIfFails = async <T>(
     throw err;
   }
 };
-
-type FirestoreTriggerHandler = (snapshot: DocumentSnapshot) => void;
 
 const queueWorker =
   <T>(

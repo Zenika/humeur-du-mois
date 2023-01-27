@@ -65,7 +65,7 @@ export const castVoteFromEmail = functions.https.onRequest(
       res.status(200).send({
         message: `Thanks!`
       });
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof functions.https.HttpsError) {
         res.status(error.httpErrorCode.status).send({
           error: error.toJSON()
@@ -151,7 +151,7 @@ async function doVote(
         .collection("vote")
         .doc(`${campaign.id}-${token.id}`)
         .create(vote);
-    } catch (err) {
+    } catch (err: any) {
       if (err.code === 6 /* ALREADY_EXISTS */) {
         throw new functions.https.HttpsError(
           "already-exists",

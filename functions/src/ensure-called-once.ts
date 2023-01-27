@@ -1,6 +1,6 @@
 import { firestore } from "firebase-admin";
 import { isDocumentAlreadyExistsError } from "./already-exists";
-import { DocumentSnapshot } from "firebase-functions/lib/providers/firestore";
+import { DocumentSnapshot } from "@google-cloud/firestore";
 
 /**
  * This file implements a distributed lock system based on the unicity of

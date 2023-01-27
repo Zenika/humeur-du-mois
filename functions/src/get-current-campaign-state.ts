@@ -34,7 +34,7 @@ export const getCurrentCampaignState = functions.https.onCall(
       };
     }
 
-    const voterEmail: string = context.auth!.token.email;
+    const voterEmail: string = context.auth!.token.email!;
 
     let voteToken = await getOrGenerateRandomEmailToken({
       type: "vote",

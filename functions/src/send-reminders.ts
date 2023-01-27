@@ -212,7 +212,7 @@ export const forceSendCampaingReminder = functions
         .substr(0, 7)
     };
 
-    const { email, all } = req.query;
+    const { email, all } = req.query as { [key: string]: string };
     if (email) {
       // Envoi un mail de vote à un seul employé en générant un nouveau token de vote
       const token = await generateAndSaveRandomEmailToken({

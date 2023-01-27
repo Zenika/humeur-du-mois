@@ -11,7 +11,7 @@ export const statsManager = functions.https.onRequest(
     if (!allowCorsEmail(req, res)) {
       return;
     }
-    const token = req.query.token;
+    const token = req.query.token as string;
     if (!token) {
       res.status(401).send({
         message: "no token provided"

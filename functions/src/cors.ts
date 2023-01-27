@@ -30,7 +30,7 @@ export function allowCorsEmail(
       return false;
     }
     res.set("Access-Control-Allow-Origin", requestOrigin);
-    const sourceOriginEmail = req.query.__amp_source_origin;
+    const sourceOriginEmail = req.query.__amp_source_origin as string;
     if (!sourceOriginEmail) {
       res.status(401).send({
         message: "No Source Origin params"
