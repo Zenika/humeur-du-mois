@@ -102,9 +102,6 @@ jobs:
       ui-build-config:
         type: string
         default: ""
-      google-application-credentials-content-json:
-        type: env_var_name
-        default: GOOGLE_APPLICATION_CREDENTIALS_CONTENT_JSON
     executor: default
     environment:
       HUMEUR_DU_MOIS_UI_FIREBASE_CONFIG: << parameters.ui-build-config >>
