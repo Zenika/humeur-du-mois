@@ -168,7 +168,7 @@ workflows:
           filters: &filters-only-main
             branches:
               only:
-                - new_firebase_auth_from_ci
+                - main
 
       - validate-functions-config:
           name: prod-validate-functions-config
