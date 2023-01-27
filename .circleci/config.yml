@@ -18,6 +18,8 @@ executors:
   default:
     docker:
       - image: cimg/node:16.15.1
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: google_application_credentials.json
 
 commands:
   install-dependency-as-global-package:
@@ -33,8 +35,8 @@ commands:
   setup-firebase-auth:
     steps:
       - run:
+          name: Set up Firebase authentication
           command: |
-            export GOOGLE_APPLICATION_CREDENTIALS=google_application_credentials.json
             echo ${GOOGLE_APPLICATION_CREDENTIALS_CONTENT_JSON} > ${GOOGLE_APPLICATION_CREDENTIALS}
             echo Service account key written to ${GOOGLE_APPLICATION_CREDENTIALS}
 
