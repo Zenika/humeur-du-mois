@@ -13,7 +13,7 @@
     "@types/mini-css-extract-plugin": "2.4.0",
     "@types/node": "10.12.1",
     "@types/webpack": "5.28.0",
-    "ava": "3.15.0",
+    "ava": "5.2.0",
     "css-loader": "6.5.1",
     "html-differ": "^1.4.0",
     "html-webpack-plugin": "5.5.0",
