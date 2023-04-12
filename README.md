@@ -1,3 +1,7 @@
+# DEPRECATION NOTICE
+
+This app has been replaced by Amelio.
+
 # Humeur du mois
 
 Is everything alright for you at Zenika? We'd like to know! This is an app that asks Zenika's employees how they feel. If the answer is not positive, the company has to take action.
