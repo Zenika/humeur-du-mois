@@ -17,7 +17,7 @@ parameters:
 executors:
   default:
     docker:
-      - image: cimg/node:16.15.1
+      - image: cimg/node:18.19.0
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: google_application_credentials.json
 
@@ -30,8 +30,8 @@ commands:
       - run:
           name: Install << parameters.package-name >>
           command: |
-            npm install --global \
-              << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
+            npm install \
+            << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
   setup-firebase-auth:
     parameters:
       firebase-project:
@@ -67,7 +67,7 @@ jobs:
           firebase-project: << parameters.firebase-project >>
       - install-dependency-as-global-package:
           package-name: firebase-tools
-      - run: firebase --project=<< parameters.firebase-project >> functions:config:get > config.json
+      - run: npx firebase --project=<< parameters.firebase-project >> functions:config:get > config.json
       - run: npx typescript-json-schema@0.50.0 --required --noExtraProps --out config-schema.json functions/src/config.ts Config
       - run: npx --package ajv-cli ajv validate -s config-schema.json -d config.json
 
