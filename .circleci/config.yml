@@ -30,9 +30,8 @@ commands:
       - run:
           name: Install << parameters.package-name >>
           command: |
-            mkdir .npm-global && npm config set prefix '.npm-global' && \
-            npm install --global \
-              << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
+            npm install \
+            << parameters.package-name >>@$(node --print --eval='require("./package-lock.json").packages["node_modules/<< parameters.package-name >>"].version') \
   setup-firebase-auth:
     parameters:
       firebase-project:
