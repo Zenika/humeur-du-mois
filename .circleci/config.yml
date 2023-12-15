@@ -83,7 +83,7 @@ jobs:
           firebase-project: << parameters.firebase-project >>
       - install-dependency-as-global-package:
           package-name: firebase-tools
-      - run: firebase --project=<< parameters.firebase-project >> functions:config:get > ./deployment/check-config/config.json
+      - run: npx firebase --project=<< parameters.firebase-project >> functions:config:get > ./deployment/check-config/config.json
       - run: npm run config:check ./config.json
 
   check-formatting:
