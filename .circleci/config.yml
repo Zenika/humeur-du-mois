@@ -17,7 +17,7 @@ parameters:
 executors:
   default:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.19.0
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: google_application_credentials.json
 
