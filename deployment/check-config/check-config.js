@@ -59,11 +59,11 @@ const checkConfig = config => {
   if (votingCampaignConfig?.enabled !== "true") {
     errors.push("- voting_campaign is disabled");
   }
-  // if (votingCampaignConfig?.start_on !== "25") {
-  //   errors.push("- voting_campaign doesn't start on the 25th");
-  // }
-  if (votingCampaignConfig?.end_on !== "5") {
-    errors.push("- voting_campaign doesn't end on the 5th");
+  if (votingCampaignConfig?.start_on !== "1") {
+    errors.push("- voting_campaign doesn't start on the 1st");
+  }
+  if (votingCampaignConfig?.end_on !== "10") {
+    errors.push("- voting_campaign doesn't end on the 10th");
   }
   return errors;
 };
