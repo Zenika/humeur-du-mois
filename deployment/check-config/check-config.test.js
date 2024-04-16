@@ -97,7 +97,7 @@ test("Config is not suitable for production", t => {
     "- reminders.voting_campaign_ends is disabled",
     "- app_link ends with a slash",
     "- voting_campaign is disabled",
-    "- voting_campaign doesn't start on the 28th",
+    "- voting_campaign doesn't start on the 1st",
     "- voting_campaign doesn't end on the 10th"
   ]);
 });
