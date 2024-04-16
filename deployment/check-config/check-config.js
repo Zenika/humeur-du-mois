@@ -59,7 +59,7 @@ const checkConfig = config => {
   if (votingCampaignConfig?.enabled !== "true") {
     errors.push("- voting_campaign is disabled");
   }
-  if (votingCampaignConfig?.start_on !== "1") {
+  if (votingCampaignConfig?.start_on !== "28") {
     errors.push("- voting_campaign doesn't start on the 1st");
   }
   if (votingCampaignConfig?.end_on !== "10") {
