@@ -29,7 +29,7 @@ test("Config is suitable for production", t => {
       },
       voting_campaigns: {
         enabled: "true",
-        start_on: "1",
+        start_on: "28",
         end_on: "10"
       }
     }
@@ -78,8 +78,8 @@ test("Config is not suitable for production", t => {
       },
       voting_campaigns: {
         enabled: "false",
-        start_on: "2",
-        end_on: "6"
+        start_on: "6",
+        end_on: "101"
       }
     }
   };
@@ -97,7 +97,7 @@ test("Config is not suitable for production", t => {
     "- reminders.voting_campaign_ends is disabled",
     "- app_link ends with a slash",
     "- voting_campaign is disabled",
-    "- voting_campaign doesn't start on the 1st",
+    "- voting_campaign doesn't start on the 28th",
     "- voting_campaign doesn't end on the 10th"
   ]);
 });
