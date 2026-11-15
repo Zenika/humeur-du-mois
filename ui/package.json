@@ -28,6 +28,6 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "1.19.2",
-    "firebase": "9.3.0"
+    "firebase": "13.3.0"
   }
 }
